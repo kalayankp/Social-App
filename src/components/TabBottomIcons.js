@@ -91,9 +91,20 @@ const ProfileNavigationOptions = {
   ),
 };
 
+const BottomNavigationScreenOption = {
+  headerShown: false,
+  tabBarShowLabel: false,
+  tabBarStyle: {
+    position: 'absolute',
+
+    borderRadius: 15,
+  },
+};
+
 export {
   ExploreNavigationOption,
   MyCardsNavigationOption,
   InsightNavigationOption,
   ProfileNavigationOptions,
+  BottomNavigationScreenOption,
 };
