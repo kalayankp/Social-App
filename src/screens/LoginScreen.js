@@ -19,51 +19,6 @@ import {Context as AuthContext} from '../context/AuthContext';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-class LoginScreen{
-  constructor(props){
-    super(props);
-    this.state = {
-      password: "",
-      passwordErrorMessage: "",
-      confirmPassword: "",
-      confirmPasswordErrorMessage: "",
-      userName: "",
-      loading: 'false'
-    }
-  }
-}
-//Logic for UserName constrains
-usernameChangeHandler = async() =>{
-  if(this.state.userName.len>3){
-      axios.checkUsername(this.state.userName)
-  }
-}
-
-//Logic for password and ConfirmPassword Match
-formValidation = async() => {
-  this.setState({loading:true})
-  let errorFlag = false;
-
-  if(this.state.password.length == 0){
-    errorFlag = true;
-    this.setState({passwordErrorMessage:"Password is required field"});
-  } else if (this.state.password.length < 6) {
-    errorFlag = true;
-    this.setState({ passwordErrorMessage: "Password should be min 6 char and max 20 char"});
-  } else if (this.state.password !==  this.state.confirmPassword ) {
-    errorFlag = true;
-    this.setState({ passwordErrorMessage: "Passwoad and confirm password should be same."});
-  }
-  
-  if (this.state.confirmPassword.length == 0) {
-    errorFlag = true;
-    this.setState({ confirmPasswordErrorMessage: "Confirm Password is required feild"});
-  } else if (this.state.confirmPassword.length < 6) {
-    errorFlag = true;
-    this.setState({ confirmPasswordErrorMessage: "Password should be 6 min  char and max 20 char"});
-  }
-}
-
 const LoginScreen = ({navigation}) => {
   const [isLogin, setIsLogin] = useState(true);
   const LoginComponent = () => {
@@ -167,7 +122,7 @@ const LoginScreen = ({navigation}) => {
             placeholderTextColor="#707070"
           />
           <TextInput
-            placeholder="Enter Unique Username"
+            placeholder="Enter Your Password"
             style={{
               height: 50,
               borderRadius: 10,
@@ -179,8 +134,6 @@ const LoginScreen = ({navigation}) => {
               marginTop: 14,
             }}
             placeholderTextColor="#707070"
-            value = {this.state.userName}
-            onTextChanged = { usernameChangeHandler }
           />
           <TextInput
             placeholder="Enter Your Password"
@@ -194,27 +147,7 @@ const LoginScreen = ({navigation}) => {
               color: 'black',
               marginTop: 14,
             }}
-            value = {this.state.password}
-            secureTextEntry={true}
             placeholderTextColor="#707070"
-            onChangeText={password => this.setState({password})}
-          />
-          <TextInput
-            placeholder="Confirm Password"
-            style={{
-              height: 50,
-              borderRadius: 10,
-              borderWidth: 1,
-              borderColor: '#C7C6C6',
-              marginHorizontal: 14,
-              paddingHorizontal: 16,
-              color: 'black',
-              marginTop: 14,
-            }}
-            value = {this.state.password}
-            secureTextEntry={true}
-            placeholderTextColor="#707070"
-            onChangeText={password => this.setState({password})}
           />
         </View>
 
