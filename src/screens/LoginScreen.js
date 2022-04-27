@@ -85,7 +85,7 @@ const LoginScreen = ({navigation}) => {
             flexDirection: 'row',
           }}>
           <Image
-            source={require('../assets/googleLogo.png')}
+            source={require('../asset/googleLogo.png')}
             style={{height: 24, width: 24, position: 'absolute', left: 14}}
           />
           <Text style={{flex: 1, textAlign: 'center'}}>LOGIN WITH GOOGLE</Text>
@@ -175,7 +175,7 @@ const LoginScreen = ({navigation}) => {
             flexDirection: 'row',
           }}>
           <Image
-            source={require('../assets/googleLogo.png')}
+            source={require('../asset/googleLogo.png')}
             style={{height: 24, width: 24, position: 'absolute', left: 14}}
           />
           <Text style={{flex: 1, textAlign: 'center'}}>SIGNUP WITH GOOGLE</Text>
@@ -197,7 +197,7 @@ const LoginScreen = ({navigation}) => {
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
       <View style={{position: 'absolute'}}>
-        <Image source={require('../assets/loginScreenTop.png')} />
+        <Image source={require('../asset/loginScreenTop.png')} />
       </View>
       <View
         style={{
@@ -207,7 +207,7 @@ const LoginScreen = ({navigation}) => {
         }}>
         <Text style={{fontSize: 24, fontWeight: 'bold'}}>Welcome to HashX</Text>
         <Image
-          source={require('../assets/logo.png')}
+          source={require('../asset/logo.png')}
           style={{height: 120, width: 120, resizeMode: 'contain'}}
         />
       </View>
