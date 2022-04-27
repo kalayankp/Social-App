@@ -71,7 +71,7 @@ function SelectLocation() {
   );
 }
 
-const MyCards = () => {
+const MyCardsScreen = () => {
   const {height, width} = useWindowDimensions();
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -150,7 +150,6 @@ const MyCards = () => {
     </View>
   );
 };
-export default MyCards;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -211,3 +210,5 @@ const styles = StyleSheet.create({
     borderColor: '#c7c6c6',
   },
 });
+
+export default MyCardsScreen;

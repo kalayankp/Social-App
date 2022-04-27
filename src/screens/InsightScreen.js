@@ -4,7 +4,7 @@ import Card from '../components/Card';
 import Transcation from '../components/Transaction';
 import MainHeader from '../components/MainHeader';
 // import {LinearGradient} from 'react-native-linear-gradient';
-const Insight = () => {
+const InsightScreen = () => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <MainHeader title="WALLET" />
@@ -15,7 +15,6 @@ const Insight = () => {
     </View>
   );
 };
-export default Insight;
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -28,3 +27,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+export default InsightScreen;

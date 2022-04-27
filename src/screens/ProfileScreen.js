@@ -59,7 +59,7 @@ const ProfileImage = () => {
   );
 };
 
-const Profile = () => {
+const ProfileScreen = () => {
   return (
     <>
       <MainHeader title="VIEW PROFILE" />
@@ -347,4 +347,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+export default ProfileScreen;

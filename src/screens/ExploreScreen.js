@@ -4,7 +4,7 @@ import MainHeader from '../components/MainHeader';
 
 import TradeList from '../components/TradeList';
 import TradeStatus from '../components/TradeStatus';
-const Explore = () => {
+const ExploreScreen = () => {
   const data = [
     {
       id: 517665,
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Explore;
+export default ExploreScreen;
