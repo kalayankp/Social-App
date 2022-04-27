@@ -1,7 +1,7 @@
 import {View, StyleSheet, SafeAreaView} from 'react-native';
 import React from 'react';
 import MainHeader from '../components/MainHeader';
-import BottomNavigation from './BottomNavigation';
+import BottomNavigation from './BottomNavigationDummy';
 
 function DashBoard() {
   return (
