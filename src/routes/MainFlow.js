@@ -9,7 +9,7 @@ import ExploreScreen from '../screens/ExploreScreen';
 import MyCardsScreen from '../screens/MyCardsScreen';
 import InsightScreen from '../screens/InsightScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import Add from '../screens/Add';
+import Add from '../screens/AddScreen';
 
 //Extras
 import {AddIcon} from '../screens/AddIcon';
