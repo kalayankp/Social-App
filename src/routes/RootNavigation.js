@@ -10,4 +10,10 @@ export function navigate(name, params) {
   }
 }
 
+export function goBack() {
+  if (navigationRef.isReady()) {
+    navigationRef.goBack();
+  }
+}
+
 // add other navigation functions that you need and export them

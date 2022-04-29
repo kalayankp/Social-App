@@ -49,11 +49,23 @@ const Cards = ({imgPath}) => {
     </Shadow>
   );
 };
-const CreateTradeScreen = () => {
+const CreateTradeScreen = ({navigation}) => {
+  const Back = () => {
+    function back() {
+      navigation.navigate('BottomTabNavigation');
+    }
+    return (
+      <View>
+        <Pressable onPress={back}>
+          <IIcons name="return-up-back" size={28} style={{marginRight: 12}} />
+        </Pressable>
+      </View>
+    );
+  };
   console.log(metrics.height);
   return (
     <View style={styles.mainContainer}>
-      <MainHeader title="TRADE" />
+      <MainHeader title="TRADE" rightComponent={Back} />
 
       <View style={styles.yourTradeContainer}>
         <Text style={styles.tradeHeading}>Your Trades</Text>
