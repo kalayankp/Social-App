@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Platform} from 'react-native';
 import MainHeader from '../components/MainHeader';
 
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -57,7 +57,7 @@ const SelectLocationScreen = ({navigation}) => {
           style={{position: 'absolute', right: 25}}
         />
       </View>
-      <View style={{flex: 1, marginTop: 30}}>
+      <View style={{marginTop: 30}}>
         <Pressable style={{flexDirection: 'row'}}>
           <FFIcons
             name="location-arrow"
@@ -67,18 +67,16 @@ const SelectLocationScreen = ({navigation}) => {
           <Text style={{fontSize: 20}}>Current Location</Text>
         </Pressable>
       </View>
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{flex: 1, marginTop: 20}}>
         <MapView
-          provider={PROVIDER_GOOGLE}
-          style={{
-            flex: 1,
-            marginBottom: 20,
-            width: 300,
-            height: 400,
-          }}
+          // provider={PROVIDER_GOOGLE}
+
+          provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : null}
+          style={styles.mapStyle}
+          zoomEnabled={true}
           initialRegion={{
-            latitude: 35.78825,
-            longitude: -122.4324,
+            latitude: 22.258,
+            longitude: 71.19,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
@@ -88,5 +86,13 @@ const SelectLocationScreen = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  mapStyle: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+});
 export default SelectLocationScreen;
