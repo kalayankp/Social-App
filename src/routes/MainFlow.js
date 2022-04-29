@@ -9,7 +9,9 @@ import ExploreScreen from '../screens/ExploreScreen';
 import MyCardsScreen from '../screens/MyCardsScreen';
 import InsightScreen from '../screens/InsightScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import Add from '../screens/AddScreen';
+import AddScreen from '../screens/AddScreen';
+import CreateTradeScreen from '../screens/CreateTradeScreen';
+import SelectLocationScreen from '../screens/SelectLocationScreen';
 
 //Extras
 import {AddIcon} from '../screens/AddIcon';
@@ -42,7 +44,7 @@ function BottomTabNavigation() {
       />
       <Tab.Screen
         name="Add"
-        component={Add}
+        component={AddScreen}
         options={{
           tabBarIcon: ({}) => <AddIcon />,
         }}
@@ -79,6 +81,16 @@ const DrawerNavigation = () => {
       <Drawer.Screen
         name="MainStackFlow"
         component={MainStackFlow}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CreateTrade"
+        component={CreateTradeScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SelectLocation"
+        component={SelectLocationScreen}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

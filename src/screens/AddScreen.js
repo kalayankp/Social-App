@@ -2,10 +2,11 @@ import React from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
 import MainHeader from '../components/MainHeader';
 import Icons from 'react-native-vector-icons/FontAwesome5';
+import RightIcons from '../components/RightIcons';
 const AddScreen = () => {
   return (
     <View style={styles.mainContainer}>
-      <MainHeader title="TRADE SUMMARY" />
+      <MainHeader title="TRADE SUMMARY" rightComponent={RightIcons} />
       <View style={{marginHorizontal: 15}}>
         <View style={styles.tradeStatusContainer}>
           <View>

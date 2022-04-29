@@ -1,10 +1,13 @@
 import React from 'react';
-import {Text, StyleSheet, View, SafeAreaView} from 'react-native';
+import {Text, StyleSheet, View, SafeAreaView, StatusBar} from 'react-native';
 import MainHeader from '../components/MainHeader';
-
+import metrics from '../contents/metrics';
 import TradeList from '../components/TradeList';
 import TradeStatus from '../components/TradeStatus';
+import RightIcons from '../components/RightIcons';
+
 const ExploreScreen = () => {
+  console.log(metrics.height);
   const data = [
     {
       id: 517665,
@@ -70,19 +73,23 @@ const ExploreScreen = () => {
   return (
     // <SafeAreaView style={{flex: 1}}>
     // {/* <MainHeader title="YOUR TRADE" /> */}
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
-      <MainHeader title="YOUR TRADES" />
-      <View style={{flex: 1, marginBottom: 150, marginTop: 10}}>
-        <View style={styles.statusContainer}>
-          <TradeStatus type="ALL" count="44" />
-          <TradeStatus type="ONGOING" count="44" />
-          <TradeStatus type="COMPLETED" count="172" />
-        </View>
-        <View style={styles.cardLayout}>
-          <TradeList data={data} />
+    <>
+      <StatusBar backgroundColor="white" />
+      <View style={{flex: 1, backgroundColor: '#fff'}}>
+        <MainHeader title="YOUR TRADES" rightComponent={RightIcons} />
+        <View style={{flex: 1, marginBottom: 150, marginTop: 10}}>
+          <View style={styles.statusContainer}>
+            <TradeStatus type="ALL" count="44" />
+            <TradeStatus type="ONGOING" count="44" />
+            <TradeStatus type="COMPLETED" count="172" />
+          </View>
+          <View style={styles.cardLayout}>
+            <TradeList data={data} />
+          </View>
         </View>
       </View>
-    </View>
+    </>
+
     // </SafeAreaView>
   );
 };
@@ -92,7 +99,7 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     // marginTop: 5,
-    height: 150,
+    height: metrics.height > 843 ? 160 : 170,
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#fff',

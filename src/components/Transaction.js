@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
   transactionText: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#1e2022',
   },
   allTransaction: {
     color: '#6180d5',

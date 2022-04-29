@@ -10,7 +10,10 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
+  StatusBar,
 } from 'react-native';
+
 import {Input, Text} from 'react-native-elements';
 import {Button} from 'react-native-elements';
 
@@ -18,9 +21,10 @@ import {Context as AuthContext} from '../context/AuthContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+console.log(windowHeight);
 const LoginScreen = ({navigation}) => {
   const [isLogin, setIsLogin] = useState(true);
+
   const LoginComponent = () => {
     return (
       <View>
@@ -195,24 +199,38 @@ const LoginScreen = ({navigation}) => {
     );
   };
   return (
-    <View style={{backgroundColor: 'white', flex: 1}}>
-      <View style={{position: 'absolute'}}>
-        <Image source={require('../asset/loginScreenTop.png')} />
-      </View>
+    <ScrollView style={{backgroundColor: '#fff'}}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="white"
+        // translucent={true}
+      />
       <View
         style={{
-          marginTop: 180,
-          justifyContent: 'center',
-          alignItems: 'center',
+          backgroundColor: 'white',
+          flex: 1,
+          marginBottom: windowHeight < 844 ? 50 : 0,
         }}>
-        <Text style={{fontSize: 24, fontWeight: 'bold'}}>Welcome to HashX</Text>
-        <Image
-          source={require('../asset/logo.png')}
-          style={{height: 120, width: 120, resizeMode: 'contain'}}
-        />
+        <View style={{position: 'absolute'}}>
+          <Image source={require('../asset/loginScreenTop.png')} />
+        </View>
+        <View
+          style={{
+            marginTop: 180,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+            Welcome to HashX
+          </Text>
+          <Image
+            source={require('../asset/logo.png')}
+            style={{height: 120, width: 120, resizeMode: 'contain'}}
+          />
+        </View>
+        {isLogin ? <LoginComponent /> : <SignUpComponent />}
       </View>
-      {isLogin ? <LoginComponent /> : <SignUpComponent />}
-    </View>
+    </ScrollView>
   );
 };
 

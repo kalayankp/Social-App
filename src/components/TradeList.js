@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import metrics from '../contents/metrics';
 const TradeList = ({data}) => {
   //   const renderTradeList =({items})=>(<View><Text>{items.}</Text></View>)
   function renderTradeList(itemData) {
@@ -40,7 +41,7 @@ const TradeList = ({data}) => {
   return (
     <FlatList
       //   style={{marginBottom: '18%'}}
-      style={{marginBottom: Platform.OS === 'android' ? '10%' : '18%'}}
+      style={{marginBottom: metrics.height / 10}}
       data={data}
       keyExtractor={item => item.id}
       renderItem={renderTradeList}

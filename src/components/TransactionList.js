@@ -9,10 +9,13 @@ const TransactionList = ({transaction}) => {
         <View style={styles.dateContainer}>
           <Text style={{fontSize: 16}}>{itemData.item.day.getDate()}</Text>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 7, marginRight: 3}}>{month}</Text>
+            <Text style={{fontSize: 7, marginRight: 3, color: '#535353'}}>
+              {month}
+            </Text>
             <Text
               style={{
                 fontSize: 7,
+                color: '#535353',
               }}>
               {itemData.item.day.getFullYear().toString().slice(-2)}
             </Text>
@@ -25,10 +28,10 @@ const TransactionList = ({transaction}) => {
               height: 40,
               justifyContent: 'space-between',
             }}>
-            <Text style={{fontSize: 13, fontWeight: '700'}}>
+            <Text style={{fontSize: 13, fontWeight: '700', color: '#1e2022'}}>
               {itemData.item.transactionType}
             </Text>
-            <Text style={{fontSize: 13, color: '#a1aab2'}}>
+            <Text style={{fontSize: 13, color: '#77838f'}}>
               {itemData.item.transcationId}
             </Text>
           </View>

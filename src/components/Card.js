@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
   },
   buyBtn: {
     fontSize: 18,
+    color: '#1f1f1f',
   },
   starContainer: {
     alignSelf: 'flex-start',

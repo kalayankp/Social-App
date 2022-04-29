@@ -3,11 +3,12 @@ import {Text, View, StyleSheet} from 'react-native';
 import Card from '../components/Card';
 import Transcation from '../components/Transaction';
 import MainHeader from '../components/MainHeader';
+import RightIcons from '../components/RightIcons';
 // import {LinearGradient} from 'react-native-linear-gradient';
 const InsightScreen = () => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
-      <MainHeader title="WALLET" />
+      <MainHeader title="WALLET" rightComponent={RightIcons} />
       <View style={styles.cardContainer}>
         <Card />
         <Transcation />

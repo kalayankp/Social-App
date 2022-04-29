@@ -6,6 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Context as AuthContext} from '../context/AuthContext';
 import LoginFlow from './LoginFlow';
 import MainFlow from './MainFlow';
+import {navigationRef} from './RootNavigation';
 
 const Stack = createStackNavigator();
 
@@ -23,8 +24,8 @@ const App = () => {
 
   if (!state.isLoading) {
     return (
-      <NavigationContainer>
-        {state.isSignedIn ? (
+      <NavigationContainer ref={navigationRef}>
+        {!state.isSignedIn ? (
           <>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="MainFlow" component={MainFlow} />

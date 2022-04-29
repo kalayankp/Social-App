@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   statusCount: {
     textAlign: 'center',
-    fontSize: 37,
+    fontSize: 30,
     // fontFamily: 'open sans',
 
     padding: 10,

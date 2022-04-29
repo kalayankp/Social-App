@@ -6,11 +6,13 @@ import {
   Image,
   Pressable,
   ScrollView,
+  Platform,
 } from 'react-native';
 
 import {cardImage1, cardImage2, cardImage3} from '../asset/images/index';
 
 import MainHeader from '../components/MainHeader';
+import RightIcons from '../components/RightIcons';
 
 const Cards = ({path}) => {
   console.log(path);
@@ -46,7 +48,9 @@ const Cards = ({path}) => {
 const ProfileName = ({name}) => {
   return (
     <View style={{alignItems: 'flex-start', marginLeft: 18}}>
-      <Text style={{fontSize: 26, fontWeight: 'bold'}}>{name}</Text>
+      <Text style={{fontSize: 26, fontWeight: 'bold', color: '#4b5872'}}>
+        {name}
+      </Text>
     </View>
   );
 };
@@ -62,7 +66,7 @@ const ProfileImage = () => {
 const ProfileScreen = () => {
   return (
     <>
-      <MainHeader title="VIEW PROFILE" />
+      <MainHeader title="VIEW PROFILE" rightComponent={RightIcons} />
       <ScrollView style={{marginTop: 1}}>
         <View style={styles.mainContainer}>
           <View style={styles.mainProfileContainer}>
@@ -71,9 +75,15 @@ const ProfileScreen = () => {
               <ProfileName name="Ananda Krishnan R" />
 
               <View style={styles.numbersContainer}>
-                <Text style={{fontSize: 22, marginRight: 12}}>8</Text>
-                <Text style={{fontSize: 22, marginRight: 8}}>905</Text>
-                <Text style={{fontSize: 22, marginRight: 8}}>1.1K</Text>
+                <Text style={{fontSize: 22, marginRight: 12, color: '#2e3e5c'}}>
+                  8
+                </Text>
+                <Text style={{fontSize: 22, marginRight: 8, color: '#2e3e5c'}}>
+                  905
+                </Text>
+                <Text style={{fontSize: 22, marginRight: 8, color: '#2e3e5c'}}>
+                  1.1K
+                </Text>
               </View>
               <View style={styles.numbersDetailContainer}>
                 <Text style={{fontSize: 12, fontWeight: 'bold'}}>Assets</Text>
@@ -142,7 +152,13 @@ const ProfileScreen = () => {
           </View>
 
           <View style={styles.aboutContainer}>
-            <Text style={{marginBottom: 5, fontSize: 13, fontWeight: '700'}}>
+            <Text
+              style={{
+                marginBottom: 5,
+                fontSize: 13,
+                fontWeight: '700',
+                color: '#2e3e5c',
+              }}>
               I Like to help real people behind real change
             </Text>
             <Text
@@ -265,23 +281,6 @@ const ProfileScreen = () => {
               <Cards path={cardImage1} />
               <Cards path={cardImage2} />
               <Cards path={cardImage3} />
-              {/* <Cards />
-              <Cards /> */}
-              {/* <View
-                style={{
-                  height: 205,
-                  backgroundColor: '#fff',
-                  margin: 8,
-                }}>
-                <Image source={require('../asset/images/img1.png')} />
-              </View>
-
-              <View style={{height: 220, backgroundColor: '#fff', margin: 8}}>
-                <Image source={require('../asset/images/img2.png')} />
-              </View>
-              <View style={{height: 220, backgroundColor: '#fff', margin: 8}}>
-                <Image source={require('../asset/images/img3.png')} />
-              </View> */}
             </ScrollView>
           </View>
         </View>
@@ -293,7 +292,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: '#fff',
-    marginBottom: 80,
+    marginBottom: Platform.OS === 'android' ? 40 : 80,
   },
   mainProfileContainer: {
     marginTop: 15,
@@ -341,6 +340,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 14,
     fontWeight: 'bold',
+    color: '#2e3e5c',
   },
   cardContainer: {
     margin: 15,

@@ -8,11 +8,15 @@ import {
   ScrollView,
   Pressable,
   useWindowDimensions,
+  Platform,
   SafeAreaView,
+  StatusBar,
 } from 'react-native';
+import metrics from '../contents/metrics';
 import Icons from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
 import MainHeader from '../components/MainHeader';
+import RightIcons from '../components/RightIcons';
 
 // function CurrentBalance() {
 //   return (
@@ -73,81 +77,86 @@ function SelectLocation() {
 
 const MyCardsScreen = () => {
   const {height, width} = useWindowDimensions();
+  console.log(metrics.height + ' height');
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
-      <MainHeader title="PUBLISH" />
-      <ScrollView style={{flex: 1, backgroundColor: '#fff', marginTop: 10}}>
-        <View style={styles.mainContainer}>
-          <View>
-            <SelectLocation />
-            <TextInput placeholder="Select Tags" style={styles.selectTags} />
-          </View>
-          <View style={styles.imgContainer}>
-            <Text
-              style={{
-                alignSelf: 'flex-start',
-                marginLeft: 40,
-                fontSize: 16,
-                marginBottom: 15,
-                color: '#939393',
-              }}>
-              Select Cover Content:
-            </Text>
-            <Image source={require('../asset/images/3.png')} />
-          </View>
+    <>
+      <MainHeader title="PUBLISH" rightComponent={RightIcons} />
+      <View style={{flex: 1, backgroundColor: '#fff'}}>
+        <ScrollView style={{flex: 1, backgroundColor: '#fff', marginTop: 10}}>
+          <View style={styles.mainContainer}>
+            <View>
+              <SelectLocation />
+              <TextInput placeholder="Select Tags" style={styles.selectTags} />
+            </View>
+            <View style={styles.imgContainer}>
+              <Text
+                style={{
+                  alignSelf: 'flex-start',
+                  marginLeft: 40,
+                  fontSize: 16,
+                  marginBottom: 15,
+                  color: '#939393',
+                }}>
+                Select Cover Content:
+              </Text>
+              <Image source={require('../asset/images/3.png')} />
+            </View>
 
-          <View style={styles.rechargeContainer}>
-            <Text style={{color: '#707070', fontSize: 16}}>Recharge Gas -</Text>
-            <TextInput
-              style={styles.rechargeInput}
-              placeholder="Rs 25"
-              placeholderTextColor="#000"
-            />
-            <Text>~ 12 Views</Text>
-          </View>
-          <View style={{flexDirection: 'row', marginTop: 20}}>
-            <LinearGradient
-              style={{
-                width: width / 2,
-                marginHorizontal: 20,
-                padding: 10,
-                borderRadius: 17,
-              }}
-              colors={['#FF0844', '#FFB199']}>
-              <Pressable>
-                <Text
-                  style={{color: '#fff', textAlign: 'center', fontSize: 30}}>
-                  Rs 3941.23
-                </Text>
-                <Text style={{color: '#fff', textAlign: 'center'}}>
-                  Current Balance
-                </Text>
-              </Pressable>
-            </LinearGradient>
+            <View style={styles.rechargeContainer}>
+              <Text style={{color: '#707070', fontSize: 16}}>
+                Recharge Gas -
+              </Text>
+              <TextInput
+                style={styles.rechargeInput}
+                placeholder="Rs 25"
+                placeholderTextColor="#000"
+              />
+              <Text>~ 12 Views</Text>
+            </View>
+            <View style={{flexDirection: 'row', marginTop: 20}}>
+              <LinearGradient
+                style={{
+                  width: width / 2,
+                  marginHorizontal: 20,
+                  padding: 10,
+                  borderRadius: 17,
+                }}
+                colors={['#FF0844', '#FFB199']}>
+                <Pressable>
+                  <Text
+                    style={{color: '#fff', textAlign: 'center', fontSize: 30}}>
+                    Rs 3941.23
+                  </Text>
+                  <Text style={{color: '#fff', textAlign: 'center'}}>
+                    Current Balance
+                  </Text>
+                </Pressable>
+              </LinearGradient>
 
-            <LinearGradient
-              style={{
-                padding: 10,
-                borderRadius: 17,
-                width: width / 3,
-              }}
-              start={{x: 1, y: 1}}
-              end={{x: 0, y: 0}}
-              colors={['#000000', '#00DD4B']}>
-              <Pressable>
-                <Text
-                  style={{color: '#fff', textAlign: 'center', fontSize: 30}}>
-                  - Rs 25
-                </Text>
-                <Text style={{color: '#fff', textAlign: 'center'}}>
-                  Publish
-                </Text>
-              </Pressable>
-            </LinearGradient>
+              <LinearGradient
+                style={{
+                  padding: 10,
+                  borderRadius: 17,
+                  width: width / 3,
+                }}
+                start={{x: 1, y: 1}}
+                end={{x: 0, y: 0}}
+                colors={['#000000', '#00DD4B']}>
+                <Pressable>
+                  <Text
+                    style={{color: '#fff', textAlign: 'center', fontSize: 30}}>
+                    - Rs 25
+                  </Text>
+                  <Text style={{color: '#fff', textAlign: 'center'}}>
+                    Publish
+                  </Text>
+                </Pressable>
+              </LinearGradient>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 const styles = StyleSheet.create({
@@ -157,7 +166,8 @@ const styles = StyleSheet.create({
     // marginHorizontal: 20,
   },
   textContainer: {
-    padding: 12,
+    paddingVertical: metrics.height > 843 ? 15 : 10,
+
     margin: 15,
     borderWidth: 1,
     marginHorizontal: 20,
@@ -167,18 +177,22 @@ const styles = StyleSheet.create({
 
   mapPin: {
     position: 'absolute',
-    top: 9,
+    top: metrics.height > 843 ? 13 : 12,
+    // top: 9,
     left: 11,
+    color: 'black',
   },
   textInput: {
-    marginLeft: 35,
+    marginLeft: 50,
     fontSize: 16,
+    paddingVertical: 0,
   },
 
   map: {
     position: 'absolute',
-    top: 9,
-    left: 315,
+    top: metrics.height > 843 ? 14 : 10,
+    left: metrics.height > 843 ? 315 : 330,
+    color: 'black',
   },
   selectTags: {
     borderWidth: 1,
