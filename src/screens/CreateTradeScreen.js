@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   Image,
   Pressable,
   ScrollView,
+  Animated,
+  PanResponder,
 } from 'react-native';
 import MainHeader from '../components/MainHeader';
 import Icons from 'react-native-vector-icons/FontAwesome';
@@ -15,41 +17,52 @@ import {Shadow} from 'react-native-shadow-2';
 import {cardImage1, cardImage2, cardImage3} from '../asset/images';
 import metrics from '../contents/metrics';
 
-const Cards = ({imgPath}) => {
+const AllImages = [cardImage1, cardImage2, cardImage3];
+const Cards = ({imgPath, scrollViewSetterFunction}) => {
+  const pan = useRef(new Animated.ValueXY()).current;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}]),
+      onPanResponderGrant: (e, gesture) => {
+        scrollViewSetterFunction(false);
+      },
+      onPanResponderRelease: () => {
+        scrollViewSetterFunction(true);
+        Animated.spring(pan, {
+          toValue: {x: 0, y: 0},
+          useNativeDriver: true,
+        }).start();
+      },
+    }),
+  ).current;
   return (
     <Shadow containerViewStyle={{marginRight: 10, marginVertical: 5}}>
       <View
         style={{
-          //   marginTop: 20,
-          //   marginHorizontal: 5,
-          height: 230,
+          justifyContent: 'center',
+          alignItems: 'center',
           backgroundColor: 'white',
           borderRadius: 10,
         }}>
-        <Image
+        <Animated.Image
+          {...panResponder.panHandlers}
           resizeMode="contain"
           source={imgPath}
-          style={{borderRadius: 10}}
+          style={{
+            transform: [{translateX: pan.x}, {translateY: pan.y}],
+            borderRadius: 10,
+            height: metrics.height / 4,
+            width: metrics.height / 6,
+          }}
         />
-        <View style={{flexDirection: 'row', marginTop: 8, marginLeft: 15}}>
-          <Pressable>
-            <Icons name="thumbs-o-up" size={15} />
-          </Pressable>
-          <Pressable style={{marginLeft: 20}}>
-            <MaterialIcon name="message-text-outline" size={15} />
-          </Pressable>
-          <Pressable style={{marginLeft: 20}}>
-            <IIcons name="ios-share-social-outline" size={15} />
-          </Pressable>
-          <Pressable style={{marginLeft: 13}}>
-            <MaterialIcon name="dots-vertical" size={15} />
-          </Pressable>
-        </View>
       </View>
     </Shadow>
   );
 };
 const CreateTradeScreen = ({navigation}) => {
+  const [scrollViewActive, setScrollViewActive] = useState(true);
   const Back = () => {
     function back() {
       navigation.navigate('BottomTabNavigation');
@@ -62,7 +75,7 @@ const CreateTradeScreen = ({navigation}) => {
       </View>
     );
   };
-  console.log(metrics.height);
+  console.log(metrics.width);
   return (
     <View style={styles.mainContainer}>
       <MainHeader title="TRADE" rightComponent={Back} />
@@ -88,18 +101,32 @@ const CreateTradeScreen = ({navigation}) => {
             </Text>
 
             <Shadow containerViewStyle={{marginRight: 20}}>
-              <View style={[styles.dragCardContainer, {marginRight: 10}]}>
+              <View style={[styles.dragCardContainer]}>
                 <Icons
                   name="plus"
                   size={38}
                   color="#c7c7c7"
                   style={{textAlign: 'center', marginBottom: 10}}
                 />
-                <Text style={{width: 100, color: '#6e6e6e', fontSize: 15}}>
+                <Text
+                  style={{
+                    color: '#6e6e6e',
+                    fontSize: 15,
+                  }}>
                   You can drag cards from below to Trade with
                 </Text>
               </View>
             </Shadow>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: '#1f1f1f',
+                textAlign: 'center',
+                marginTop: 15,
+              }}>
+              My Deck
+            </Text>
           </View>
           <View>
             <Text style={{fontSize: 18, textAlign: 'center', color: '#1f1f1f'}}>
@@ -107,30 +134,44 @@ const CreateTradeScreen = ({navigation}) => {
             </Text>
             <Shadow containerViewStyle={{marginTop: 20, marginLeft: 10}}>
               <View style={styles.dragCardContainer}>
-                <Icons
+                {/* <Icons
                   name="plus"
                   size={38}
                   color="#c7c7c7"
                   style={{textAlign: 'center', marginBottom: 10}}
                 />
-                <Text style={{width: 100, color: '#6e6e6e', fontSize: 15}}>
+                <Text
+                  style={{
+                    color: '#6e6e6e',
+                    fontSize: 15,
+                  }}>
                   You can drag cards from below to Trade with
-                </Text>
+                </Text> */}
+                <Image source={cardImage2} />
               </View>
             </Shadow>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: '#1f1f1f',
+                textAlign: 'center',
+                marginTop: 15,
+              }}>
+              Srikanth's Deck
+            </Text>
           </View>
         </View>
       </View>
 
       {/* part 2 */}
-      <View style={{flex: 1}}>
-        <View
+      <View style={{marginBottom: 30}}>
+        {/* <View
           style={{
             flexDirection: 'row',
             marginHorizontal: 20,
             marginTop: 10,
             justifyContent: 'space-between',
-
             paddingBottom: 30,
           }}>
           <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1f1f1f'}}>
@@ -139,37 +180,79 @@ const CreateTradeScreen = ({navigation}) => {
           <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1f1f1f'}}>
             Srikanth's Deck
           </Text>
-        </View>
-        <View
+        </View> */}
+        {/* <View
           style={{
             borderBottomWidth: 1,
             borderBottomColor: '#707070',
-          }}></View>
+          }}></View> */}
 
-        <ScrollView
-          //   style={{height: 200}}
-          //   style={{height: metrics.height > 883 ? 1000 : 200}}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}>
-          <ScrollView
-            horizontal={true}
+        <View>
+          <View
+            // style={{height: 200}}
+            //   style={{height: metrics.height > 883 ? 1000 : 200}}
+            disableScrollViewPanResponder={true}
+            nestedScrollEnabled={true}
             showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}>
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={false}>
+            <View
+              disableScrollViewPanResponder={true}
+              nestedScrollEnabled={true}
+              horizontal={true}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              scrollEnabled={false}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 30,
+                  marginHorizontal: 8,
+                }}>
+                {AllImages.map((img, i) => {
+                  return (
+                    <Cards
+                      key={i}
+                      imgPath={img}
+                      scrollViewSetterFunction={setScrollViewActive}
+                    />
+                  );
+                })}
+              </View>
+            </View>
             <View
               style={{
                 flexDirection: 'row',
-                marginTop: 30,
-                marginHorizontal: 8,
+                marginTop: 20,
+                marginHorizontal: 20,
               }}>
-              <Cards imgPath={cardImage1} />
-              <Cards imgPath={cardImage2} />
-              <Cards imgPath={cardImage3} />
+              <Pressable
+                style={{
+                  backgroundColor: '#dedee5',
+                  width: 150,
+                  height: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 10,
+                }}>
+                <Text>CANCEL TRADE</Text>
+              </Pressable>
+              <Pressable
+                style={{
+                  backgroundColor: '#5851bc',
+                  width: 150,
+                  marginLeft: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 10,
+                }}>
+                <Text>ACCEPT TRADE</Text>
+              </Pressable>
             </View>
-          </ScrollView>
-        </ScrollView>
+          </View>
+        </View>
       </View>
-
-      {/* end of main container */}
+      {console.log(metrics, 'jojojo')}
     </View>
   );
 };
@@ -179,7 +262,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   yourTradeContainer: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     marginTop: 10,
   },
@@ -192,11 +275,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   dragCardContainer: {
-    marginTop: 10,
+    marginTop: 0,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 25,
     borderRadius: 10,
+
+    height: metrics.height / 4,
+    width: metrics.height / 6,
   },
 });
 export default CreateTradeScreen;
