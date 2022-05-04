@@ -18,18 +18,37 @@ import {cardImage1, cardImage2, cardImage3} from '../asset/images';
 import metrics from '../contents/metrics';
 
 const AllImages = [cardImage1, cardImage2, cardImage3];
-const Cards = ({imgPath, scrollViewSetterFunction}) => {
+const Cards = ({imgPath, setDragImage}) => {
+  console.log(imgPath);
   const pan = useRef(new Animated.ValueXY()).current;
 
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}]),
+      onPanResponderMove: (evt, gesture) => {
+        console.log(gesture.dy);
+        if (gesture.dy < -283) {
+          setDragImage(imgPath);
+          console.log(imgPath);
+        }
+        return Animated.event(
+          [
+            null,
+            {
+              dx: pan.x,
+              dy: pan.y,
+            },
+          ],
+          {useNativeDriver: false},
+        )(evt, gesture);
+      },
+
       onPanResponderGrant: (e, gesture) => {
-        scrollViewSetterFunction(false);
+        // scrollViewSetterFunction(false);
       },
       onPanResponderRelease: () => {
-        scrollViewSetterFunction(true);
+        // scrollViewSetterFunction(true);
+        pan.flattenOffset();
         Animated.spring(pan, {
           toValue: {x: 0, y: 0},
           useNativeDriver: true,
@@ -63,6 +82,9 @@ const Cards = ({imgPath, scrollViewSetterFunction}) => {
 };
 const CreateTradeScreen = ({navigation}) => {
   const [scrollViewActive, setScrollViewActive] = useState(true);
+  const [dragImage, setDragImage] = useState(null);
+  console.log(dragImage);
+
   const Back = () => {
     function back() {
       navigation.navigate('BottomTabNavigation');
@@ -101,21 +123,25 @@ const CreateTradeScreen = ({navigation}) => {
             </Text>
 
             <Shadow containerViewStyle={{marginRight: 20}}>
-              <View style={[styles.dragCardContainer]}>
-                <Icons
-                  name="plus"
-                  size={38}
-                  color="#c7c7c7"
-                  style={{textAlign: 'center', marginBottom: 10}}
-                />
-                <Text
-                  style={{
-                    color: '#6e6e6e',
-                    fontSize: 15,
-                  }}>
-                  You can drag cards from below to Trade with
-                </Text>
-              </View>
+              {dragImage === null ? (
+                <View style={[styles.dragCardContainer]}>
+                  <Icons
+                    name="plus"
+                    size={38}
+                    color="#c7c7c7"
+                    style={{textAlign: 'center', marginBottom: 10}}
+                  />
+                  <Text
+                    style={{
+                      color: '#6e6e6e',
+                      fontSize: 15,
+                    }}>
+                    You can drag cards from below to Trade with
+                  </Text>
+                </View>
+              ) : (
+                <Image source={dragImage} />
+              )}
             </Shadow>
             <Text
               style={{
@@ -134,19 +160,6 @@ const CreateTradeScreen = ({navigation}) => {
             </Text>
             <Shadow containerViewStyle={{marginTop: 20, marginLeft: 10}}>
               <View style={styles.dragCardContainer}>
-                {/* <Icons
-                  name="plus"
-                  size={38}
-                  color="#c7c7c7"
-                  style={{textAlign: 'center', marginBottom: 10}}
-                />
-                <Text
-                  style={{
-                    color: '#6e6e6e',
-                    fontSize: 15,
-                  }}>
-                  You can drag cards from below to Trade with
-                </Text> */}
                 <Image source={cardImage2} />
               </View>
             </Shadow>
@@ -188,67 +201,54 @@ const CreateTradeScreen = ({navigation}) => {
           }}></View> */}
 
         <View>
-          <View
-            // style={{height: 200}}
-            //   style={{height: metrics.height > 883 ? 1000 : 200}}
-            disableScrollViewPanResponder={true}
-            nestedScrollEnabled={true}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            scrollEnabled={false}>
-            <View
-              disableScrollViewPanResponder={true}
-              nestedScrollEnabled={true}
-              horizontal={true}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              scrollEnabled={false}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: 30,
-                  marginHorizontal: 8,
-                }}>
-                {AllImages.map((img, i) => {
-                  return (
-                    <Cards
-                      key={i}
-                      imgPath={img}
-                      scrollViewSetterFunction={setScrollViewActive}
-                    />
-                  );
-                })}
-              </View>
-            </View>
+          <View>
             <View
               style={{
                 flexDirection: 'row',
-                marginTop: 20,
-                marginHorizontal: 20,
+                marginTop: 30,
+                marginHorizontal: 8,
               }}>
-              <Pressable
-                style={{
-                  backgroundColor: '#dedee5',
-                  width: 150,
-                  height: 50,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10,
-                }}>
-                <Text>CANCEL TRADE</Text>
-              </Pressable>
-              <Pressable
-                style={{
-                  backgroundColor: '#5851bc',
-                  width: 150,
-                  marginLeft: 50,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 10,
-                }}>
-                <Text>ACCEPT TRADE</Text>
-              </Pressable>
+              {AllImages.map((img, i) => {
+                console.log(img);
+                return (
+                  <Cards
+                    key={i}
+                    imgPath={img}
+                    setDragImage={setDragImage}
+                    scrollViewSetterFunction={setScrollViewActive}
+                  />
+                );
+              })}
             </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 20,
+              marginHorizontal: 20,
+            }}>
+            <Pressable
+              style={{
+                backgroundColor: '#dedee5',
+                width: 150,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 10,
+              }}>
+              <Text>CANCEL TRADE</Text>
+            </Pressable>
+            <Pressable
+              style={{
+                backgroundColor: '#5851bc',
+                width: 150,
+                marginLeft: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 10,
+              }}>
+              <Text>ACCEPT TRADE</Text>
+            </Pressable>
           </View>
         </View>
       </View>
