@@ -18,29 +18,56 @@ import {cardImage1, cardImage2, cardImage3} from '../asset/images';
 import metrics from '../contents/metrics';
 
 const AllImages = [cardImage1, cardImage2, cardImage3];
-const Cards = ({imgPath, setDragImage}) => {
-  console.log(imgPath);
+const Cards = ({imgPath, setDragImage, setScrollViewActive, dragImage}) => {
+  // console.log(imgPath);
   const pan = useRef(new Animated.ValueXY()).current;
 
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        setScrollViewActive(false);
+      },
       onPanResponderMove: (evt, gesture) => {
+        // if (gesture.dy < -283) {
+        //   setDragImage(imgPath);
+        // }
         console.log(gesture.dy);
         if (gesture.dy < -283) {
-          setDragImage(imgPath);
-          console.log(imgPath);
+          setDragImage(prev => {
+            if (!prev.includes(imgPath)) {
+              return [...prev, imgPath];
+            } else {
+              return [...prev];
+            }
+          });
+          // return Animated.spring(pan, {
+          //   toValue: {x: 0, y: 0},
+          //   useNativeDriver: true,
+          // }).start();
+        } else {
+          return Animated.event(
+            [
+              null,
+              {
+                dx: pan.x,
+                dy: pan.y,
+              },
+            ],
+            {useNativeDriver: false},
+          )(evt, gesture);
         }
-        return Animated.event(
-          [
-            null,
-            {
-              dx: pan.x,
-              dy: pan.y,
-            },
-          ],
-          {useNativeDriver: false},
-        )(evt, gesture);
+
+        // return Animated.event(
+        //   [
+        //     null,
+        //     {
+        //       dx: pan.x,
+        //       dy: pan.y,
+        //     },
+        //   ],
+        //   {useNativeDriver: false},
+        // )(evt, gesture);
       },
 
       onPanResponderGrant: (e, gesture) => {
@@ -57,33 +84,71 @@ const Cards = ({imgPath, setDragImage}) => {
     }),
   ).current;
   return (
-    <Shadow containerViewStyle={{marginRight: 10, marginVertical: 5}}>
-      <View
+    // <Shadow containerViewStyle={{marginRight: 10, marginVertical: 5}}>
+    <View
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderRadius: 10,
+      }}>
+      <Animated.Image
+        {...panResponder.panHandlers}
+        resizeMode="contain"
+        source={imgPath}
         style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'white',
+          overflow: 'visible',
+          transform: [{translateX: pan.x}, {translateY: pan.y}],
           borderRadius: 10,
-        }}>
-        <Animated.Image
-          {...panResponder.panHandlers}
-          resizeMode="contain"
-          source={imgPath}
-          style={{
-            transform: [{translateX: pan.x}, {translateY: pan.y}],
-            borderRadius: 10,
-            height: metrics.height / 4,
-            width: metrics.height / 6,
-          }}
-        />
-      </View>
-    </Shadow>
+          height: metrics.height / 4,
+          width: metrics.height / 6,
+        }}
+      />
+    </View>
+    // </Shadow>
   );
 };
 const CreateTradeScreen = ({navigation}) => {
   const [scrollViewActive, setScrollViewActive] = useState(true);
-  const [dragImage, setDragImage] = useState(null);
+  const [dragImage, setDragImage] = useState([]);
+  const [imgIndex, setImgIndex] = useState(0);
   console.log(dragImage);
+  const pans = useRef(new Animated.ValueXY()).current;
+  const panResponders = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gesture) => true,
+
+      onPanResponderMove: (evt, gesture) => {
+        console.log(gesture.dx);
+
+        return Animated.event(
+          [
+            null,
+            {
+              dx: pans.x,
+              dy: pans.y,
+            },
+          ],
+          {useNativeDriver: false},
+        )(evt, gesture);
+      },
+      onPanResponderRelease: (evt, gesture) => {
+        if (gesture.dx < -100) {
+          setDragImage(prev => {
+            return prev.filter((img, i) => {
+              return i !== imgIndex;
+            });
+          });
+        }
+        pans.flattenOffset();
+
+        Animated.spring(pans, {
+          toValue: {x: 0, y: 0},
+          useNativeDriver: true,
+        }).start();
+      },
+    }),
+  ).current;
 
   const Back = () => {
     function back() {
@@ -97,7 +162,7 @@ const CreateTradeScreen = ({navigation}) => {
       </View>
     );
   };
-  console.log(metrics.width);
+  // console.log(metrics.width);
   return (
     <View style={styles.mainContainer}>
       <MainHeader title="TRADE" rightComponent={Back} />
@@ -122,8 +187,8 @@ const CreateTradeScreen = ({navigation}) => {
               You are Trading
             </Text>
 
-            <Shadow containerViewStyle={{marginRight: 20}}>
-              {dragImage === null ? (
+            <Shadow containerViewStyle={{marginRight: 20, overflow: 'visible'}}>
+              {dragImage.length === 0 ? (
                 <View style={[styles.dragCardContainer]}>
                   <Icons
                     name="plus"
@@ -140,12 +205,44 @@ const CreateTradeScreen = ({navigation}) => {
                   </Text>
                 </View>
               ) : (
-                <Image source={dragImage} />
+                <>
+                  {dragImage
+                    .map((img, index) => {
+                      if (index === imgIndex) {
+                        return (
+                          <Animated.Image
+                            {...panResponders.panHandlers}
+                            source={img}
+                            key={index}
+                            style={{
+                              position: 'absolute',
+                              transform: [
+                                {translateX: pans.x},
+                                {translateY: pans.y},
+                              ],
+                            }}
+                          />
+                        );
+                      } else {
+                        return (
+                          <Image
+                            source={img}
+                            key={index}
+                            style={{
+                              position: 'absolute',
+                            }}
+                          />
+                        );
+                      }
+                    })
+                    .reverse()}
+                </>
               )}
             </Shadow>
             <Text
               style={{
                 fontSize: 18,
+
                 fontWeight: 'bold',
                 color: '#1f1f1f',
                 textAlign: 'center',
@@ -179,29 +276,12 @@ const CreateTradeScreen = ({navigation}) => {
 
       {/* part 2 */}
       <View style={{marginBottom: 30}}>
-        {/* <View
-          style={{
-            flexDirection: 'row',
-            marginHorizontal: 20,
-            marginTop: 10,
-            justifyContent: 'space-between',
-            paddingBottom: 30,
-          }}>
-          <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1f1f1f'}}>
-            My Deck
-          </Text>
-          <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1f1f1f'}}>
-            Srikanth's Deck
-          </Text>
-        </View> */}
-        {/* <View
-          style={{
-            borderBottomWidth: 1,
-            borderBottomColor: '#707070',
-          }}></View> */}
-
         <View>
-          <View>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            // contentContainerStyle={{overflow: 'visible'}}
+            style={{overflow: 'visible'}}>
             <View
               style={{
                 flexDirection: 'row',
@@ -209,18 +289,19 @@ const CreateTradeScreen = ({navigation}) => {
                 marginHorizontal: 8,
               }}>
               {AllImages.map((img, i) => {
-                console.log(img);
+                // console.log(img);
                 return (
                   <Cards
                     key={i}
                     imgPath={img}
                     setDragImage={setDragImage}
                     scrollViewSetterFunction={setScrollViewActive}
+                    dragImage={dragImage}
                   />
                 );
               })}
             </View>
-          </View>
+          </ScrollView>
           <View
             style={{
               flexDirection: 'row',
@@ -247,12 +328,12 @@ const CreateTradeScreen = ({navigation}) => {
                 alignItems: 'center',
                 borderRadius: 10,
               }}>
-              <Text>ACCEPT TRADE</Text>
+              <Text style={{color: 'white'}}>ACCEPT TRADE</Text>
             </Pressable>
           </View>
         </View>
       </View>
-      {console.log(metrics, 'jojojo')}
+      {/* {console.log(metrics, 'jojojo')} */}
     </View>
   );
 };

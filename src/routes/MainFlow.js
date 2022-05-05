@@ -12,6 +12,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import AddScreen from '../screens/AddScreen';
 import CreateTradeScreen from '../screens/CreateTradeScreen';
 import SelectLocationScreen from '../screens/SelectLocationScreen';
+import TradeStatusScreen from '../screens/TradeStatusScreen';
 
 //Extras
 import {AddIcon} from '../screens/AddIcon';
@@ -66,9 +67,14 @@ function BottomTabNavigation() {
 const MainStackFlow = () => {
   return (
     <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen
+      {/* <Stack.Screen
         name="BottomTabNavigation"
         component={BottomTabNavigation}
+        options={{headerShown: false}}
+      /> */}
+      <Stack.Screen
+        name="CreateTrade"
+        component={CreateTradeScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -91,6 +97,11 @@ const DrawerNavigation = () => {
       <Stack.Screen
         name="SelectLocation"
         component={SelectLocationScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="TradeStatus"
+        component={TradeStatusScreen}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>
