@@ -62,7 +62,9 @@ const AllChatScreen = () => {
             marginRight: 20,
             alignItems: 'flex-end',
           }}>
-          <IIcon name="angle-right" size={25} style={{}} />
+          <Pressable>
+            <IIcon name="angle-right" size={25} style={{}} />
+          </Pressable>
           <Text>11:45 AM</Text>
         </View>
       </View>

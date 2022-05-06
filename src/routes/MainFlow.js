@@ -27,6 +27,7 @@ import {
   InsightNavigationOption,
   BottomNavigationScreenOption,
 } from '../components/TabBottomIcons';
+import BuyTokensScreen from '../screens/BuyTokensScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -114,6 +115,11 @@ const DrawerNavigation = () => {
       <Stack.Screen
         name="AllChatScreen"
         component={AllChatScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="BuyTokens"
+        component={BuyTokensScreen}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>
