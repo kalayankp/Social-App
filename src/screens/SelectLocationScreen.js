@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable, Platform} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Platform,
+  TextInput,
+} from 'react-native';
 import MainHeader from '../components/MainHeader';
 
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -7,22 +14,10 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import FIcons from 'react-native-vector-icons/Feather';
 import FFIcons from 'react-native-vector-icons/FontAwesome5';
 import IIcons from 'react-native-vector-icons/Ionicons';
-import {TextInput} from 'react-native-gesture-handler';
+
+import Back from '../components/Back';
 
 const SelectLocationScreen = ({navigation}) => {
-  const Back = () => {
-    function back() {
-      navigation.navigate('BottomTabNavigation');
-    }
-    return (
-      <View>
-        <Pressable onPress={back}>
-          <Text style={{fontSize: 18}}>Send</Text>
-          {/* <IIcons name="return-up-back" size={28} style={{marginRight: 12}} /> */}
-        </Pressable>
-      </View>
-    );
-  };
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <MainHeader title="Pick a Location" rightComponent={Back} />

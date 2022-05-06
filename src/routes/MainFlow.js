@@ -13,6 +13,8 @@ import AddScreen from '../screens/AddScreen';
 import CreateTradeScreen from '../screens/CreateTradeScreen';
 import SelectLocationScreen from '../screens/SelectLocationScreen';
 import TradeStatusScreen from '../screens/TradeStatusScreen';
+import ChatScreen from '../screens/ChatScreen';
+import AllChatScreen from '../screens/AllChatScreen';
 
 //Extras
 import {AddIcon} from '../screens/AddIcon';
@@ -67,16 +69,16 @@ function BottomTabNavigation() {
 const MainStackFlow = () => {
   return (
     <Stack.Navigator initialRouteName="Home">
-      {/* <Stack.Screen
+      <Stack.Screen
         name="BottomTabNavigation"
         component={BottomTabNavigation}
         options={{headerShown: false}}
-      /> */}
-      <Stack.Screen
+      />
+      {/* <Stack.Screen
         name="CreateTrade"
         component={CreateTradeScreen}
         options={{headerShown: false}}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };
@@ -102,6 +104,16 @@ const DrawerNavigation = () => {
       <Stack.Screen
         name="TradeStatus"
         component={TradeStatusScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AllChatScreen"
+        component={AllChatScreen}
         options={{headerShown: false}}
       />
     </Drawer.Navigator>

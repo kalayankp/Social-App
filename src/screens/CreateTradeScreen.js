@@ -133,6 +133,7 @@ const CreateTradeScreen = ({navigation}) => {
         )(evt, gesture);
       },
       onPanResponderRelease: (evt, gesture) => {
+        pans.flattenOffset();
         if (gesture.dx < -100) {
           setDragImage(prev => {
             return prev.filter((img, i) => {
@@ -140,7 +141,6 @@ const CreateTradeScreen = ({navigation}) => {
             });
           });
         }
-        pans.flattenOffset();
 
         Animated.spring(pans, {
           toValue: {x: 0, y: 0},
