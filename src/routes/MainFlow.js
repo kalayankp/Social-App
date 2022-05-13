@@ -17,6 +17,7 @@ import ChatScreen from '../screens/ChatScreen';
 import AllChatScreen from '../screens/AllChatScreen';
 import {FeedRow} from '../components/Reels/FeedRow';
 import ReelsScreen from '../screens/ReelsScreen';
+import ActiveListingScreen from '../screens/ActiveListingScreen';
 //Extras
 import {AddIcon} from '../screens/AddIcon';
 
@@ -127,6 +128,11 @@ const DrawerNavigation = () => {
       <Stack.Screen
         name="ReelsScreen"
         component={ReelsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ActiveListing"
+        component={ActiveListingScreen}
         options={{headerShown: false}}
       />
       {/* <Stack.Screen name="Reels" component={FeedRow} /> */}
