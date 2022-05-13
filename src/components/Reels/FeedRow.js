@@ -20,10 +20,15 @@ const FeedRow = ({item, isNext, isVisible, index, transitionAnimation}) => {
           justifyContent: 'center',
           position: 'absolute',
           zIndex: 1000,
+          elevation: 1000,
           marginTop: metrics.width / 8,
           marginLeft: metrics.width / 20,
+          borderRadius: 50,
+          borderWidth: 1,
+          borderColor: 'white',
+          padding: 5,
         }}>
-        <Icons name="return-up-back" size={40} color="black" onPress={back} />
+        <Icons name="return-up-back" size={30} color="white" onPress={back} />
       </View>
     );
   };
@@ -35,7 +40,6 @@ const FeedRow = ({item, isNext, isVisible, index, transitionAnimation}) => {
   console.log(item.isImage);
   return (
     <View>
-      <Back />
       <VideoComponent
         post={post}
         isNext={isNext}
@@ -43,7 +47,7 @@ const FeedRow = ({item, isNext, isVisible, index, transitionAnimation}) => {
         setIsMute={setMute}
         isMute={isMute}
       />
-
+      <Back />
       <FeedSideBar item={item} animation={transitionAnimation(index)} />
       <FeedFooter item={item} animation={transitionAnimation(index)} />
     </View>
