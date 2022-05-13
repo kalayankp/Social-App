@@ -15,7 +15,8 @@ import SelectLocationScreen from '../screens/SelectLocationScreen';
 import TradeStatusScreen from '../screens/TradeStatusScreen';
 import ChatScreen from '../screens/ChatScreen';
 import AllChatScreen from '../screens/AllChatScreen';
-
+import {FeedRow} from '../components/Reels/FeedRow';
+import ReelsScreen from '../screens/ReelsScreen';
 //Extras
 import {AddIcon} from '../screens/AddIcon';
 
@@ -122,6 +123,13 @@ const DrawerNavigation = () => {
         component={BuyTokensScreen}
         options={{headerShown: false}}
       />
+
+      <Stack.Screen
+        name="ReelsScreen"
+        component={ReelsScreen}
+        options={{headerShown: false}}
+      />
+      {/* <Stack.Screen name="Reels" component={FeedRow} /> */}
     </Drawer.Navigator>
   );
 };
