@@ -1,12 +1,31 @@
-import React from 'react';
-import {View, TextInput, Text, ScrollView, Image} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  TextInput,
+  Text,
+  ScrollView,
+  Image,
+  Pressable,
+} from 'react-native';
 import MainHeader from '../components/MainHeader';
 import Back from '../components/Back';
 import Icons from 'react-native-vector-icons/EvilIcons';
 import MIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import metrics from '../contents/metrics';
-
+import {img1, img2, img3} from '../asset/images';
+import ImageList from '../components/ImageList';
 const ActiveListingScreen = () => {
+  const images = [
+    {id: 1, image: img1},
+    {id: 2, image: img2},
+    {id: 3, image: img3},
+    {id: 4, image: img1},
+    {id: 5, image: img2},
+    {id: 6, image: img3},
+    {id: 7, image: img1},
+    {id: 8, image: img2},
+    {id: 9, image: img3},
+  ];
   const Details = ({listingNumber}) => {
     return (
       <View
@@ -23,7 +42,6 @@ const ActiveListingScreen = () => {
               position: 'absolute',
               left: metrics.width / 1.75,
               top: metrics.width / 90,
-
               backgroundColor: '#de3430',
               borderRadius: 11,
               padding: 3,
@@ -44,12 +62,13 @@ const ActiveListingScreen = () => {
   return (
     <View
       style={{
-        backgroundColor: 'white',
         flex: 1,
-        marginBottom: metrics.height / 2.5,
+        // borderWidth: 3,
+        backgroundColor: 'white',
+        // marginBottom: metrics.height / 2.5,
       }}>
       <MainHeader title="My Cards" rightComponent={Back} />
-      <View>
+      <View style={{}}>
         <Details listingNumber={10} />
         <View>
           <Icons
@@ -85,94 +104,9 @@ const ActiveListingScreen = () => {
             }}
           />
         </View>
-        <View>
-          <ScrollView>
-            <View
-              style={{flexDirection: 'row', marginLeft: metrics.width / 30}}>
-              <Image
-                source={require('../asset/images/img1.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-              <Image
-                source={require('../asset/images/img2.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-              <Image
-                source={require('../asset/images/img4.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-            </View>
-            <View
-              style={{flexDirection: 'row', marginLeft: metrics.width / 30}}>
-              <Image
-                source={require('../asset/images/img1.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-              <Image
-                source={require('../asset/images/img2.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-              <Image
-                source={require('../asset/images/img4.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginLeft: metrics.width / 30,
-              }}>
-              <Image
-                source={require('../asset/images/img1.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-              <Image
-                source={require('../asset/images/img2.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-              <Image
-                source={require('../asset/images/img4.png')}
-                style={{
-                  width: 100,
-                  margin: metrics.width / 30,
-                  borderRadius: metrics.width / 25,
-                }}
-              />
-            </View>
-          </ScrollView>
-        </View>
+      </View>
+      <View style={{flex: 1, marginLeft: 10}}>
+        <ImageList images={images} />
       </View>
     </View>
   );

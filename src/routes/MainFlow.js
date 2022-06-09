@@ -18,6 +18,7 @@ import AllChatScreen from '../screens/AllChatScreen';
 import {FeedRow} from '../components/Reels/FeedRow';
 import ReelsScreen from '../screens/ReelsScreen';
 import ActiveListingScreen from '../screens/ActiveListingScreen';
+import AddCards from '../components/CreateTrade/AddCards';
 //Extras
 import {AddIcon} from '../screens/AddIcon';
 
@@ -72,16 +73,13 @@ function BottomTabNavigation() {
 const MainStackFlow = () => {
   return (
     <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen
-        name="BottomTabNavigation"
-        component={BottomTabNavigation}
-        options={{headerShown: false}}
-      />
-      {/* <Stack.Screen
-        name="CreateTrade"
-        component={CreateTradeScreen}
-        options={{headerShown: false}}
-      /> */}
+      <Stack.Group>
+        <Stack.Screen
+          name="BottomTabNavigation"
+          component={BottomTabNavigation}
+          options={{headerShown: false}}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };
@@ -89,55 +87,87 @@ const MainStackFlow = () => {
 const DrawerNavigation = () => {
   return (
     <Drawer.Navigator initialRouteName="Home">
-      <Drawer.Screen
-        name="MainStackFlow"
-        component={MainStackFlow}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="CreateTrade"
-        component={CreateTradeScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SelectLocation"
-        component={SelectLocationScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="TradeStatus"
-        component={TradeStatusScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="ChatScreen"
-        component={ChatScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="AllChatScreen"
-        component={AllChatScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="BuyTokens"
-        component={BuyTokensScreen}
-        options={{headerShown: false}}
-      />
+      <Drawer.Group>
+        <Drawer.Screen
+          name="MainStackFlow"
+          component={MainStackFlow}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CreateTrade"
+          component={CreateTradeScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SelectLocation"
+          component={SelectLocationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TradeStatus"
+          component={TradeStatusScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChatScreen"
+          component={ChatScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AllChatScreen"
+          component={AllChatScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="BuyTokens"
+          component={BuyTokensScreen}
+          options={{headerShown: false}}
+        />
 
-      <Stack.Screen
-        name="ReelsScreen"
-        component={ReelsScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="ActiveListing"
-        component={ActiveListingScreen}
-        options={{headerShown: false}}
-      />
+        <Stack.Screen
+          name="ReelsScreen"
+          component={ReelsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ActiveListing"
+          component={ActiveListingScreen}
+          options={{headerShown: false}}
+        />
+      </Drawer.Group>
+
+      {/* <Drawer.Group screenOptions={{presentation: 'modal'}}>
+        <Stack.Screen
+          name="AddCards"
+          component={AddCards}
+          options={{headerLeft: null}}
+        />
+      </Drawer.Group> */}
+
       {/* <Stack.Screen name="Reels" component={FeedRow} /> */}
     </Drawer.Navigator>
   );
 };
 
-export default DrawerNavigation;
+const MainFlow = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Group>
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="DrawerNavigation"
+          component={DrawerNavigation}
+        />
+      </Stack.Group>
+      <Stack.Group screenOptions={{presentation: 'modal'}}>
+        <Stack.Screen
+          name="AddCards"
+          component={AddCards}
+          options={{headerLeft: null}}
+        />
+      </Stack.Group>
+    </Stack.Navigator>
+  );
+};
+
+export default MainFlow;
