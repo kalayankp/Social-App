@@ -4,9 +4,9 @@ import {
   Animated,
   TouchableOpacity,
   Image,
-  Text,
   StyleSheet,
 } from 'react-native';
+import {Text} from 'react-native-elements';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 // import {AppContext} from '../Context';
 // import {AppImages} from '../Theme/AppImages';

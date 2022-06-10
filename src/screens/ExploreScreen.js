@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, StyleSheet, View, SafeAreaView, StatusBar} from 'react-native';
+import {StyleSheet, View, SafeAreaView, StatusBar} from 'react-native';
+import {Text} from 'react-native-elements';
 import MainHeader from '../components/MainHeader';
 import metrics from '../contents/metrics';
 import TradeList from '../components/TradeList';
@@ -77,7 +78,7 @@ const ExploreScreen = () => {
       <StatusBar backgroundColor="white" />
       <View style={{flex: 1, backgroundColor: '#fff'}}>
         <MainHeader title="YOUR TRADES" rightComponent={RightIcons} />
-        <View style={{flex: 1, marginBottom: 150, marginTop: 10}}>
+        <View style={{flex: 1, marginTop: 10}}>
           <View style={styles.statusContainer}>
             <TradeStatus type="ALL" count="44" />
             <TradeStatus type="ONGOING" count="44" />
@@ -87,6 +88,7 @@ const ExploreScreen = () => {
             <TradeList data={data} />
           </View>
         </View>
+        <View style={{marginBottom: metrics.width >= 800 ? 35 : 80}} />
       </View>
     </>
 
@@ -98,13 +100,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statusContainer: {
-    // marginTop: 5,
     height: metrics.height > 843 ? 160 : 170,
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#fff',
     flexDirection: 'row',
-    // padding: 15,
   },
   cardLayout: {
     height: '100%',

@@ -4,10 +4,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  Text,
   Animated,
   Image,
 } from 'react-native';
+import {Text} from 'react-native-elements';
 import metrics from '../../contents/metrics';
 // import {AppContext} from '../Context';
 // import {width, height} from '../Utils/Constant';

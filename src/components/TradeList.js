@@ -1,11 +1,5 @@
-import {
-  FlatList,
-  View,
-  Pressable,
-  Text,
-  StyleSheet,
-  Platform,
-} from 'react-native';
+import {FlatList, View, Pressable, StyleSheet, Platform} from 'react-native';
+import {Text} from 'react-native-elements';
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import metrics from '../contents/metrics';

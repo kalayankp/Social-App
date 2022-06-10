@@ -46,8 +46,8 @@ const ImageList = images => {
               <Image
                 style={{
                   height: metrics.width / 2,
-                  marginHorizontal: 8,
-                  width: (metrics.width - 48) / 3,
+                  marginHorizontal: 3,
+                  width: (metrics.width - 24) / 3,
                   marginTop: 8,
                   borderRadius: 8,
                 }}

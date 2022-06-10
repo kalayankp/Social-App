@@ -1,5 +1,6 @@
 import LinearGradient from 'react-native-linear-gradient';
-import {View, Text, StyleSheet, Button, Pressable} from 'react-native';
+import {View, StyleSheet, Button, Pressable} from 'react-native';
+import {Text} from 'react-native-elements';
 import React from 'react';
 import Icons from 'react-native-vector-icons';
 const Card = () => {

@@ -4,11 +4,7 @@ import MainHeader from '../components/MainHeader';
 import BottomNavigation from './BottomNavigationDummy';
 
 function DashBoard() {
-  return (
-    <View style={styles.container}>
-      <BottomNavigation />
-    </View>
-  );
+  return <View style={styles.container}>{/* <BottomNavigation /> */}</View>;
 }
 export default DashBoard;
 const styles = StyleSheet.create({

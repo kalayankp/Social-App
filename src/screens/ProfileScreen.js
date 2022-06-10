@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Text,
   View,
   StyleSheet,
   Image,
@@ -8,11 +7,13 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
+import {Text} from 'react-native-elements';
 
 import {cardImage1, cardImage2, cardImage3} from '../asset/images/index';
 
 import MainHeader from '../components/MainHeader';
 import RightIcons from '../components/RightIcons';
+import metrics from '../contents/metrics';
 
 const Cards = ({path}) => {
   console.log(path);
@@ -22,6 +23,8 @@ const Cards = ({path}) => {
         style={{
           height: 225,
           width: 130,
+
+          // height: metrics.width / 3,
           backgroundColor: '#fff',
           margin: 8,
           borderRadius: 15,
@@ -57,7 +60,7 @@ const ProfileName = ({name}) => {
 
 const ProfileImage = () => {
   return (
-    <View style={{marginLeft: 15, marginTop: 20}}>
+    <View style={{marginTop: 20, marginHorizontal: 8}}>
       <Image source={require('../asset/images/Clipped.png')} />
     </View>
   );
@@ -65,13 +68,13 @@ const ProfileImage = () => {
 
 const ProfileScreen = () => {
   return (
-    <>
+    <View style={{flex: 1, backgroundColor: 'white', marginHorizontal: 3}}>
       <MainHeader title="VIEW PROFILE" rightComponent={RightIcons} />
-      <ScrollView style={{marginTop: 1}}>
+      <ScrollView style={{marginTop: 1, flex: 1}}>
         <View style={styles.mainContainer}>
           <View style={styles.mainProfileContainer}>
             <ProfileImage />
-            <View>
+            <View style={{flex: 1, paddingRight: 10}}>
               <ProfileName name="Ananda Krishnan R" />
 
               <View style={styles.numbersContainer}>
@@ -99,7 +102,7 @@ const ProfileScreen = () => {
 
           <View>
             <View style={styles.descriptionContainer}>
-              <View style={{justifyContent: 'center'}}>
+              <View style={{justifyContent: 'center', marginHorizontal: 8}}>
                 <Image
                   source={require('../asset/images/smile.png')}
                   style={{
@@ -110,7 +113,7 @@ const ProfileScreen = () => {
                 />
                 <Text style={{fontSize: 9, textAlign: 'center'}}>Friendly</Text>
               </View>
-              <View style={{marginRight: 10}}>
+              <View style={{marginHorizontal: 8}}>
                 <Image
                   source={require('../asset/images/run.png')}
                   style={{
@@ -122,7 +125,7 @@ const ProfileScreen = () => {
                 />
                 <Text style={{fontSize: 9}}>Competitive</Text>
               </View>
-              <View>
+              <View style={{marginHorizontal: 8}}>
                 <Image
                   source={require('../asset/images/bolt.png')}
                   style={{
@@ -140,7 +143,7 @@ const ProfileScreen = () => {
                   paddingHorizontal: 25,
                   borderRadius: 10,
                   marginLeft: 17,
-                  width: 150,
+                  // width: 150,
                   alignItems: 'center',
                 }}>
                 <Image source={require('../asset/images/send.png')} />
@@ -197,7 +200,7 @@ const ProfileScreen = () => {
 
           <View>
             <Text style={styles.networkText}>Networks</Text>
-            <View>
+            <View style={{}}>
               <ScrollView horizontal={true} style={{marginLeft: 4}}>
                 <View
                   style={{
@@ -281,11 +284,16 @@ const ProfileScreen = () => {
               <Cards path={cardImage1} />
               <Cards path={cardImage2} />
               <Cards path={cardImage3} />
+              <Cards path={cardImage3} />
+              <Cards path={cardImage3} />
+              <Cards path={cardImage3} />
+              <Cards path={cardImage3} />
+              <Cards path={cardImage3} />
             </ScrollView>
           </View>
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -295,6 +303,7 @@ const styles = StyleSheet.create({
     marginBottom: Platform.OS === 'android' ? 40 : 80,
   },
   mainProfileContainer: {
+    // justifyContent: 'center',
     marginTop: 15,
     flexDirection: 'row',
   },
@@ -302,27 +311,29 @@ const styles = StyleSheet.create({
   numbersContainer: {
     flexDirection: 'row',
     padding: 10,
+
     justifyContent: 'space-between',
-    width: '50%',
     marginLeft: 20,
-    width: 250,
   },
   numbersDetailContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     // marginRight: 50,
     marginLeft: 10,
     padding: 10,
-    width: 260,
   },
 
   descriptionContainer: {
     flexDirection: 'row',
+    // justifyContent: 'space-between',
     // borderWidth: 1,
     marginTop: 15,
-    justifyContent: 'space-evenly',
+    // justifyContent: 'center',
+    // justifyContent: 'space-evenly',
   },
   aboutContainer: {
+    // alignItems: 'center',
     marginLeft: 20,
     marginTop: 45,
   },
@@ -330,6 +341,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   networkText: {
+    // textAlign: 'center',
     marginBottom: 20,
     marginLeft: 20,
     marginTop: 20,

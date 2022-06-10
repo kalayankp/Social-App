@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, Text, Image, Pressable} from 'react-native';
+import {View, Image, Pressable} from 'react-native';
+import {Text} from 'react-native-elements';
 import MainHeader from '../components/MainHeader';
 import {LinearProgress} from 'react-native-elements';
 import Back from '../components/Back';
@@ -33,6 +34,7 @@ const BuyTokensScreen = () => {
               height: metrics.width / 15,
               width: metrics.width / 12,
               overflow: 'visible',
+              resizeMode: 'contain',
             }}
           />
           <Text style={{fontSize: 9}}>Membership Level</Text>
@@ -58,11 +60,12 @@ const BuyTokensScreen = () => {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <MainHeader title="STORE" rightComponent={Back} />
-      <View>
+      <View style={{flex: 1}}>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'flex-start',
+            justifyContent: 'center',
             marginTop: 20,
             marginHorizontal: 10,
           }}>
@@ -86,6 +89,7 @@ const BuyTokensScreen = () => {
               overflow: 'visible',
               marginLeft: 10,
               marginTop: 12,
+              resizeMode: 'contain',
             }}
             source={require('../asset/logo.png')}
           />
@@ -107,15 +111,20 @@ const BuyTokensScreen = () => {
         </View>
         <View
           style={{
-            marginTop: metrics.width / 17,
+            // marginTop: metrics.width / 17,
             marginHorizontal: 10,
+            marginTop: metrics.width / 25,
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            // justifyContent: 'space-between',
+            justifyContent: 'space-around',
             alignItems: 'flex-start',
           }}>
           <Pressable
             style={{
-              paddingHorizontal: metrics.width / 13,
+              flex: 1,
+              alignItems: 'center',
+              marginRight: 5,
+              // paddingHorizontal: metrics.width / 5, //4
               paddingVertical: metrics.width / 19,
               borderRadius: 5,
               backgroundColor: '#e2e1ff',
@@ -127,8 +136,11 @@ const BuyTokensScreen = () => {
           </Pressable>
           <Pressable
             style={{
+              flex: 1,
               paddingVertical: metrics.width / 19,
-              paddingHorizontal: metrics.width / 11,
+              alignItems: 'center',
+              marginLeft: 5,
+              // paddingHorizontal: metrics.width / 11,
               backgroundColor: '#e2e1ff',
               borderRadius: 5,
             }}>
@@ -136,7 +148,7 @@ const BuyTokensScreen = () => {
           </Pressable>
         </View>
 
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <View
             style={{
               justifyContent: 'center',
@@ -172,16 +184,17 @@ const BuyTokensScreen = () => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginHorizontal: 40,
+            marginHorizontal: metrics.width / 7,
           }}>
-          <FIcons name="award" size={26} />
-          <FIcons name="award" size={26} />
+          <FIcons name="award" size={26} color="black" />
+          <FIcons name="award" size={26} color="black" />
         </View>
         <View
           style={{
             flexDirection: 'row',
             marginTop: metrics.width / 17,
             marginLeft: metrics.width / 20,
+            // flex: 1,
           }}>
           <Text style={{fontSize: 15, fontWeight: '600'}}>What are</Text>
           <Image
@@ -192,16 +205,21 @@ const BuyTokensScreen = () => {
               overflow: 'visible',
               marginHorizontal: 8,
               marginVertical: 0.9,
+              resizeMode: 'contain',
             }}
           />
           <Text style={{fontSize: 15, fontWeight: '600'}}>Tokens?</Text>
         </View>
-        <View style={{padding: 10}}>
-          <Text style={{fontSize: 8}}>
+        <View
+          style={{
+            marginTop: 10,
+            justifyContent: 'center',
+          }}>
+          <Text style={{fontSize: 10, textAlign: 'center'}}>
             Tokens are used in place of money. Using tokens allows 100% platform
             protection on all your
           </Text>
-          <Text style={{fontSize: 8}}>
+          <Text style={{fontSize: 10, textAlign: 'center'}}>
             purchases through the escrow system, preventing fraud. They are also
             used to pay for views.
           </Text>

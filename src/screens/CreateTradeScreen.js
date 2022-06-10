@@ -1,7 +1,6 @@
 import React, {useState, useRef} from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   Pressable,
@@ -9,6 +8,7 @@ import {
   Animated,
   PanResponder,
 } from 'react-native';
+import {Text} from 'react-native-elements';
 import MainHeader from '../components/MainHeader';
 
 import Icons from 'react-native-vector-icons/FontAwesome';
@@ -214,6 +214,7 @@ const CreateTradeScreen = ({navigation}) => {
             style={{
               flexDirection: 'row',
               marginTop: 20,
+              justifyContent: 'center',
               marginHorizontal: 20,
             }}>
             <Pressable

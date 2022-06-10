@@ -1,6 +1,8 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
+import {Text} from 'react-native-elements';
 import Icons from 'react-native-vector-icons/FontAwesome5';
+import metrics from '../contents/metrics';
 
 const ExploreNavigationOption = {
   headerTitle: '',
@@ -9,6 +11,7 @@ const ExploreNavigationOption = {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
+        width: metrics.width >= 800 ? 150 : null,
       }}>
       <Icons name="home" light color={color} size={20} />
       <Text
@@ -31,13 +34,11 @@ const MyCardsNavigationOption = {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
-
-        //   top: 10,
+        width: metrics.width >= 800 ? 150 : null,
       }}>
       <Icons name="clone" color={color} size={20} />
       <Text
         style={{
-          // top: 8,
           fontSize: 12,
           color: '#939393',
           fontWeight: '500',
@@ -54,12 +55,13 @@ const InsightNavigationOption = {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
-        //   top: 10,
+        width: metrics.width >= 800 ? 150 : null,
+        // flex: 1,
       }}>
       <Icons name="poll" color={color} size={20} />
       <Text
         style={{
-          // top: 8,
+          // flex: 1,
           color: '#939393',
           fontSize: 12,
           fontWeight: '500',
@@ -75,14 +77,15 @@ const ProfileNavigationOptions = {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
-        //   top: 10,
+        width: metrics.width >= 800 ? 150 : null,
+        // flex: 1,
       }}>
       <Icons name="user" size={20} color={color} />
       <Text
         style={{
-          // top: 8,
           color: '#939393',
           fontSize: 12,
+
           fontWeight: '500',
         }}>
         Profile
@@ -94,11 +97,11 @@ const ProfileNavigationOptions = {
 const BottomNavigationScreenOption = {
   headerShown: false,
   tabBarShowLabel: false,
-  tabBarStyle: {
-    position: 'absolute',
-
-    borderRadius: 15,
-  },
+  // tabBarStyle: {
+  //   position: 'absolute',
+  //   bottom: 10,
+  //   borderRadius: 15,
+  // },
 };
 
 export {

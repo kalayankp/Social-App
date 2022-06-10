@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Text,
   View,
   StyleSheet,
   TextInput,
@@ -12,6 +11,7 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import {Text} from 'react-native-elements';
 import metrics from '../contents/metrics';
 import Icons from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
@@ -77,7 +77,7 @@ function SelectLocation() {
 
 const MyCardsScreen = () => {
   const {height, width} = useWindowDimensions();
-  console.log(metrics.height + ' height');
+  console.log(metrics.width + ' width');
   return (
     <>
       <MainHeader title="PUBLISH" rightComponent={RightIcons} />
@@ -86,7 +86,11 @@ const MyCardsScreen = () => {
           <View style={styles.mainContainer}>
             <View>
               <SelectLocation />
-              <TextInput placeholder="Select Tags" style={styles.selectTags} />
+              <TextInput
+                placeholder="Select Tags"
+                style={styles.selectTags}
+                placeholderTextColor="grey"
+              />
             </View>
             <View style={styles.imgContainer}>
               <Text
@@ -113,7 +117,12 @@ const MyCardsScreen = () => {
               />
               <Text>~ 12 Views</Text>
             </View>
-            <View style={{flexDirection: 'row', marginTop: 20}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 20,
+                justifyContent: 'center',
+              }}>
               <LinearGradient
                 style={{
                   width: width / 2,
@@ -189,10 +198,12 @@ const styles = StyleSheet.create({
   },
 
   map: {
-    position: 'absolute',
-    top: metrics.height > 843 ? 14 : 10,
-    left: metrics.height > 843 ? 315 : 330,
     color: 'black',
+    position: 'absolute',
+    // top: metrics.width / 18,
+    top: metrics.height > 843 ? 14 : 10,
+    // left: metrics.height > 843 ? 315 : 400,
+    left: metrics.width > 799 ? 700 : 315,
   },
   selectTags: {
     borderWidth: 1,
@@ -211,6 +222,7 @@ const styles = StyleSheet.create({
   },
   rechargeContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     marginHorizontal: 18,
     marginTop: 25,
     alignItems: 'center',

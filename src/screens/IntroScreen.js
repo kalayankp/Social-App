@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
+import {Text} from 'react-native-elements';
 import LoginScreen from './LoginScreen';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icons from 'react-native-vector-icons/FontAwesome5';

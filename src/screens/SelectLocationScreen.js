@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  Platform,
-  TextInput,
-} from 'react-native';
+import {View, StyleSheet, Pressable, Platform, TextInput} from 'react-native';
+import {Text} from 'react-native-elements';
 import MainHeader from '../components/MainHeader';
 
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
@@ -16,6 +10,7 @@ import FFIcons from 'react-native-vector-icons/FontAwesome5';
 import IIcons from 'react-native-vector-icons/Ionicons';
 
 import Back from '../components/Back';
+import metrics from '../contents/metrics';
 
 const SelectLocationScreen = ({navigation}) => {
   return (
@@ -32,7 +27,12 @@ const SelectLocationScreen = ({navigation}) => {
         <FIcons
           name="search"
           size={20}
-          style={{position: 'absolute', top: 10, left: 25}}
+          color="black"
+          style={{
+            position: 'absolute',
+            top: metrics.width / 47,
+            left: metrics.width / 15,
+          }}
         />
         <TextInput
           style={{
@@ -46,10 +46,12 @@ const SelectLocationScreen = ({navigation}) => {
           placeholder="India"
           placeholderTextColor="#101010"
         />
+
         <IIcons
           name="close-circle"
           size={20}
-          style={{position: 'absolute', right: 25}}
+          color="black"
+          style={{position: 'absolute', right: metrics.width / 12}}
         />
       </View>
       <View style={{marginTop: 30}}>

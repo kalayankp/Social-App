@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, Text, Pressable} from 'react-native';
+import {View, Pressable} from 'react-native';
+import {Text} from 'react-native-elements';
 import MainHeader from '../components/MainHeader';
 import IIcons from 'react-native-vector-icons/Ionicons';
 import metrics from '../contents/metrics';

@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import {Text} from 'react-native-elements';
+import {View, StyleSheet, Image} from 'react-native';
 import MainHeader from '../components/MainHeader';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import RightIcons from '../components/RightIcons';

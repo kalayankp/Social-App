@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform} from 'react-native';
+import {View, StyleSheet, Platform} from 'react-native';
+import {Text} from 'react-native-elements';
 const TradeStatus = ({type, count}) => {
   let statusBackground;
   if (type === 'ALL') {

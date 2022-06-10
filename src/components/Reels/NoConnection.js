@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import {Text} from 'react-native-elements';
 import CommonStyle from '../Theme/CommonStyle';
 import {AppContext} from '../Context';
 import {fontSize} from '../Utils/Constant';

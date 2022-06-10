@@ -1,5 +1,7 @@
 import React from 'react';
-import {View, FlatList, Text, StyleSheet, Platform} from 'react-native';
+import {View, FlatList, StyleSheet, Platform} from 'react-native';
+import {Text} from 'react-native-elements';
+
 import moment from 'moment';
 const TransactionList = ({transaction}) => {
   function renderTransaction(itemData) {

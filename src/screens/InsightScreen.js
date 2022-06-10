@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import {Text} from 'react-native-elements';
 import Card from '../components/Card';
 import Transcation from '../components/Transaction';
 import MainHeader from '../components/MainHeader';

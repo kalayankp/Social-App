@@ -1,12 +1,6 @@
 import React, {useState} from 'react';
-import {
-  View,
-  TextInput,
-  Text,
-  ScrollView,
-  Image,
-  Pressable,
-} from 'react-native';
+import {Text} from 'react-native-elements';
+import {View, TextInput, ScrollView, Image, Pressable} from 'react-native';
 import MainHeader from '../components/MainHeader';
 import Back from '../components/Back';
 import Icons from 'react-native-vector-icons/EvilIcons';
@@ -70,7 +64,7 @@ const ActiveListingScreen = () => {
       <MainHeader title="My Cards" rightComponent={Back} />
       <View style={{}}>
         <Details listingNumber={10} />
-        <View>
+        <View style={{paddingBottom: metrics.width / 20}}>
           <Icons
             name="search"
             size={29}
@@ -105,7 +99,7 @@ const ActiveListingScreen = () => {
           />
         </View>
       </View>
-      <View style={{flex: 1, marginLeft: 10}}>
+      <View style={{flex: 1}}>
         <ImageList images={images} />
       </View>
     </View>
