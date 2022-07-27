@@ -31,6 +31,7 @@ import {
   BottomNavigationScreenOption,
 } from '../components/TabBottomIcons';
 import BuyTokensScreen from '../screens/BuyTokensScreen';
+import NetworkHomeScreen from '../screens/NetworkHomeScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -133,6 +134,11 @@ const DrawerNavigation = () => {
           name="ActiveListing"
           component={ActiveListingScreen}
           options={{headerShown: false}}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="NetworkHome"
+          component={NetworkHomeScreen}
         />
       </Drawer.Group>
 

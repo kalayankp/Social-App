@@ -27,7 +27,6 @@ const ActiveListingScreen = () => {
           padding: 20,
           flexDirection: 'row',
           justifyContent: 'space-around',
-          //   marginTop: metrics.width / 16,
         }}>
         <Text>ASSET</Text>
         {listingNumber > 0 ? (
