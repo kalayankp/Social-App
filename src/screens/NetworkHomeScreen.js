@@ -12,11 +12,15 @@ import {
   img3,
   list,
   grid,
+  member,
 } from '../asset/images';
+import AboutNetwork from '../components/AboutNetwork';
 import Announcement from '../components/Announcement';
 import Back from '../components/Back';
 import ImageList from '../components/ImageList';
+import ImageListView from '../components/ImageListView';
 import MainHeader from '../components/MainHeader';
+import MemberList from '../components/MemberList';
 import RightIcons from '../components/RightIcons';
 import metrics from '../contents/metrics';
 const NetworkHomeScreen = () => {
@@ -31,12 +35,21 @@ const NetworkHomeScreen = () => {
     {id: 8, image: img2},
     {id: 9, image: img3},
   ];
+
+  const members = [
+    {name: 'Harsha N K', type: 'Admin', profileimg: member},
+    {name: 'Anil ', type: 'Admin', profileimg: member},
+    {name: 'Rakesh S S', type: 'Member', profileimg: member},
+    {name: 'Param', type: 'Member', profileimg: member},
+    {name: 'Lokesh', type: 'Member', profileimg: member},
+    {name: 'Srikanth', type: 'Member', profileimg: member},
+  ];
   const [seeMore, setSeeMore] = useState(false);
   const [navigate, setNavigate] = useState('announcement');
   const [view, setView] = useState('grid');
   return (
     <>
-      <MainHeader title="Network" rightComponent={Back} />
+      <MainHeader title="NETWORK" rightComponent={Back} />
       <ScrollView
         style={{backgroundColor: 'white'}}
         showsVerticalScrollIndicator={false}>
@@ -154,6 +167,25 @@ const NetworkHomeScreen = () => {
                 {seeMore ? 'See Less' : 'See More'}
               </Text>
             </Pressable>
+            <Pressable>
+              <View style={{}}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    alignSelf: 'center',
+                    backgroundColor: '#afafaf',
+                    paddingHorizontal: 24,
+                    paddingVertical: 8,
+
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    fontWeight: 'bold',
+                    marginBottom: 8,
+                  }}>
+                  Join
+                </Text>
+              </View>
+            </Pressable>
           </View>
 
           <View
@@ -174,7 +206,9 @@ const NetworkHomeScreen = () => {
                 <Text
                   style={{
                     fontSize: 20,
-                    marginRight: 8,
+                    marginRight: 16,
+                    textDecorationLine:
+                      navigate === 'announcement' ? 'underline' : 'none',
                     fontWeight: navigate === 'announcement' ? 'bold' : '400',
                   }}>
                   Announcement
@@ -184,7 +218,9 @@ const NetworkHomeScreen = () => {
                 <Text
                   style={{
                     fontSize: 20,
-                    marginRight: 8,
+                    marginRight: 16,
+                    textDecorationLine:
+                      navigate === 'treasury' ? 'underline' : 'none',
                     fontWeight: navigate === 'treasury' ? 'bold' : '400',
                   }}>
                   Treasury
@@ -194,7 +230,9 @@ const NetworkHomeScreen = () => {
                 <Text
                   style={{
                     fontSize: 20,
-                    marginRight: 8,
+                    marginRight: 16,
+                    textDecorationLine:
+                      navigate === 'members' ? 'underline' : 'none',
                     fontWeight: navigate === 'members' ? 'bold' : '400',
                   }}>
                   Members
@@ -204,6 +242,8 @@ const NetworkHomeScreen = () => {
                 <Text
                   style={{
                     fontSize: 20,
+                    textDecorationLine:
+                      navigate === 'about' ? 'underline' : 'none',
                     fontWeight: navigate === 'about' ? 'bold' : '400',
                   }}>
                   About
@@ -255,13 +295,28 @@ const NetworkHomeScreen = () => {
                 </Pressable>
               </View>
               {view === 'grid' ? <ImageList images={images} /> : null}
-              {view === 'list' ? <View></View> : null}
+              {view === 'list' ? (
+                <View>
+                  <ImageListView data={images} />
+                </View>
+              ) : null}
+            </View>
+          ) : null}
+          {navigate === 'members' ? (
+            <View>
+              <MemberList data={members} />
+            </View>
+          ) : null}
+          {navigate === 'about' ? (
+            <View>
+              <AboutNetwork />
             </View>
           ) : null}
         </View>
 
         <View style={{marginBottom: 20}} />
       </ScrollView>
+      <View style={{marginBottom: 18}} />
     </>
   );
 };

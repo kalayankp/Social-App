@@ -19,10 +19,9 @@ const AllChatScreen = () => {
               position: 'absolute',
               top: metrics.height / 13.5,
               left: metrics.height / 15.5,
-              //   top: 65,
-              //   left: 55,
+
               borderRadius: 30,
-              // borderWidth: 1,
+
               overflow: 'hidden',
               zIndex: 100,
             }}></View>
@@ -43,10 +42,9 @@ const AllChatScreen = () => {
         <View
           style={{
             justifyContent: 'center',
-            // alignItems: 'flex-start',
+
             marginLeft: 25,
-            // flex: 1,
-            // borderWidth: 1,
+
             overflow: 'hidden',
             paddingRight: 35,
           }}>
