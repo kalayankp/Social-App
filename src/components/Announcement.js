@@ -17,17 +17,16 @@ const Announcement = ({
           marginHorizontal: 16,
           marginTop: 8,
           borderRadius: 8,
-          overflow: 'hidden',
+
           shadowColor: 'black',
           shadowOffset: {width: 0, height: 1},
-          shadowOpacity: 0.3,
+          shadowOpacity: 0.5,
           shadowRadius: 4,
 
-          backgroundColor: '#ddd',
+          backgroundColor: '#f5f5f5',
         }}>
         <View
           style={{
-            marginTop: 16,
             marginHorizontal: 8,
             flexDirection: 'row',
           }}>

@@ -10,30 +10,31 @@ const AboutNetwork = () => {
       <View>
         <View
           style={{
-            justifyContent: 'space-between',
-            marginHorizontal: 16,
-            marginTop: 16,
-            flexDirection: 'row',
-          }}>
-          <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-            About this Network
-          </Text>
-          <Pressable>
-            <FIcon name="edit-2" size={25} />
-          </Pressable>
-        </View>
-        <View
-          style={{
             padding: 16,
 
             marginHorizontal: 8,
-            backgroundColor: '#dfdfdf',
+            backgroundColor: '#f5f5f5',
             marginTop: 16,
             shadowColor: 'black',
             shadowOffset: {width: 1, height: 1},
             shadowOpacity: 0.5,
             shadowRadius: 5,
+            borderRadius: 8,
           }}>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              marginTop: 8,
+              marginBottom: 8,
+            }}>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+              About this Network
+            </Text>
+            <Pressable>
+              <FIcon name="edit-2" size={20} />
+            </Pressable>
+          </View>
           <Text style={{fontSize: 20, lineHeight: 28}}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
@@ -73,29 +74,30 @@ const AboutNetwork = () => {
             padding: 16,
 
             marginHorizontal: 8,
-            backgroundColor: '#dfdfdf',
+            backgroundColor: '#f5f5f5',
             marginTop: 16,
             shadowColor: 'black',
             shadowOffset: {width: 1, height: 1},
             shadowOpacity: 0.5,
             shadowRadius: 5,
+            borderRadius: 8,
           }}>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+            <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 8}}>
               Network Rules by the Network Admin
             </Text>
             <Pressable style={{marginLeft: 8}}>
-              <FIcon name="edit-2" size={25} />
+              <FIcon name="edit-2" size={20} />
             </Pressable>
           </View>
           <View>
-            <Text style={{fontSize: 20, marginBottom: 8}}>
+            <Text style={{fontSize: 18, marginBottom: 8}}>
               1. Please be kind and polite
             </Text>
-            <Text style={{fontSize: 20, marginBottom: 8}}>
+            <Text style={{fontSize: 18, marginBottom: 8}}>
               2. Only post related topics in the network
             </Text>
-            <Text style={{fontSize: 20}}>
+            <Text style={{fontSize: 18}}>
               3. Do not market yourself here for personal purporses
             </Text>
           </View>

@@ -20,7 +20,7 @@ const ImageListView = ({data}) => {
                 source={item.image}
                 style={{
                   width: metrics.width / 1.2,
-                  height: metrics.height,
+                  height: metrics.height / 1.5,
                   borderRadius: 8,
                   marginBottom: 8,
                   marginHorizontal: 8,

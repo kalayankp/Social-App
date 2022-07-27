@@ -18,7 +18,7 @@ const MemberList = ({data}) => {
           <View
             style={{
               flexDirection: 'row',
-              backgroundColor: '#afafaf',
+              backgroundColor: '#33a543',
               padding: 6,
               borderRadius: 8,
               marginTop: 8,
@@ -29,7 +29,7 @@ const MemberList = ({data}) => {
                   fontSize: 18,
                   marginRight: 4,
                   marginLeft: 8,
-                  color: 'black',
+                  color: 'white',
                   fontWeight: 'bold',
                 }}>
                 Invite
@@ -38,7 +38,7 @@ const MemberList = ({data}) => {
                 name="plus-circle"
                 style={{alignSelf: 'center'}}
                 size={22}
-                color="black"
+                color="white"
               />
             </Pressable>
           </View>
