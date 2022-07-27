@@ -13,6 +13,8 @@ import {
   list,
   grid,
   member,
+  user_1,
+  user_2,
 } from '../asset/images';
 import AboutNetwork from '../components/AboutNetwork';
 import Announcement from '../components/Announcement';
@@ -69,8 +71,8 @@ const NetworkHomeScreen = () => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                marginHorizontal: 8,
-                marginTop: 8,
+                marginHorizontal: 0,
+                marginTop: 20,
               }}>
               <Text
                 style={{
@@ -85,82 +87,86 @@ const NetworkHomeScreen = () => {
               <View
                 style={{
                   flexDirection: 'row',
-                  // justifyContent: 'center',
-                  alignItems: 'center',
+                  //justifyContent: 'flex-start',
                   flex: 1,
-                  paddingLeft: 85,
+                  alignItems: 'center',
+                  marginLeft: 60,
+                  paddingLeft: 80,
+                  paddingRight: 5,
                 }}>
                 <View
                   style={{
-                    borderWidth: 1,
-                    width: 30,
-                    height: 30,
+                    // borderWidth: 1,
+                    width: 40,
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    borderRadius: 15,
+                    borderRadius: 20,
                     // marginLeft: 16,
                     // marginRight: 35,
                     position: 'absolute',
-                    left: 1,
+                    left: 5,
                   }}>
                   <Image
                     source={member}
-                    style={{width: 30, height: 30, borderRadius: 15}}
+                    style={{width: 40, height: 40, borderRadius: 20}}
                   />
                 </View>
                 <View
                   style={{
-                    borderWidth: 1,
-                    width: 30,
-                    height: 30,
+                    width: 40,
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    borderRadius: 15,
+                    borderRadius: 20,
 
                     position: 'absolute',
-                    left: 14,
+                    left: 25,
                   }}>
                   <Image
-                    source={member}
-                    style={{width: 30, height: 30, borderRadius: 15}}
+                    source={user_1}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                    }}
                   />
                 </View>
                 <View
                   style={{
-                    borderWidth: 1,
-                    width: 30,
-                    height: 30,
+                    // borderWidth: 1,
+                    width: 40,
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    borderRadius: 15,
-
-                    position: 'absolute',
-                    left: 28,
-                  }}>
-                  <Image
-                    source={member}
-                    style={{width: 30, height: 30, borderRadius: 15}}
-                  />
-                </View>
-                <View
-                  style={{
-                    borderWidth: 1,
-                    width: 30,
-                    height: 30,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 15,
+                    borderRadius: 20,
 
                     position: 'absolute',
                     left: 45,
                   }}>
                   <Image
-                    source={member}
-                    style={{width: 30, height: 30, borderRadius: 15}}
+                    source={user_2}
+                    style={{width: 40, height: 40, borderRadius: 20}}
                   />
                 </View>
-                <View style={{marginLeft: 8, alignSelf: 'center', flex: 1}}>
-                  <Text style={{fontSize: 14}}>and 99 members</Text>
+                <View
+                  style={{
+                    width: 40,
+                    height: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 20,
+
+                    position: 'absolute',
+                    left: 65,
+                  }}>
+                  <Image
+                    source={member}
+                    style={{width: 40, height: 40, borderRadius: 20}}
+                  />
+                </View>
+                <View style={{marginLeft: 30, alignSelf: 'center', flex: 1}}>
+                  <Text style={{fontSize: 14}}>+99 members</Text>
                 </View>
               </View>
             </View>

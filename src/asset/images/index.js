@@ -16,6 +16,8 @@ const comment = require('./comment.png');
 const share = require('./share.png');
 const list = require('./list.png');
 const grid = require('./menu.png');
+const user_1 = require('./user_1.jpeg');
+const user_2 = require('./user_2.jpeg');
 export {
   cardImage1,
   cardImage2,
@@ -33,4 +35,6 @@ export {
   share,
   list,
   grid,
+  user_1,
+  user_2,
 };
