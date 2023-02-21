@@ -6,6 +6,7 @@ import {FeedRow} from '../components/Reels/FeedRow';
 // import {height, isIOS} from '../Utils/Constant';
 import {data} from '../utils/data';
 import metrics from '../contents/metrics';
+import Header from '../components/Search/Header';
 
 const ReelsScreen = () => {
   //   const {displayHeight, setDisplayHeight} = useContext(AppContext);
@@ -73,6 +74,10 @@ const ReelsScreen = () => {
   };
 
   return (
+    <>
+    <View>
+      <Header/>
+    </View>
     <View style={{flex: 1, backgroundColor: 'transparent'}}>
       <Animated.FlatList
         pagingEnabled
@@ -100,6 +105,7 @@ const ReelsScreen = () => {
         removeClippedSubviews={true}
       />
     </View>
+    </>
   );
 };
 
