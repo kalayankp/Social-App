@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Appbar, Searchbar, Button, Modal, Portal, TextInput ,Slider} from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import { Appbar, Searchbar, Button, Modal, Portal, TextInput ,Slider , Title} from 'react-native-paper';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 const Header = () => {
 
   const [minPrice, setMinPrice] = useState(0);
@@ -18,6 +17,9 @@ const Header = () => {
     console.log('Selected Max Price:', maxPrice);
     hideModal();
   };
+  const [Mapvisible, setMapVisible] = useState(false);
+  const showMap = () => setMapVisible(true);
+  const hideMap = () => setMapVisible(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -26,11 +28,20 @@ const Header = () => {
     <>
     <Appbar.Header backgroundColor="#FFFFFF">
              <Appbar.Action icon="filter" onPress={showModal} />
-
-         {/* <Appbar.Action icon={() => <MaterialCommunityIcons name="filter" size={24} />} onPress={() => <PriceFilter/>} /> */}
       <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />
-      {/* <PriceFilter /> */}
     </Appbar.Header>
+    <Appbar >
+      
+      <Button icon="thumb-up-outline" mode="outlined" style={{fontsize : "2px"}} onPress={() => console.log('Recommended!')}>
+        Recommend
+      </Button>
+      <Button icon="heart-outline"  mode="outlined" onPress={() => console.log('Hot topics!')}>
+        Hot
+      </Button>
+      <Button icon="map-outline"  mode="outlined" small onPress={showMap}>
+        nearby
+      </Button>
+    </Appbar>
 <Portal>
 <Modal visible={visible} onDismiss={hideModal}>
  <View style={styles.modalContainer}>
@@ -65,6 +76,28 @@ const Header = () => {
   <Button mode="contained" onPress={onApply}>
     Apply
   </Button>
+</View> 
+</Modal>
+</Portal>
+
+
+<Portal>
+<Modal visible={Mapvisible} onDismiss={hideMap}>
+ <View style={styles.modalContainer}>
+ <View style={{flex: 1, marginTop: 20}}>
+        <MapView
+          // provider={PROVIDER_GOOGLE}
+          provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : null}
+          style={styles.mapStyle}
+          zoomEnabled={true}
+          initialRegion={{
+            latitude: 22.258,
+            longitude: 71.19,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      </View>
 </View> 
 </Modal>
 </Portal>

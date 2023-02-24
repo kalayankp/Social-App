@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet, Pressable, Platform, TextInput} from 'react-native';
 import {Text} from 'react-native-elements';
 import MainHeader from '../components/MainHeader';
-
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 //Icons
 import FIcons from 'react-native-vector-icons/Feather';
@@ -67,7 +66,6 @@ const SelectLocationScreen = ({navigation}) => {
       <View style={{flex: 1, marginTop: 20}}>
         <MapView
           // provider={PROVIDER_GOOGLE}
-
           provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : null}
           style={styles.mapStyle}
           zoomEnabled={true}
@@ -82,7 +80,6 @@ const SelectLocationScreen = ({navigation}) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   mapStyle: {
     position: 'absolute',
