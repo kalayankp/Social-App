@@ -7,13 +7,13 @@ import {FeedRow} from '../components/Reels/FeedRow';
 import {data} from '../utils/data';
 import metrics from '../contents/metrics';
 import Header from '../components/Search/Header';
-
+import ShareButton from '../components/Reels/ShareButton';
 const ReelsScreen = () => {
+  const contentToShare = 'Check out this cool thing I found!';
   //   const {displayHeight, setDisplayHeight} = useContext(AppContext);
   const refFlatList = useRef();
   const [scrollY] = useState(new Animated.Value(0));
   const [scrollInfo, setScrollInfo] = useState({isViewable: true, index: 0});
-
   const viewabilityConfig = {viewAreaCoveragePercentThreshold: 80};
   const onViewableItemsChanged = useRef(viewableItems => {
     const info = {
@@ -105,6 +105,9 @@ const ReelsScreen = () => {
         removeClippedSubviews={true}
       />
     </View>
+    <View style={{ position: 'absolute', bottom: 30, right: 15 }}>
+        <ShareButton contentToShare={contentToShare} />
+      </View>
     </>
   );
 };
