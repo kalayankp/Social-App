@@ -1,30 +1,25 @@
+
 import React from 'react';
-import { Share } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { View, Share, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ShareButton = ({ content }) => {
-  const shareContent = async () => {
+  const onShare = async () => {
     try {
-      const result = await Share.share({
+      await Share.share({
         message: content,
-        url: 'https://example.com',
-        title: 'Title of the content',
       });
-      if (result.action === Share.sharedAction) {
-        console.log('Shared successfully');
-      } else if (result.action === Share.dismissedAction) {
-        console.log('Sharing dismissed');
-      }
     } catch (error) {
-      console.log('Error sharing:', error.message);
+      console.error(error);
     }
   };
 
   return (
-    <IconButton
-      icon="share-variant"
-      onPress={shareContent}
-    />
+    <View>
+      <TouchableOpacity onPress={onShare}>
+        <Icon name="share" size={30} color="#fff" />
+      </TouchableOpacity>
+    </View>
   );
 };
 

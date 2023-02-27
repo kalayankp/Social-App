@@ -75,9 +75,9 @@ const ReelsScreen = () => {
 
   return (
     <>
-    <View>
+    {/* <View>
       <Header/>
-    </View>
+    </View> */}
     <View style={{flex: 1, backgroundColor: 'transparent'}}>
       <Animated.FlatList
         pagingEnabled
@@ -105,11 +105,12 @@ const ReelsScreen = () => {
         removeClippedSubviews={true}
       />
     </View>
-    <View style={{ position: 'absolute', bottom: 30, right: 15 }}>
+    {/* <View style={{ position: 'absolute', bottom: 30, right: 15 }}>
         <ShareButton contentToShare={contentToShare} />
-      </View>
+      </View> */}
     </>
   );
 };
+
 
 export default ReelsScreen;

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Appbar, Searchbar, Button, Modal, Portal, TextInput ,Slider , Title} from 'react-native-paper';
+import { Appbar, Searchbar, Button, Modal, Portal, TextInput , Title} from 'react-native-paper';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import {Slider} from  "react-native-elements"
+
 const Header = () => {
 
   const [minPrice, setMinPrice] = useState(0);
@@ -26,32 +28,37 @@ const Header = () => {
 
   return (
     <>
-    <Appbar.Header backgroundColor="#FFFFFF">
+    <Appbar.Header >
              <Appbar.Action icon="filter" onPress={showModal} />
       <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />
     </Appbar.Header>
     <Appbar >
       
-      <Button icon="thumb-up-outline" mode="outlined" style={{fontsize : "2px"}} onPress={() => console.log('Recommended!')}>
-        Recommend
+      <Button icon="trending-up" mode="outlined" style={{fontsize : "2px"}} onPress={() => console.log('Recommended!')}>
+       
       </Button>
       <Button icon="heart-outline"  mode="outlined" onPress={() => console.log('Hot topics!')}>
-        Hot
+      Hot
       </Button>
       <Button icon="map-outline"  mode="outlined" small onPress={showMap}>
-        nearby
+        Nearby
       </Button>
     </Appbar>
 <Portal>
 <Modal visible={visible} onDismiss={hideModal}>
  <View style={styles.modalContainer}>
- {/* <Slider
+ <Slider
     style={styles.slider}
     minimumValue={0}
     maximumValue={100}
     value={minPrice}
     onValueChange={(value) => setMinPrice(value)}
-  /> */}
+    thumbStyle={styles.thumbStyle}
+        thumbTintColor='#ffffff'
+        minimumTrackTintColor='#0000ff'
+        maximumTrackTintColor='#cccccc'
+  />
+
   <TextInput
     style={styles.textInput}
     label="Min Price"
@@ -59,13 +66,18 @@ const Header = () => {
     keyboardType="numeric"
     onChangeText={(text) => setMinPrice(Number(text))}
   />
-  {/* <Slider
+  <Slider
     style={styles.slider}
     minimumValue={0}
     maximumValue={100}
     value={maxPrice}
     onValueChange={(value) => setMaxPrice(value)}
-  /> */}
+    thumbStyle={styles.thumbStyle}
+        thumbTintColor='#ffffff'
+        minimumTrackTintColor='#0000ff'
+        maximumTrackTintColor='#cccccc'
+        
+  />
   <TextInput
     style={styles.textInput}
     label="Max Price"
@@ -110,14 +122,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
   },
+  Appbar:{
+    backgroundColor:"white"
+  },
   slider: {
     width: '100%',
     height: 40,
     marginBottom: 10,
+    borderRadius: 20,
   },
   textInput: {
     marginBottom: 10,
   },
+  thumbStyle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#0000ff',
+    borderWidth: 2,
+    borderColor: '#ffffff',}
 });
+
 
 export default Header;

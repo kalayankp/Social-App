@@ -12,6 +12,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 // import {AppImages} from '../Theme/AppImages';
 // import {width} from '../Utils/Constant';
 import metrics from '../../contents/metrics';
+import ShareButton from './ShareButton';
+import Comment from './Comment';
+import LikeButton from './LikeButton';
 
 const styles = StyleSheet.create({
   icon: {
@@ -93,7 +96,12 @@ const FeedSideBar = ({item, animation}) => {
         },
         animation,
       ]}>
-      <RenderIcon
+        
+   
+        <LikeButton/>
+        <Comment/>
+        <ShareButton content={`https://liteblog.azurewebsites.net/`}/>
+      {/* <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/heart.png'),
           disText: like,
@@ -102,30 +110,31 @@ const FeedSideBar = ({item, animation}) => {
         }}
         exStyle={{tintColor: likeStatus}}
         onPress={makeAction}
-      />
-      <RenderIcon
+      /> */}
+      {/* <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/comment.png'),
           disText: comment,
           type: 'Comment',
         }}
         onPress={makeAction}
-      />
-      <RenderIcon
+      /> */}
+      
+      {/* <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/comment.png'),
           type: 'Share',
         }}
         onPress={makeAction}
-      />
-      <RenderIcon
+      /> */}
+      {/* <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/share.png'),
           size: 35,
           type: 'More',
         }}
         onPress={makeAction}
-      />
+      /> */}
     </Animated.View>
   );
 };
