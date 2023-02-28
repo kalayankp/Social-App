@@ -1,5 +1,5 @@
 import React, {useState, useRef, useContext} from 'react';
-import {View, Animated} from 'react-native';
+import {SafeAreaView,View, Animated} from 'react-native';
 import {FeedRow} from '../components/Reels/FeedRow';
 // import {AppContext} from '../Context';
 // import CommonStyle from '../Theme/CommonStyle';
@@ -8,6 +8,7 @@ import {data} from '../utils/data';
 import metrics from '../contents/metrics';
 import Header from '../components/Search/Header';
 import ShareButton from '../components/Reels/ShareButton';
+import ReelSearchBar from '../components/Search/ReelSearchBar';
 const ReelsScreen = () => {
   const contentToShare = 'Check out this cool thing I found!';
   //   const {displayHeight, setDisplayHeight} = useContext(AppContext);
@@ -74,11 +75,9 @@ const ReelsScreen = () => {
   };
 
   return (
-    <>
-    {/* <View>
-      <Header/>
-    </View> */}
+    
     <View style={{flex: 1, backgroundColor: 'transparent'}}>
+   {/* <Header/> */}
       <Animated.FlatList
         pagingEnabled
         showsVerticalScrollIndicator={false}
@@ -105,10 +104,8 @@ const ReelsScreen = () => {
         removeClippedSubviews={true}
       />
     </View>
-    {/* <View style={{ position: 'absolute', bottom: 30, right: 15 }}>
-        <ShareButton contentToShare={contentToShare} />
-      </View> */}
-    </>
+   
+   
   );
 };
 

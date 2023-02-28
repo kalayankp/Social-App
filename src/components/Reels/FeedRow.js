@@ -6,6 +6,7 @@ import {VideoComponent} from './VideoComponent';
 import Icons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import metrics from '../../contents/metrics';
+import ReelSearchBar from '../Search/ReelSearchBar';
 
 const FeedRow = ({item, isNext, isVisible, index, transitionAnimation}) => {
   const navigation = useNavigation();
@@ -47,7 +48,9 @@ const FeedRow = ({item, isNext, isVisible, index, transitionAnimation}) => {
         setIsMute={setMute}
         isMute={isMute}
       />
+      <ReelSearchBar/>
       <Back />
+      
       <FeedSideBar item={item} animation={transitionAnimation(index)} />
       <FeedFooter item={item} animation={transitionAnimation(index)} />
     </View>
