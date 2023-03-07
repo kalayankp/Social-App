@@ -1,4 +1,8 @@
-import React, {useContext} from 'react';
+import React, {useContext , useState } from 'react';
+import { Button, Input } from 'react-native-elements';
+import { Portal } from 'react-native-paper';
+import { Modal } from 'react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
 import {
   View,
   Animated,
@@ -13,8 +17,68 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 // import {width} from '../Utils/Constant';
 import metrics from '../../contents/metrics';
 import ShareButton from './ShareButton';
-import Comment from './Comment';
+import CommentsList from './CommentsList';
 import LikeButton from './LikeButton';
+
+
+
+const comments = [
+  {
+    id: '1',
+    user: {
+      name: 'Shivam',
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+    },
+    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    replys:[{
+      id: '2',
+      user: {
+        name: 'Ankita',
+        avatar:'https://randomuser.me/api/portraits/women/1.jpg',
+    },
+    reply:'this is reply  1'
+  },
+  {
+    id: '2',
+    user: {
+      name: 'Ankita',
+      avatar:'https://randomuser.me/api/portraits/women/1.jpg',
+  },
+  reply:'this is reply  2'
+},
+
+]
+},
+{
+  id: '2',
+  user: {
+    name: 'Ankita',
+    avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
+  },
+  text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  replys:[{
+    id: '1',
+    user: {
+      name: 'Shivam',
+      avatar:'https://randomuser.me/api/portraits/men/1.jpg',
+  },
+  reply:'this is reply  3'
+},
+{
+  id: '1',
+  user: {
+    name: 'Shivam',
+    avatar:'https://randomuser.me/api/portraits/men/1.jpg',
+},
+reply:'this is reply  4'
+},
+
+]
+},
+  
+  
+  
+];
 
 const styles = StyleSheet.create({
   icon: {
@@ -78,11 +142,18 @@ const RenderIcon = ({obj, onPress, exStyle = {}}) => {
 };
 
 const FeedSideBar = ({item, animation}) => {
+
+
+  const [messages, setMessages] = useState([]);
+
+  const handleSend = (newMessages) => {
+    setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
+  };
   // const {appTheme} = useContext(AppContext);
   const insets = useSafeAreaInsets();
   const {sideBar} = styles;
   const {like, comment, likeStatus} = item;
-
+  
   const makeAction = async type => {
     // Here perfom feed action based on Type
   };
@@ -98,9 +169,20 @@ const FeedSideBar = ({item, animation}) => {
       ]}>
         
    
-        <LikeButton/>
-        <Comment/>
-        <ShareButton content={`https://liteblog.azurewebsites.net/`}/>
+        {/* <LikeButton/> */}
+        {/* <Comment/> */}
+        <Portal >
+          <Modal >
+          <View>
+      <CommentsList comments={comments} />
+      <Input placeholder="Type your comment here..." />
+      <Button title="Post" />
+    </View>
+          </Modal>
+        </Portal>
+        
+
+        {/* <ShareButton content={`https://liteblog.azurewebsites.net/`}/> */}
       {/* <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/heart.png'),

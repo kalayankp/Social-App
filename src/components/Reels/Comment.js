@@ -1,112 +1,155 @@
+
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, FlatList } from 'react-native';
-import { IconButton, Portal, Modal } from 'react-native-paper';
+import { View, Text, StyleSheet } from 'react-native';
+import { Avatar, Icon, Button, Input } from 'react-native-elements';
 
-const Comment = () => {
-  const [comment, setComment] = useState('');
-  const [comments, setComments] = useState([
-    { id: 1, text: 'This is the first comment' },
-    { id: 2, text: 'This is the second comment' },
-    { id: 3, text: 'This is the third comment' },
-  ]);
-  const [showComments, setShowComments] = useState(false);
+const Comment = ({ comment }) => {
+  const [reaction, setReaction] = useState('');
+  const [showReplyForm, setShowReplyForm] = useState(false);
+  const [replyText, setReplyText] = useState('');
 
-  const handleCommentChange = (text) => {
-    setComment(text);
+  const handleReaction = (reactionType) => {
+    setReaction(reactionType);
   };
 
-  const handleCommentPress = () => {
-    if (comment.trim() !== '') {
-      const newComment = { id: comments.length + 1, text: comment };
-      setComments([...comments, newComment]);
-      setComment('');
-    }
+  const handleReply = () => {
+    setShowReplyForm(true);
   };
 
-  const handleCommentsModalClose = () => {
-    setShowComments(false);
+  const handleCancelReply = () => {
+    setShowReplyForm(false);
+    setReplyText('');
   };
 
-  const renderComment = ({ item }) => {
-    return <Text style={styles.commentText}>{item.text}</Text>;
+  const handleSendReply = () => {
+    // Add code here to send the reply to the server
+    setShowReplyForm(false);
+    setReplyText('');
   };
 
+
+  
   return (
-    <View>
-      <IconButton
-        icon="comment-outline"
-        color="#555"
-        size={24}
-        onPress={() => setShowComments(true)}
-        style={styles.button}
+    <View style={styles.container}>
+      <Avatar
+        rounded
+        source={{
+          uri: comment.user.avatar,
+        }}
+        size="small"
       />
-      <Portal>
-        <Modal
-          visible={showComments}
-          onDismiss={handleCommentsModalClose}
-          contentContainerStyle={styles.modalContent}
-        >
-          <FlatList
-            data={comments}
-            renderItem={renderComment}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={styles.content}
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.name}>{comment.user.name}</Text>
+          <Button
+            type="clear"
+            icon={<Icon name="heart" type="font-awesome" color="#FF6C70" />}
+            onPress={() => handleReaction('like')}
+            containerStyle={styles.reactionButton}
           />
-          <View style={styles.commentContainer}>
-            <TextInput
-              placeholder="Add a comment"
-              value={comment}
-              onChangeText={handleCommentChange}
-              style={styles.input}
+          <Button
+            type="clear"
+            icon={<Icon name="thumbs-up" type="font-awesome" color="#5F7AFF" />}
+            onPress={() => handleReaction('thumbsUp')}
+            containerStyle={styles.reactionButton}
+          />
+          {/* Add more reaction buttons here */}
+          <Button
+            type="clear"
+            title="Reply"
+            onPress={handleReply}
+            containerStyle={styles.replyButton}
+          />
+        </View>
+        <Text style={styles.text}>{comment.text}</Text>
+          {comment.replys.map((reply) => (
+            <View key={reply.id} style={styles.container}>
+              <Avatar
+
+                rounded
+                source={{
+                  uri: reply.user.avatar,
+                }}
+                size="small"
+              />
+              <View style={styles.content}>
+                <View style={styles.header}>
+                  <Text style={styles.name}>{reply.user.name}</Text>
+                </View>
+                <Text style={styles.text}>{reply.reply}</Text>
+              </View>
+            </View>
+          ))}
+        {showReplyForm && (
+          <View style={styles.replyForm}>
+            <Input
+              placeholder="Type your reply here..."
+              value={replyText}
+              onChangeText={setReplyText}
+              autoFocus
             />
-            <IconButton
-              icon="comment-outline"
-              color="#555"
-              size={24}
-              onPress={handleCommentPress}
-              style={styles.button}
-            />
+            <View style={styles.replyFormButtons}>
+              <Button
+                title="Cancel"
+                onPress={handleCancelReply}
+                containerStyle={styles.replyFormButton}
+              />
+              <Button
+                title="Send"
+                onPress={handleSendReply}
+                containerStyle={styles.replyFormButton}
+              />
+            </View>
           </View>
-        </Modal>
-      </Portal>
+        )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    marginRight: 10,
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    padding: 16,
+  container: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+    backgroundColor: 'grey',
+    padding: 10,
+    borderRadius: 10,
   },
   content: {
-    flexGrow: 1,
+    marginLeft: 10,
+    flex: 1,
   },
-  commentContainer: {
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    flex: 1,
-    marginRight: 10,
-    color:'black'
-    
+  name: {
+    fontWeight: 'bold',
   },
-  commentText: {
-    fontSize: 16,
+  text: {
+    marginTop: 5,
+  },
+  reactionButton: {
+    marginLeft: 5,
+    marginHorizontal: 5,
+  },
+  replyButton: {
+    marginLeft: 'auto',
+  },
+  replyForm: {
+    marginTop: 10,
     padding: 10,
-    color:'black'
+    backgroundColor: '#F6F6F6',
+    borderRadius: 10,
+  },
+  replyFormButtons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 10,
+  },
+  replyFormButton: {
+    marginLeft: 10,
   },
 });
-
 export default Comment;

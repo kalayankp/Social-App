@@ -48,9 +48,8 @@ const FeedRow = ({item, isNext, isVisible, index, transitionAnimation}) => {
         setIsMute={setMute}
         isMute={isMute}
       />
-      <ReelSearchBar/>
+      {/* <ReelSearchBar/> */}
       <Back />
-      
       <FeedSideBar item={item} animation={transitionAnimation(index)} />
       <FeedFooter item={item} animation={transitionAnimation(index)} />
     </View>

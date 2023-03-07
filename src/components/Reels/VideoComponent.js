@@ -53,7 +53,7 @@ const VideoComponent = ({post, isVisible, isNext, setIsMute, isMute}) => {
         paused={!isVisible}
         ignoreSilentSwitch={'ignore'}
       />
-      <VolumeButton onPress={setIsMute} isMute={isMute} />
+      {/* <VolumeButton onPress={setIsMute} isMute={isMute} /> */}
     </View>
   );
 };

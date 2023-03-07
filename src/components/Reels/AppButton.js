@@ -158,4 +158,53 @@ const VolumeButton = ({onPress, isMute}) => {
   );
 };
 
-export {ButtonComponent, FollowButton, VolumeButton};
+
+const CommentButton = ({onPress, isMute}) => {
+  // const {isMute, setIsMute} = useContext(AppContext);
+  const [viewAnim] = useState(new Animated.Value(0));
+
+  const onVolumePress = () => {
+    onPress();
+    Animated.timing(viewAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      fadeOut();
+    });
+  };
+
+  const fadeOut = () => {
+    Animated.timing(viewAnim, {
+      delay: 500,
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={onVolumePress}
+      style={styles.touchArea}>
+      <Animated.View
+        style={[
+          styles.muteBtn,
+          {
+            opacity: viewAnim,
+          },
+        ]}>
+        <Image
+          source={
+            (isMute && require('../../asset/Assets/Icons/mute.png')) ||
+            require('../../asset/Assets/Icons/volume.png')
+          }
+          style={styles.mute}
+          resizeMode="contain"
+        />
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+export {ButtonComponent, FollowButton, VolumeButton , CommentButton};
