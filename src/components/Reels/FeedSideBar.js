@@ -19,36 +19,37 @@ import metrics from '../../contents/metrics';
 import ShareButton from './ShareButton';
 import CommentsList from './CommentsList';
 import LikeButton from './LikeButton';
+import CommentBox from './CommentBox';
 
 
 
 const comments = [
-  {
-    id: '1',
-    user: {
-      name: 'Shivam',
-      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-    },
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    replys:[{
-      id: '2',
-      user: {
-        name: 'Ankita',
-        avatar:'https://randomuser.me/api/portraits/women/1.jpg',
-    },
-    reply:'this is reply  1'
-  },
-  {
-    id: '2',
-    user: {
-      name: 'Ankita',
-      avatar:'https://randomuser.me/api/portraits/women/1.jpg',
-  },
-  reply:'this is reply  2'
-},
+//   {
+//     id: '1',
+//     user: {
+//       name: 'Shivam',
+//       avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+//     },
+//     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+//     replys:[{
+//       id: '2',
+//       user: {
+//         name: 'Ankita',
+//         avatar:'https://randomuser.me/api/portraits/women/1.jpg',
+//     },
+//     reply:'this is reply  1'
+//   },
+//   {
+//     id: '2',
+//     user: {
+//       name: 'Ankita',
+//       avatar:'https://randomuser.me/api/portraits/women/1.jpg',
+//   },
+//   reply:'this is reply  2'
+// },
 
-]
-},
+// ]
+// },
 {
   id: '2',
   user: {
@@ -175,8 +176,7 @@ const FeedSideBar = ({item, animation}) => {
           <Modal >
           <View>
       <CommentsList comments={comments} />
-      <Input placeholder="Type your comment here..." />
-      <Button title="Post" />
+      <CommentBox/>
     </View>
           </Modal>
         </Portal>
@@ -220,5 +220,8 @@ const FeedSideBar = ({item, animation}) => {
     </Animated.View>
   );
 };
+
+
+
 
 export {FeedSideBar};
