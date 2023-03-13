@@ -159,6 +159,8 @@ const FeedSideBar = ({item, animation}) => {
     // Here perfom feed action based on Type
   };
 
+
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <Animated.View
       style={[
@@ -173,7 +175,12 @@ const FeedSideBar = ({item, animation}) => {
         {/* <LikeButton/> */}
         {/* <Comment/> */}
         <Portal >
-          <Modal >
+          <Modal visible={modalVisible}
+  onRequestClose={() => setModalVisible(false)}>
+     <Button
+            title="Back to reels"
+            onPress={() => setModalVisible(false)}
+          />
           <View>
       <CommentsList comments={comments} />
       <CommentBox/>
@@ -193,14 +200,14 @@ const FeedSideBar = ({item, animation}) => {
         exStyle={{tintColor: likeStatus}}
         onPress={makeAction}
       /> */}
-      {/* <RenderIcon
+      <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/comment.png'),
           disText: comment,
           type: 'Comment',
         }}
-        onPress={makeAction}
-      /> */}
+        onPress={() => setModalVisible(true)}
+      />
       
       {/* <RenderIcon
         obj={{
