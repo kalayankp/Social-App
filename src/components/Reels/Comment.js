@@ -1,25 +1,35 @@
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet ,Modal } from 'react-native';
 import { Avatar, Icon, Button, Input } from 'react-native-elements';
-
 const Comment = ({ comment }) => {
   const [reaction, setReaction] = useState('');
   const [showReplyForm, setShowReplyForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(true);
+  const [popup , setPopup] = useState(false);
   const [replyText, setReplyText] = useState('');
 
   const handleReaction = (reactionType) => {
     setReaction(reactionType);
+    
   };
 
   const handleReply = () => {
     setShowReplyForm(true);
   };
-
+  const handelEdit = () => {
+    setPopup(true);
+    setShowEditForm(false);
+  }
+  const handleCancelEdit = () => {
+    setShowEditForm(true);
+    setReplyText('');
+  };
   const handleCancelReply = () => {
     setShowReplyForm(false);
     setReplyText('');
   };
+  
 
   const handleSendReply = () => {
     // Add code here to send the reply to the server
@@ -27,10 +37,9 @@ const Comment = ({ comment }) => {
     setReplyText('');
   };
 
-
-  
   return (
     <View style={styles.container}>
+       
       <Avatar
         rounded
         source={{
@@ -53,7 +62,15 @@ const Comment = ({ comment }) => {
             onPress={() => handleReaction('thumbsUp')}
             containerStyle={styles.reactionButton}
           />
+         
+          
           {/* Add more reaction buttons here */}
+          <Button
+            type="clear"
+            icon={<Icon name="edit" type="font-awesome" color="#5F7AFF" />}
+            onPress={() => handelEdit()}
+            containerStyle={styles.reactionButton}
+          />
           <Button
             type="clear"
             title="Reply"
@@ -61,7 +78,29 @@ const Comment = ({ comment }) => {
             containerStyle={styles.replyButton}
           />
         </View>
-        <Text style={styles.text}>{comment.text}</Text>
+        {showEditForm ?<Text style={styles.text}>{comment.text}</Text> : (
+          <View style={styles.replyForm}>
+           
+            <Input
+              value={comment.text}
+              onChangeText={setReplyText}
+              autoFocus
+            />
+            <View style={styles.replyFormButtons}>
+              <Button
+                title="Cancel"
+                onPress={handleCancelEdit}
+                containerStyle={styles.replyFormButton}
+              />
+              <Button
+                title="Send"
+                onPress={handleCancelEdit}
+                containerStyle={styles.replyFormButton}
+              />
+            </View>
+          </View>
+        )}
+        
           {comment.replys.map((reply) => (
             <View key={reply.id} style={styles.container}>
               <Avatar

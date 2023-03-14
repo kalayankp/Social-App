@@ -13,6 +13,12 @@ import {
 } from 'react-native';
 
 const CommentBox = () => {
+  const people = [
+    {
+      id: '1',
+      name: 'Shivam',
+    }
+  ];
   const [comment, setComment] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -46,13 +52,13 @@ const CommentBox = () => {
   const renderAttachments = () => {
     return (
       <TouchableOpacity style={styles.attachmentContainer} onPress={onFileSelected}>
-        {/* <Image source={require('../assets/images/attachment.png')} style={styles.attachmentIcon} /> */}
+        <Image source={require('../../asset/Assets/user.jpeg')} style={styles.attachmentIcon} />
         <Text style={styles.attachmentText}>Attach Files</Text>
       </TouchableOpacity>
     );
   };
 
-  const renderCommentInput = () => {
+  const renderCommentInput = (people) => {
     return (
       <MentionsTextInput
         style={styles.commentInput}
@@ -63,12 +69,12 @@ const CommentBox = () => {
         inputContainerStyle={{backgroundColor: '#fff'}}
         placeholderTextColor={'#ccc'}
         autoCapitalize={'none'}
-        autoCorrect={false}
-        multiline={true}
+        autoCorrect={true}
+        multiline={false}
         returnKeyType={'done'}
         onContentSizeChange={() => {}}
         textInputStyle={{fontSize: 16, color: '#000'}}
-        trigger={'@'}
+        trigger={'$'}
         triggerLocation={'anywhere'}
         renderSuggestions={(people) => (
           <View style={styles.suggestionsContainer}>
@@ -82,6 +88,7 @@ const CommentBox = () => {
             ))}
           </View>
         )}
+        
       />
     );
   };
@@ -90,7 +97,7 @@ const CommentBox = () => {
     <View style={styles.container}>
       {showEmojiPicker && renderEmojiPicker()}
       {renderAttachments()}
-      {renderCommentInput()}
+      {renderCommentInput(people)}
       <TouchableOpacity style={styles.postButton} onPress={() => console.log(`posting comment: ${comment}`)}>
         <Text style={styles.postButtonText}>Post</Text>
       </TouchableOpacity>

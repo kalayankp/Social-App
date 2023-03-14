@@ -76,9 +76,6 @@ reply:'this is reply  4'
 
 ]
 },
-  
-  
-  
 ];
 
 const styles = StyleSheet.create({
@@ -174,10 +171,12 @@ const FeedSideBar = ({item, animation}) => {
    
         {/* <LikeButton/> */}
         {/* <Comment/> */}
+        
         <Portal >
+        
           <Modal visible={modalVisible}
   onRequestClose={() => setModalVisible(false)}>
-     <Button
+          <Button
             title="Back to reels"
             onPress={() => setModalVisible(false)}
           />
@@ -185,8 +184,11 @@ const FeedSideBar = ({item, animation}) => {
       <CommentsList comments={comments} />
       <CommentBox/>
     </View>
+  
           </Modal>
+         
         </Portal>
+      
         
 
         {/* <ShareButton content={`https://liteblog.azurewebsites.net/`}/> */}
