@@ -1,7 +1,6 @@
 import React, {useContext , useState } from 'react';
 import { Button, Input } from 'react-native-elements';
 import { Portal } from 'react-native-paper';
-import { Modal } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import {
   View,
@@ -9,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ScrollView,Modal
 } from 'react-native';
 import {Text} from 'react-native-elements';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -180,10 +180,10 @@ const FeedSideBar = ({item, animation}) => {
             title="Back to reels"
             onPress={() => setModalVisible(false)}
           />
-          <View>
+      <ScrollView style={styles.container}>
       <CommentsList comments={comments} />
       <CommentBox/>
-    </View>
+      </ScrollView>
   
           </Modal>
          
