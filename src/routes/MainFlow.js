@@ -32,6 +32,7 @@ import {
 } from '../components/TabBottomIcons';
 import BuyTokensScreen from '../screens/BuyTokensScreen';
 import NetworkHomeScreen from '../screens/NetworkHomeScreen';
+import CommentScreen from '../components/Reels/CommentScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -172,6 +173,7 @@ const MainFlow = () => {
           options={{headerLeft: null}}
         />
       </Stack.Group>
+      <Stack.Screen name="Comment" component={CommentScreen} />
     </Stack.Navigator>
   );
 };

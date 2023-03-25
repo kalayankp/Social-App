@@ -43,7 +43,7 @@ const Comment = ({ comment }) => {
       <Avatar
         rounded
         source={{
-          uri: comment.user.avatar,
+          uri: comment.user.imageUri,
         }}
         size="small"
       />
@@ -101,7 +101,7 @@ const Comment = ({ comment }) => {
           </View>
         )}
         
-          {comment.replys.map((reply) => (
+          {/* {comment.replys.map((reply) => (
             <View key={reply.id} style={styles.container}>
               <Avatar
 
@@ -118,7 +118,7 @@ const Comment = ({ comment }) => {
                 <Text style={styles.text}>{reply.reply}</Text>
               </View>
             </View>
-          ))}
+          ))} */}
         {showReplyForm && (
           <View style={styles.replyForm}>
             <Input

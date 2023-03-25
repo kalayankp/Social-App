@@ -16,40 +16,37 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 // import {AppImages} from '../Theme/AppImages';
 // import {width} from '../Utils/Constant';
 import metrics from '../../contents/metrics';
-import ShareButton from './ShareButton';
-import CommentsList from './CommentsList';
-import LikeButton from './LikeButton';
-import CommentBox from './CommentBox';
+
 
 
 
 const comments = [
-//   {
-//     id: '1',
-//     user: {
-//       name: 'Shivam',
-//       avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-//     },
-//     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-//     replys:[{
-//       id: '2',
-//       user: {
-//         name: 'Ankita',
-//         avatar:'https://randomuser.me/api/portraits/women/1.jpg',
-//     },
-//     reply:'this is reply  1'
-//   },
-//   {
-//     id: '2',
-//     user: {
-//       name: 'Ankita',
-//       avatar:'https://randomuser.me/api/portraits/women/1.jpg',
-//   },
-//   reply:'this is reply  2'
-// },
+  {
+    id: '1',
+    user: {
+      name: 'Shivam',
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+    },
+    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    replys:[{
+      id: '2',
+      user: {
+        name: 'Ankita',
+        avatar:'https://randomuser.me/api/portraits/women/1.jpg',
+    },
+    reply:'this is reply  1'
+  },
+  {
+    id: '2',
+    user: {
+      name: 'Ankita',
+      avatar:'https://randomuser.me/api/portraits/women/1.jpg',
+  },
+  reply:'this is reply  2'
+},
 
-// ]
-// },
+]
+},
 {
   id: '2',
   user: {
@@ -77,7 +74,6 @@ reply:'this is reply  4'
 ]
 },
 ];
-
 const styles = StyleSheet.create({
   icon: {
     marginHorizontal: 10,
@@ -139,7 +135,7 @@ const RenderIcon = ({obj, onPress, exStyle = {}}) => {
   );
 };
 
-const FeedSideBar = ({item, animation}) => {
+const FeedSideBar = ({item, animation , navigation}) => {
 
 
   const [messages, setMessages] = useState([]);
@@ -172,27 +168,9 @@ const FeedSideBar = ({item, animation}) => {
         {/* <LikeButton/> */}
         {/* <Comment/> */}
         
-        <Portal >
-        
-          <Modal visible={modalVisible}
-  onRequestClose={() => setModalVisible(false)}>
-          <Button
-            title="Back to reels"
-            onPress={() => setModalVisible(false)}
-          />
-      <ScrollView style={styles.container}>
-      <CommentsList comments={comments} />
-      <CommentBox/>
-      </ScrollView>
-  
-          </Modal>
-         
-        </Portal>
       
-        
-
         {/* <ShareButton content={`https://liteblog.azurewebsites.net/`}/> */}
-      {/* <RenderIcon
+      <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/heart.png'),
           disText: like,
@@ -201,31 +179,25 @@ const FeedSideBar = ({item, animation}) => {
         }}
         exStyle={{tintColor: likeStatus}}
         onPress={makeAction}
-      /> */}
+      />
       <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/comment.png'),
           disText: comment,
           type: 'Comment',
         }}
-        onPress={() => setModalVisible(true)}
+        onPress={() => navigation.navigate('Comment') }
       />
       
-      {/* <RenderIcon
-        obj={{
-          imageIcon: require('../../asset/Assets/Icons/comment.png'),
-          type: 'Share',
-        }}
-        onPress={makeAction}
-      /> */}
-      {/* <RenderIcon
+      
+      <RenderIcon
         obj={{
           imageIcon: require('../../asset/Assets/Icons/share.png'),
           size: 35,
           type: 'More',
         }}
         onPress={makeAction}
-      /> */}
+      />
     </Animated.View>
   );
 };

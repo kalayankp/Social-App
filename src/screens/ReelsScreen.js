@@ -6,12 +6,7 @@ import {FeedRow} from '../components/Reels/FeedRow';
 // import {height, isIOS} from '../Utils/Constant';
 import {data} from '../utils/data';
 import metrics from '../contents/metrics';
-import Header from '../components/Search/Header';
-import ShareButton from '../components/Reels/ShareButton';
-import ReelSearchBar from '../components/Search/ReelSearchBar';
 const ReelsScreen = () => {
-  const contentToShare = 'Check out this cool thing I found!';
-  //   const {displayHeight, setDisplayHeight} = useContext(AppContext);
   const refFlatList = useRef();
   const [scrollY] = useState(new Animated.Value(0));
   const [scrollInfo, setScrollInfo] = useState({isViewable: true, index: 0});
@@ -46,12 +41,8 @@ const ReelsScreen = () => {
     index,
   });
 
-  //   const onLayout = ({nativeEvent}) => {
-  //     setDisplayHeight((!isIOS && nativeEvent.layout.height) || height);
-  //   };
-
+  
   const onEndReached = () => {
-    // make api call here
   };
 
   const keyExtractor = (item, index) => {
@@ -104,8 +95,6 @@ const ReelsScreen = () => {
         removeClippedSubviews={true}
       />
     </View>
-   
-   
   );
 };
 

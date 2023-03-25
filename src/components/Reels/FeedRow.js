@@ -50,7 +50,7 @@ const FeedRow = ({item, isNext, isVisible, index, transitionAnimation}) => {
       />
       {/* <ReelSearchBar/> */}
       <Back />
-      <FeedSideBar item={item} animation={transitionAnimation(index)} />
+      <FeedSideBar item={item} animation={transitionAnimation(index)}  navigation={navigation} />
       <FeedFooter item={item} animation={transitionAnimation(index)} />
     </View>
   );
