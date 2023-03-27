@@ -2,13 +2,12 @@ import React, {useEffect} from 'react';
 import {FlatList, View} from 'react-native';
 import CommentsList from './CommentsList';
 import CommentBox from './CommentBox';
-import useSupabase from '../../../superbase/superbase';
+import supabase from '../../../superbase/superbase';
 import ClickableTextButton from './ClickableTextButton';
 const CommentScreen = () => {
-  const supa = useSupabase();
   const postComment = async (Body, IdentityID, ItemID) => {
     const args = {Body, IdentityID, ItemID, ItemType: 2};
-    const {data, error} = await supa.from('Comments').insert(args);
+    const {data, error} = await supabase.from('Comments').insert(args);
     console.log('POSTCOMMENT', data, error);
     return data;
   };
