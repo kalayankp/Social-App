@@ -42,7 +42,8 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^12.3.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-video": "^5.2.0"
+    "react-native-video": "^5.2.0",
+    "supabase": "^1.45.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",

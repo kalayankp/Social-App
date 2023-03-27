@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { FlatList , View } from 'react-native'
 import CommentsList from './CommentsList'
 import CommentBox from './CommentBox'
-import useSupabase from '../../../superbase/superbase'
+import useSupabase from '../../utils/useSupabase.js';
 import ClickableTextButton from './ClickableTextButton'
 const CommentScreen = () => {
   const postComment = async(Body, IdentityID,ItemID ) => {
