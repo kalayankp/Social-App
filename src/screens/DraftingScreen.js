@@ -1,23 +1,17 @@
-import React ,{ useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TextInput, Text, TouchableOpacity, Image, View, FlatList ,StyleSheet } from 'react-native';
+import { TextInput, Text, TouchableOpacity, Image, View, FlatList, StyleSheet } from 'react-native';
 import Clause from '../components/Signing/Clauses';
-
-
-// import useSupabase from '../utils/useSupabase.js';
-
-
 
 const DraftingScreen = () => {
   const myImage = require('../asset/Assets/Icons/editButton.png');
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState('Drafting');
+  const [title, setTitle] = useState('Contract Title');
   const navigation = useNavigation();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  // const supabase = useSupabase(); // <-- use the useSupabase hook to get the Supabase client object
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -25,14 +19,12 @@ const DraftingScreen = () => {
 
   const handleTitleSave = () => {
     setIsEditing(false);
-    // Here you can handle the logic to save the changes made to the contract
   };
 
   const handleSave = () => {
     setIsEditing(false);
   };
 
-  // Define an array of clauses
   const clauses = [
     {
       text: 'This is clause 1',
@@ -48,8 +40,9 @@ const DraftingScreen = () => {
     },
   ];
 
-  const renderClause = ({item}) => (
+  const renderClause = ({ item }) => (
     <Clause
+      style={[styles.claus, { marginBottom: 100 }]}
       clause={item.text}
       index={item.index}
       isEditing={isEditing}
@@ -57,29 +50,23 @@ const DraftingScreen = () => {
       handleSave={handleSave}
     />
   );
-
-  // useEffect(() => {
-  //   const fetchContracts = async () => {
-  //     let { data: contracts, error } = await supabase
-  //       .from('contracts')
-  //       .select('id');
-  //     console.log(contracts);
-  //   };
-
-  //   fetchContracts();
-  // }, [supabase]);
+  const ClauseCount = clauses.length;
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
+        
         {isEditing ? (
           <TextInput
             style={styles.titleInput}
             value={title}
-            onChangeText={text => setTitle(text)}
+            onChangeText={(text) => setTitle(text)}
           />
         ) : (
-          <Text style={styles.title}>{title}</Text>
+          <View>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.numberOfClauses}>{ClauseCount} Clauses Total</Text>
+          </View>
         )}
 
         {isEditing ? (
@@ -88,20 +75,37 @@ const DraftingScreen = () => {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-            <Image style={styles.editButtonText} source={myImage} />
+            <Image source={myImage} />
           </TouchableOpacity>
         )}
       </View>
 
-      {/* Render the list of clauses using FlatList */}
       <FlatList
+        style={styles.clause}
         data={clauses}
         renderItem={renderClause}
-        keyExtractor={item => item.index.toString()}
+        keyExtractor={(item) => item.index.toString()}
       />
+      {/* Add the back button */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>Back</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+      style={styles.sign}
+      onPress={()=>{console.log('sign')}}
+      >
+        <Text style={styles.signText}>Sign</Text>
+      </TouchableOpacity>
+
+
     </View>
   );
 };
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -125,54 +129,123 @@ const styles = StyleSheet.create({
   },
   titleInput: {
     fontFamily: 'Inter',
-    fontWeight: '400',
-    fontSize: 30,
-    color: '#525266',
-    borderBottomColor: '#525266',
-    width: '80%',
-  },
-  editButton: {
-    backgroundColor: '#FFFFFF',
-  },
-  editButtonText: {
-    color: '#FFA500',
-    fontFamily: 'Inter',
     fontWeight: '600',
-    fontSize: 16,
-    lineHeight: 19.2,
-    textAlign: 'center',
-    verticalAlign: 'middle',
-  },
-  clause: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  listItem: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderBottomColor: '#CCC',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  clauseText: {
-    fontFamily: 'Inter',
-    fontWeight: '400',
-    fontSize: 18,
-    color: '#525266',
-  },
-  saveButton: {
-    backgroundColor: '#FFA500',
-    padding: 10,
-    borderRadius: 5,
-  },
-  saveButtonText: {
-    fontFamily: 'Inter',
-    fontWeight: '600',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
+fontSize: 25,
+color: '#525266',
+width: '70%',
+marginLeft: 10,
+},
+bodyContainer: {
+paddingHorizontal: 20,
+paddingVertical: 10,
+},
+bodyInput: {
+fontFamily: 'Inter',
+fontWeight: '400',
+fontSize: 18,
+color: '#525266',
+minHeight: 150,
+textAlignVertical: 'top',
+},
+buttonContainer: {
+paddingHorizontal: 20,
+paddingVertical: 10,
+flexDirection: 'row',
+justifyContent: 'space-around',
+alignItems: 'center',
+},
+saveButton: {
+backgroundColor: '#32A05F',
+borderRadius: 10,
+paddingVertical: 10,
+paddingHorizontal: 20,
+},
+saveButtonText: {
+fontFamily: 'Inter',
+fontWeight: '600',
+fontSize: 18,
+color: '#FFFFFF',
+},
+cancelButton: {
+backgroundColor: '#E60023',
+borderRadius: 10,
+paddingVertical: 10,
+paddingHorizontal: 20,
+},
+cancelButtonText: {
+fontFamily: 'Inter',
+fontWeight: '600',
+fontSize: 18,
+color: '#FFFFFF',
+},
+editButtonText: {
+fontFamily: 'Inter',
+fontWeight: '600',
+fontSize: 18,
+color: '#FF6666',
+},
+
+backButtonContainer: {
+  position: 'absolute',
+  bottom: 20,
+  left: 20,
+  right: 20,
+  alignItems: 'center',
+},
+backButtonText: {
+  fontFamily: 'Inter',
+  fontWeight: 'bold',
+  fontSize: 18,
+  color: '#FFFFFF',
+},
+backButton: {
+  backgroundColor: 'black',  // black
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  alignItems: 'center',
+  borderRadius: 10,
+  position: 'absolute',
+  bottom: 80,
+  left: 20,
+  right: 20,
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  }
+},
+sign: {
+  backgroundColor: '#EC4D36',
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  alignItems: 'center',
+  borderRadius: 10,
+  position: 'absolute',
+  bottom: 20,
+  left: 20,
+  right: 20,
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  }
+},
+signText: {
+  fontFamily: 'Inter',
+  fontWeight: 'bold',
+  fontSize: 18,
+  color: 'white',
+},
+numberOfClauses: {
+  fontFamily: 'Inter',
+  fontWeight: '4',
+  fontSize: 10,
+  color: '#525266',
+},
+
+
 });
 
 export default DraftingScreen;
