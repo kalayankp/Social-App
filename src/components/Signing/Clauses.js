@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity,Image } from "react-native";
 
-const Clause = ({ clause, index, isEditing, handleEdit, handleSave }) => {
+const Clause = ({ clause, index, isEditing,handleclauseEdit, handleSave, handleClauseChange}) => {
   const myImage = require("../../asset/Assets/Icons/editButton.png");
   const [isEditingClause, setIsEditingClause] = React.useState(false);
   const [clauseText, setClauseText] = React.useState(clause);
@@ -9,10 +9,12 @@ const Clause = ({ clause, index, isEditing, handleEdit, handleSave }) => {
 
   const handleEditClause = () => {
     setIsEditingClause(true);
+    handleclauseEdit(true)
   };
 
   const handleSaveClause = () => {
     setIsEditingClause(false);
+    handleSave(false)
     // Here you can handle the logic to save the changes made to the clause
   };
 
@@ -20,6 +22,7 @@ const Clause = ({ clause, index, isEditing, handleEdit, handleSave }) => {
     setClauseText(text);
     const words = text.trim().split(/\s+/);
     setWordCount(words.length);
+    handleClauseChange(index, text); // Call the callback function and pass the index and text as arguments
   };
 
   return (

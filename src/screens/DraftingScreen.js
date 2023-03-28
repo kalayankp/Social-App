@@ -8,24 +8,9 @@ import Clause from '../components/Signing/Clauses';
 const DraftingScreen = () => {
   const myImage = require('../asset/Assets/Icons/editButton.png');
   const [isEditing, setIsEditing] = useState(false);
+  const [button , setButton] = useState(true)
   const [title, setTitle] = useState('Contract Title');
-  const navigation = useNavigation();
-  const { colors } = useTheme();
-  const insets = useSafeAreaInsets();
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleTitleSave = () => {
-    setIsEditing(false);
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
-  };
-
-  const clauses = [
+    const [clauses, setClauses] = useState([
     {
       text: 'This is clause 1',
       index: 0,
@@ -38,7 +23,43 @@ const DraftingScreen = () => {
       text: 'This is clause 3',
       index: 2,
     },
-  ];
+  ]);
+  const navigation = useNavigation();
+  const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setButton(false)
+  };
+  const handleClauseChange = (index, text) => {
+    const updatedClauses = [...clauses];
+    updatedClauses[index].text = text;
+    setClauses(updatedClauses);
+  };
+  const handleTitleSave = () => {
+    setIsEditing(false);
+    setButton(true)
+  };
+  const handleSave = () => {
+    setIsEditing(false);
+    console.log("save")
+  };
+
+  // const clauses = [
+  //   {
+  //     text: 'This is clause 1',
+  //     index: 0,
+  //   },
+  //   {
+  //     text: 'This is clause 2',
+  //     index: 1,
+  //   },
+  //   {
+  //     text: 'This is clause 3',
+  //     index: 2,
+  //   },
+  // ];
 
   const renderClause = ({ item }) => (
     <Clause
@@ -48,6 +69,7 @@ const DraftingScreen = () => {
       isEditing={isEditing}
       handleEdit={handleEdit}
       handleSave={handleSave}
+      handleClauseChange={handleClauseChange}
     />
   );
   const ClauseCount = clauses.length;
@@ -87,7 +109,7 @@ const DraftingScreen = () => {
         keyExtractor={(item) => item.index.toString()}
       />
       {/* Add the back button */}
-      <TouchableOpacity
+      {button?(<View><TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
@@ -98,9 +120,7 @@ const DraftingScreen = () => {
       onPress={()=>{console.log('sign')}}
       >
         <Text style={styles.signText}>Sign</Text>
-      </TouchableOpacity>
-
-
+      </TouchableOpacity></View>):<View></View>}
     </View>
   );
 };
@@ -240,12 +260,10 @@ signText: {
 },
 numberOfClauses: {
   fontFamily: 'Inter',
-  fontWeight: '4',
+  fontWeight: 'normal',
   fontSize: 10,
   color: '#525266',
 },
-
-
 });
 
 export default DraftingScreen;
