@@ -198,13 +198,14 @@
 
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
+import {supabase} from '../../../superbase/superbase';  
 
 const CommentBox = ({ IdentityID, ItemID }) => {
   const [comment, setComment] = useState('');
 
   const postComment = async () => {
     const args = { Body: comment, IdentityID, ItemID, ItemType: 2 };
-    const { data, error } = await supa.from('Comments').insert(args);
+    const { data, error } = await supabase  .from('Comment').insert(args);
     console.log('POSTCOMMENT', data, error);
     setComment('');
   };
