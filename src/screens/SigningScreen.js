@@ -11,7 +11,7 @@ const SigningScreen = () => {
   const [clauses, setClauses] = useState([
     { id: "1", text: "I agree to use the product for its intended purpose only", isSigned: true },
     { id: "2", text: "I agree not to resell the product", isSigned: false },
-    { id: "3", text: "I agree to pay the full amount", isSigned: true},
+    { id: "3", text: "I agree to pay the full amount", isSigned: false },
     
 
   ]);
@@ -58,7 +58,7 @@ const SigningScreen = () => {
           style={styles.sign}
           onPress={() => { console.log('Save') }}
         >
-          <Text style={styles.signText}>Save</Text>
+          <Text style={styles.signText}>Sign</Text>
         </TouchableOpacity></View>
     </View>
 
