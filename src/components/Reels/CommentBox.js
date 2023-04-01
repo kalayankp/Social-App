@@ -204,7 +204,7 @@ const CommentBox = ({ IdentityID, ItemID }) => {
   const [comment, setComment] = useState('');
 
   const postComment = async () => {
-    const args = { Body: comment, IdentityID, ItemID, ItemType: 2 };
+    const args = { Body: comment, IdentityID : "00000000-0000-0000-0000-000000000000", ItemID :"00000000-0000-0000-0000-000000000000" , ItemType: 2 };
     const { data, error } = await supabase  .from('Comment').insert(args);
     console.log('POSTCOMMENT', data, error);
     setComment('');
