@@ -1,17 +1,7 @@
 import React, {useEffect} from 'react';
-import {FlatList, View} from 'react-native';
-import CommentsList from './CommentsList';
-import CommentBox from './CommentBox';
-import supabase from '../../../superbase/superbase';
-import ClickableTextButton from './ClickableTextButton';
+import {View, Text ,StyleSheet} from 'react-native';
+import InputComment from './CommentComponent/InputComment';
 const CommentScreen = () => {
-  const postComment = async (Body, IdentityID, ItemID) => {
-    const args = {Body, IdentityID, ItemID, ItemType: 2};
-    const {data, error} = await supabase.from('Comments').insert(args);
-    console.log('POSTCOMMENT', data, error);
-    return data;
-  };
-
   const comments = [
     {
       id: 1,
@@ -25,12 +15,20 @@ const CommentScreen = () => {
     },
   ];
   return (
-    <View>
-      <CommentsList comments={comments} />
-      <CommentBox ItemID={2} />
-      {/* <ClickableTextButton onPress={postComment} buttonText={'post'}/> */}
+    <View  
+    style = {{flex:1, backgroundColor: 'white'}}
+    >
+        <View   style={styles.inputBox}>
+          <InputComment />
+          </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  inputBox: {
+  
+  },
+});
 
 export default CommentScreen;
