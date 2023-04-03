@@ -1,25 +1,46 @@
 import React, {useEffect} from 'react';
-import {View, Text ,StyleSheet} from 'react-native';
-import InputComment from './CommentComponent/InputComment';
+import {View, Text ,StyleSheet,FlatList} from 'react-native';
+import Comment from './Comment';
+import CommentBox from './CommentBox';
 const CommentScreen = () => {
   const comments = [
-    {
-      id: 1,
-      comment: 'This is a comment',
-      user: {
-        id: 'u1',
-        username: 'Davide',
-        imageUri:
-          'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/1.jpg',
-      },
-    },
-  ];
+  {
+    username: 'johndoe',
+    profilePic: 'https://picsum.photos/32/32',
+    commentText: 'This is a great photo!',
+    time: '2 hours ago',
+    likes : 0,
+  },
+  {
+    username: 'janedoe',
+    profilePic: 'https://picsum.photos/32/32',
+    commentText: 'Wow, stunning!',
+    time: '1 hour ago',
+    likes : 0,
+  },
+];
+
+  const renderItem = ({ item }) => (
+    <Comment
+      username={item.username}
+      profilePic={item.profilePic}
+      commentText={item.commentText}
+      time={item.time}
+    />
+  );
   return (
     <View  
     style = {{flex:1, backgroundColor: 'white'}}
     >
-        <View   style={styles.inputBox}>
-          <InputComment />
+       <View>
+      <FlatList
+        data={comments}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
+        <View style={styles.inputBox}>
+          <CommentBox/>
           </View>
     </View>
   );
@@ -27,8 +48,13 @@ const CommentScreen = () => {
 
 const styles = StyleSheet.create({
   inputBox: {
-  
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
+
+  
 });
 
 export default CommentScreen;
