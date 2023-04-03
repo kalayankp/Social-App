@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet ,Modal} from 'react-native';
 
 import { Icon } from 'react-native-elements';
-import EmojiSelector from 'react-native-emoji-selector';
+import EmojiModal from 'react-native-emoji-modal';
 
-
-const CommentBox = () => {
+const CommentBox = (props) => {
   const [comment, setComment] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
   const handleCommentChange = (text) => {
     setComment(text);
   };
-
   const handleAddEmoji = (emoji) => {
     setComment(comment + emoji);
   };
-
   const toggleEmojiPicker = () => {
     setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const postButton = () => {
+    props.onPostComment(comment);
+    setComment('');
   };
 
   return (
@@ -36,10 +37,29 @@ const CommentBox = () => {
       </View>
       {showEmojiPicker && (
         <View style={styles.emojiPickerContainer}>
-          <EmojiSelector onEmojiSelected={handleAddEmoji} />
+          <Modal  visible={showEmojiPicker} transparent={true} animationType="slide" onRequestClose={toggleEmojiPicker} style={styles.Modal}
+          >
+          <EmojiModal
+            onEmojiSelected={handleAddEmoji}
+            rows={7}
+            localizedCategories={[ 
+              'Smileys and emotion',
+              'People and body',
+              'Animals and nature',
+              'Food and drink',
+              'Activities',
+              'Travel and places',
+              'Objects',
+              'Symbols',
+            ]}
+            onPressOutside={toggleEmojiPicker}
+            />
+            
+      </Modal>  
         </View>
       )}
-      <TouchableOpacity style={styles.postButton}>
+      <TouchableOpacity style={styles.postButton} 
+      onPress={postButton}>
         <Text style={styles.postButtonText}>Post</Text>
       </TouchableOpacity>
     </View>
@@ -68,7 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     marginLeft: 8,
-    color: 'black',
+    
   },
   postButton: {
     paddingHorizontal: 16,
@@ -88,6 +108,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
+  Modal:{
+    // stick to input box
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    }
 });
 
 

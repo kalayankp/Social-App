@@ -6184,6 +6184,16 @@
     "array-includes" "^3.1.4"
     "object.assign" "^4.1.2"
 
+"just-group-by@2.1.2":
+  "integrity" "sha512-pl5PjWr/WAQx0XL7igWUMwQoiyhYt+tc/8STlNgjENqZjRch4V9dExBF1vd9SRob75vGXrUKyL2Dp4kRVeadPQ=="
+  "resolved" "https://registry.npmjs.org/just-group-by/-/just-group-by-2.1.2.tgz"
+  "version" "2.1.2"
+
+"just-map-values@3.1.1":
+  "integrity" "sha512-te7sWH0edcRLXCDLZu+kNr7mBPOBON4hTxnE6/pIWjUiyv08MvdTUo2Iw9nySwb5TfoMNb5ZdodER8RD1Zu5jA=="
+  "resolved" "https://registry.npmjs.org/just-map-values/-/just-map-values-3.1.1.tgz"
+  "version" "3.1.1"
+
 "keymirror@^0.1.1":
   "integrity" "sha1-kYiJ6hP40KQufFVyUO7nE63JXDU="
   "resolved" "https://registry.npmjs.org/keymirror/-/keymirror-0.1.1.tgz"
@@ -7864,6 +7874,17 @@
     "react-native-scrollable-tab-view" "^1.0.0"
     "string.fromcodepoint" "^0.2.1"
 
+"react-native-emoji-modal@^0.2.4":
+  "integrity" "sha512-A8rwI6Cfrmm3VbCsC2cSi1nCrn+Fq706tf76CyTwD7939dIXcnx3s2ifLKhhiKJTVhUrsrSI7Gei0soOMJiIIg=="
+  "resolved" "https://registry.npmjs.org/react-native-emoji-modal/-/react-native-emoji-modal-0.2.4.tgz"
+  "version" "0.2.4"
+  dependencies:
+    "just-group-by" "2.1.2"
+    "just-map-values" "3.1.1"
+    "react" ">=17.0.0"
+    "react-native" ">=0.64.0"
+    "react-native-vector-icons" "^9.0.0"
+
 "react-native-emoji-selector@^0.2.0":
   "integrity" "sha512-+rPPWG5vl5AexdH8udEwtzdq9QUGD6kp+dQ8C/459d3ScM0S3UnT/qAvhmpsTgCbgjpdwiJIcrKNxKmGEDb15g=="
   "resolved" "https://registry.npmjs.org/react-native-emoji-selector/-/react-native-emoji-selector-0.2.0.tgz"
@@ -8034,7 +8055,7 @@
   "resolved" "https://registry.npmjs.org/react-native-typing-animation/-/react-native-typing-animation-0.1.7.tgz"
   "version" "0.1.7"
 
-"react-native-vector-icons@*", "react-native-vector-icons@^9.2.0", "react-native-vector-icons@>7.0.0":
+"react-native-vector-icons@*", "react-native-vector-icons@^9.0.0", "react-native-vector-icons@^9.2.0", "react-native-vector-icons@>7.0.0":
   "integrity" "sha512-wKYLaFuQST/chH3AJRjmOLoLy3JEs1JR6zMNgTaemFpNoXs0ztRnTxcxFD9xhX7cJe1/zoN5BpQYe7kL0m5yyA=="
   "resolved" "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-9.2.0.tgz"
   "version" "9.2.0"
@@ -8051,7 +8072,7 @@
     "prop-types" "^15.7.2"
     "shaka-player" "^2.5.9"
 
-"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.68 || 1000.0.0", "react-native@>= 0.51", "react-native@>=0.20.0", "react-native@>=0.42.0", "react-native@>=0.50.0", "react-native@>=0.51.0", "react-native@>=0.55", "react-native@>=0.57", "react-native@0.68.0":
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.68 || 1000.0.0", "react-native@>= 0.51", "react-native@>=0.20.0", "react-native@>=0.42.0", "react-native@>=0.50.0", "react-native@>=0.51.0", "react-native@>=0.55", "react-native@>=0.57", "react-native@>=0.64.0", "react-native@0.68.0":
   "integrity" "sha512-Qi8KpG9rqiU0hVp05GKkuRe8iAVhblYMwpnwG3wkBi99Z/X8iZ0jD1b1UW0/y6oesmCyGQAxpsB36imU8zg1AQ=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.68.0.tgz"
   "version" "0.68.0"
@@ -8117,7 +8138,7 @@
   "resolved" "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
   "version" "0.13.4"
 
-"react@*", "react@^16.0.0 || ^17.0.0", "react@^17.0.0", "react@^18.0.0", "react@>= 16.0", "react@>=15.0.0", "react@>=16.0.0", "react@>=16.3.0", "react@>=16.8", "react@16 || 17", "react@17.0.2":
+"react@*", "react@^16.0.0 || ^17.0.0", "react@^17.0.0", "react@^18.0.0", "react@>= 16.0", "react@>=15.0.0", "react@>=16.0.0", "react@>=16.3.0", "react@>=16.8", "react@>=17.0.0", "react@16 || 17", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
