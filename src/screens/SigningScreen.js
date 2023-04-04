@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity ,KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import SignedClause from "../components/Signing/SignedClause";
 
@@ -9,6 +9,12 @@ const SigningScreen = () => {
   const navigation = useNavigation();
 
   const [clauses, setClauses] = useState([
+    { id: "1", text: "I agree to use the product for its intended purpose only", isSigned: true },
+    { id: "2", text: "I agree not to resell the product", isSigned: false },
+    { id: "3", text: "I agree to pay the full amount", isSigned: false },
+    { id: "1", text: "I agree to use the product for its intended purpose only", isSigned: true },
+    { id: "2", text: "I agree not to resell the product", isSigned: false },
+    { id: "3", text: "I agree to pay the full amount", isSigned: false },
     { id: "1", text: "I agree to use the product for its intended purpose only", isSigned: true },
     { id: "2", text: "I agree not to resell the product", isSigned: false },
     { id: "3", text: "I agree to pay the full amount", isSigned: false },
@@ -38,6 +44,11 @@ const SigningScreen = () => {
   );
 
   return (
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: 'white' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 64}
+    >
     <View style={styles.container}>
       <Text style={styles.terms}>T&amp;C</Text>
       <Text style={styles.numberOfClauses}>Clauses: {totalSingned}/{clauses.length} </Text>
@@ -46,10 +57,11 @@ const SigningScreen = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
+</View>
 
-
-<View><TouchableOpacity
-        style={styles.backButton}
+<View style={{flexDirection:'row',justifyContent:'space-between',marginHorizontal:20,marginVertical:20}} 
+><TouchableOpacity
+        style={styles.backButton }
         onPress={() => navigation.goBack()}
       >
         <Text style={styles.backButtonText}>Back</Text>
@@ -60,8 +72,7 @@ const SigningScreen = () => {
         >
           <Text style={styles.signText}>Sign</Text>
         </TouchableOpacity></View>
-    </View>
-
+    </KeyboardAvoidingView>
   );
 };
 
@@ -69,7 +80,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
-        marginTop :'50%'
+        marginTop :'50%',
+        bottom: 55,
       },
       terms: {
         fontSize: 30,
@@ -91,12 +103,12 @@ const styles = StyleSheet.create({
       },
       backButton: {
         backgroundColor: 'black',  // black
-        paddingVertical: 10,
+        paddingVertical: 8,
         paddingHorizontal: 20,
         alignItems: 'center',
         borderRadius: 10,
         position: 'absolute',
-        bottom: 80,
+        bottom:45,
         left: 20,
         right: 20,
         alignItems: 'center',
@@ -108,12 +120,12 @@ const styles = StyleSheet.create({
       },
       sign: {
         backgroundColor: '#EC4D36',
-        paddingVertical: 10,
+        paddingVertical: 5,
         paddingHorizontal: 20,
         alignItems: 'center',
         borderRadius: 10,
         position: 'absolute',
-        bottom: 20,
+        bottom:0,
         left: 20,
         right: 20,
         alignItems: 'center',
