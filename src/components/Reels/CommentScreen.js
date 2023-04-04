@@ -1,35 +1,69 @@
-import React, { useEffect } from 'react'
-import { FlatList , View } from 'react-native'
-import CommentsList from './CommentsList'
-import CommentBox from './CommentBox'
-import useSupabase from '../../utils/useSupabase.js';
-import ClickableTextButton from './ClickableTextButton'
-const CommentScreen = () => {
-  const postComment = async(Body, IdentityID,ItemID ) => {
-    const args = { Body, IdentityID, ItemID, ItemType: 2 }
-    const {data,error} = await useSupabase.from('Comments').insert(args);
-    console.log('POSTCOMMENT',data,error);
-  return data;
-  }
-  
-  const comments = [
-    {
-      id: 1,
-      comment: 'This is a comment',
-      user: {
-        id: 'u1',
-        username: 'Davide',
-        imageUri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/1.jpg',
-      },
-    },]
-  return (
-    <View>
-      <CommentsList comments={comments} />
-      <CommentBox  ItemID={2}/>
-      {/* <ClickableTextButton onPress={postComment} buttonText={'post'}/> */}
-   
-    </View>
-  )
-}
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import Comment from './Comment';
+import CommentBox from './CommentBox';
 
-export default CommentScreen
+const CommentScreen = () => {
+  const [comments, setComments] = useState([
+    {
+      username: 'johndoe',
+      profilePic: 'https://picsum.photos/32/32',
+      commentText: 'This is a great photo!',
+      time: '2 hours ago',
+      likes: 0,
+    },
+    {
+      username: 'janedoe',
+      profilePic: 'https://picsum.photos/32/32',
+      commentText: 'Wow, stunning!',
+      time: '1 hour ago',
+      likes: 0,
+    },
+  ]);
+
+  const renderItem = ({ item }) => (
+    <Comment
+      username={item.username}
+      profilePic={item.profilePic}
+      commentText={item.commentText}
+      time={item.time}
+    />
+  );
+
+  const onPostComment = (comment) => {
+    const newComment = {
+      username: 'johndoe',
+      profilePic: 'https://picsum.photos/32/32',
+      commentText: comment,
+      time: 'just now',
+      likes: 0,
+    };
+    setComments([...comments, newComment]);
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: 'white' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 2}
+    >
+      <View style={{ flex: 1 }}>
+        <FlatList data={comments} renderItem={renderItem} keyExtractor={(item) => item.id} />
+      </View>
+     
+        <CommentBox onPostComment={onPostComment} />
+      
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  inputBox: {
+    height: 50,
+    backgroundColor: '#eee',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+export default CommentScreen;
