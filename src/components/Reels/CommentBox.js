@@ -24,7 +24,7 @@ const CommentBox = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
+      {/* <View style={styles.inputContainer}> */}
         <TextInput
           placeholder="Add a comment..."
           value={comment}
@@ -34,7 +34,7 @@ const CommentBox = (props) => {
         <TouchableOpacity onPress={toggleEmojiPicker}>
           <Icon name="ios-heart-outline" type="ionicon" size={24} color="black" />
         </TouchableOpacity>
-      </View>
+      {/* </View> */}
       {showEmojiPicker && (
         <View style={styles.emojiPickerContainer}>
           <Modal  visible={showEmojiPicker} transparent={true} animationType="slide" onRequestClose={toggleEmojiPicker} style={styles.Modal}
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     marginLeft: 8,
+    color : 'black'
     
   },
   postButton: {

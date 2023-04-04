@@ -50,9 +50,9 @@ const CommentScreen = () => {
       <View style={{ flex: 1 }}>
         <FlatList data={comments} renderItem={renderItem} keyExtractor={(item) => item.id} />
       </View>
-      <View style={styles.inputBox}>
+     
         <CommentBox onPostComment={onPostComment} />
-      </View>
+      
     </KeyboardAvoidingView>
   );
 };
