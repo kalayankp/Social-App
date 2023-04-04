@@ -19,6 +19,8 @@ import {FeedRow} from '../components/Reels/FeedRow';
 import ReelsScreen from '../screens/ReelsScreen';
 import ActiveListingScreen from '../screens/ActiveListingScreen';
 import AddCards from '../components/CreateTrade/AddCards';
+import DraftingScreen from '../screens/DraftingScreen';
+import SigningScreen from '../screens/SigningScreen';
 //Extras
 import {AddIcon} from '../screens/AddIcon';
 
@@ -140,6 +142,18 @@ const DrawerNavigation = () => {
           options={{headerShown: false}}
           name="NetworkHome"
           component={NetworkHomeScreen}
+        />
+        {/* drafting */}
+        <Stack.Screen
+          name="Drafting"
+          component={DraftingScreen}
+          // options={{headerShown: false}}
+        />
+        {/* signing */}
+        <Stack.Screen
+          name="Signing"
+          component={SigningScreen}
+          // options={{headerShown: false}}
         />
       </Drawer.Group>
 
