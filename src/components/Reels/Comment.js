@@ -1,146 +1,20 @@
-
-import React, { useState } from 'react';
-import { View, Text, StyleSheet ,Modal } from 'react-native';
-import { Avatar, Icon, Button, Input } from 'react-native-elements';
-const Comment = ({ comment }) => {
-  const [reaction, setReaction] = useState('');
-  const [showReplyForm, setShowReplyForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(true);
-  const [popup , setPopup] = useState(false);
-  const [replyText, setReplyText] = useState('');
-
-  const handleReaction = (reactionType) => {
-    setReaction(reactionType);
-    
-  };
-
-  const handleReply = () => {
-    setShowReplyForm(true);
-  };
-  const handelEdit = () => {
-    setPopup(true);
-    setShowEditForm(false);
-  }
-  const handleCancelEdit = () => {
-    setShowEditForm(true);
-    setReplyText('');
-  };
-  const handleCancelReply = () => {
-    setShowReplyForm(false);
-    setReplyText('');
-  };
-  
-
-  const handleSendReply = () => {
-    // Add code here to send the reply to the server
-    setShowReplyForm(false);
-    setReplyText('');
-  };
-
+import React from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { Icon } from 'react-native-elements';
+const Comment = ({ username, profilePic, commentText, time, onEditComment, onDeleteComment }) => {
   return (
     <View style={styles.container}>
-       
-      <Avatar
-        rounded
-        source={{
-          uri: comment.user.imageUri,
-        }}
-        size="small"
-      />
-      <View style={styles.content}>
+      <Image style={styles.profilePic} source={{ uri: profilePic }} />
+      <View style={styles.commentContainer}>
         <View style={styles.header}>
-          <Text style={styles.name}>{comment.user.name}</Text>
-          <Button
-            type="clear"
-            icon={<Icon name="heart" type="font-awesome" color="#FF6C70" />}
-            onPress={() => handleReaction('like')}
-            containerStyle={styles.reactionButton}
-          />
-          <Button
-            type="clear"
-            icon={<Icon name="thumbs-up" type="font-awesome" color="#5F7AFF" />}
-            onPress={() => handleReaction('thumbsUp')}
-            containerStyle={styles.reactionButton}
-          />
-         
-          
-          {/* Add more reaction buttons here */}
-          <Button
-            type="clear"
-            icon={<Icon name="edit" type="font-awesome" color="#5F7AFF" />}
-            onPress={() => handelEdit()}
-            containerStyle={styles.reactionButton}
-          />
-          <Button
-            type="clear"
-            title="Reply"
-            onPress={handleReply}
-            containerStyle={styles.replyButton}
-          />
+          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.time}>{time}</Text>
         </View>
-        {showEditForm ?<Text style={styles.text}>{comment.text}</Text> : (
-          <View style={styles.replyForm}>
-           
-            <Input
-              value={comment.text}
-              onChangeText={setReplyText}
-              autoFocus
-            />
-            <View style={styles.replyFormButtons}>
-              <Button
-                title="Cancel"
-                onPress={handleCancelEdit}
-                containerStyle={styles.replyFormButton}
-              />
-              <Button
-                title="Send"
-                onPress={handleCancelEdit}
-                containerStyle={styles.replyFormButton}
-              />
-            </View>
-          </View>
-        )}
-        
-          {/* {comment.replys.map((reply) => (
-            <View key={reply.id} style={styles.container}>
-              <Avatar
-
-                rounded
-                source={{
-                  uri: reply.user.avatar,
-                }}
-                size="small"
-              />
-              <View style={styles.content}>
-                <View style={styles.header}>
-                  <Text style={styles.name}>{reply.user.name}</Text>
-                </View>
-                <Text style={styles.text}>{reply.reply}</Text>
-              </View>
-            </View>
-          ))} */}
-        {showReplyForm && (
-          <View style={styles.replyForm}>
-            <Input
-              placeholder="Type your reply here..."
-              value={replyText}
-              onChangeText={setReplyText}
-              autoFocus
-            />
-            <View style={styles.replyFormButtons}>
-              <Button
-                title="Cancel"
-                onPress={handleCancelReply}
-                containerStyle={styles.replyFormButton}
-              />
-              <Button
-                title="Send"
-                onPress={handleSendReply}
-                containerStyle={styles.replyFormButton}
-              />
-            </View>
-          </View>
-        )}
+        <Text style={styles.commentText}>{commentText}</Text>
+        <View style={styles.actions}>
+        <Icon name="ios-heart-outline" type="ionicon" size={24} color="black" />
+          <Text style={styles.action} onPress={onEditComment}>Edit</Text>
+        </View>
       </View>
     </View>
   );
@@ -149,46 +23,55 @@ const Comment = ({ comment }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 10,
-    backgroundColor: 'grey',
-    padding: 10,
-    borderRadius: 10,
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginVertical: 8,
   },
-  content: {
-    marginLeft: 10,
+  profilePic: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  commentContainer: {
     flex: 1,
+    flexDirection: 'column',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  name: {
+  username: {
     fontWeight: 'bold',
+    fontSize: 14,
+    lineHeight: 16,
+    color: '#000',
   },
-  text: {
-    marginTop: 5,
+  commentText: {
+    fontSize: 14,
+    lineHeight: 16,
+    color: '#000',
+    marginTop: 4,
   },
-  reactionButton: {
-    marginLeft: 5,
-    marginHorizontal: 5,
+  time: {
+    fontSize: 12,
+    lineHeight: 14,
+    color: '#8E8E8E',
   },
-  replyButton: {
-    marginLeft: 'auto',
-  },
-  replyForm: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#F6F6F6',
-    borderRadius: 10,
-  },
-  replyFormButtons: {
+  actions: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 10,
+    marginTop: 4,
   },
-  replyFormButton: {
-    marginLeft: 10,
+  action: {
+    fontSize: 12,
+    lineHeight: 14,
+    color: '#8E8E8E',
+    marginLeft: 8,
+    textDecorationLine: 'underline',
   },
 });
+
 export default Comment;
