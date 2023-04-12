@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import Comment from './Comment';
 import CommentBox from './CommentBox';
-
+import { supabase } from '../../utils/supabase';
 const CommentScreen = () => {
   const [comments, setComments] = useState([
     {
@@ -30,6 +30,17 @@ const CommentScreen = () => {
     />
   );
 
+  async function PostComments(comment) {
+    try{
+      const args = { Body: comment, IdentityID : "00000000-0000-0000-0000-000000000000", ItemID :"00000000-0000-0000-0000-000000000000" , ItemType: 2 };
+      const { data, error } = await supabase  .from('Comment').insert(args);
+      console.log('POSTCOMMENT', data, error);
+      setComment('');
+    }
+    catch (error) {
+      console.log('error', error);
+    }
+  }
   const onPostComment = (comment) => {
     const newComment = {
       username: 'johndoe',
@@ -38,6 +49,7 @@ const CommentScreen = () => {
       time: 'just now',
       likes: 0,
     };
+    PostComments(comment);
     setComments([...comments, newComment]);
   };
 
