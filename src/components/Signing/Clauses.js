@@ -1,30 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity,Image } from "react-native";
 
-const Clause = ({ clause, index, isEditing,handleclauseEdit, handleSave, handleClauseChange}) => {
+const Clause = (props) => {
   const myImage = require("../../asset/Assets/Icons/editButton.png");
   const [isEditingClause, setIsEditingClause] = React.useState(false);
-  const [clauseText, setClauseText] = React.useState(clause);
-  const [wordCount, setWordCount] = React.useState(clause.trim().split(/\s+/).length);
-
-  const handleEditClause = () => {
-    setIsEditingClause(true);
-    handleclauseEdit(true)
-  };
-
-  const handleSaveClause = () => {
-    setIsEditingClause(false);
-    handleSave(false)
-    // Here you can handle the logic to save the changes made to the clause
-  };
-
-  const handleTextChange = (text) => {
-    setClauseText(text);
-    const words = text.trim().split(/\s+/);
-    setWordCount(words.length);
-    handleClauseChange(index, text); // Call the callback function and pass the index and text as arguments
-  };
-
+  const [clauseText, setClauseText] = React.useState(props.clause);
+  const [wordCount, setWordCount] = React.useState(props.clause.trim().split(/\s+/).length);
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -32,7 +13,11 @@ const Clause = ({ clause, index, isEditing,handleclauseEdit, handleSave, handleC
           <TextInput
             style={styles.titleInput }
             value={clauseText}
-            onChangeText={handleTextChange}
+            onChangeText={(text) => {
+              setClauseText(text);
+              setWordCount(text.trim().split(/\s+/).length);
+            }
+            }
              multiline={true}
              numberOfLines={4}
           />
@@ -41,12 +26,22 @@ const Clause = ({ clause, index, isEditing,handleclauseEdit, handleSave, handleC
         )}
 
         {isEditingClause ? (
-          <TouchableOpacity style={styles.editButton} onPress={handleSaveClause}>
+          <TouchableOpacity style={styles.editButton} 
+          onPress={() => {
+            setIsEditingClause(false);
+            props.saveClause(props.index, clauseText, false);
+          }}
+          >
             <Text style={styles.editButtonText}>Save</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.editButton} onPress={handleEditClause}>
-            {/* <Text style={styles.editButtonText}>Edit</Text> */}
+          <TouchableOpacity style={styles.editButton} 
+          onPress={() => {
+            setIsEditingClause(true);
+            props.editClause(props.index, clauseText, true);
+
+          }}
+          >
             <Image source={myImage} />
           </TouchableOpacity>
         )}
@@ -81,6 +76,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#000",
     // backgroundColor: "#fff",
+    width: "80%",
   },
 
   titleInput: {

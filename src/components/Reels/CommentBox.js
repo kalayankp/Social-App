@@ -1,244 +1,249 @@
 // import React, { useState } from 'react';
-// import EmojiSelector from 'react-native-emoji-selector';
-// import DocumentPicker from 'react-native-document-picker';
-// import MentionsTextInput from 'react-native-mentions';
-// import Hyperlink from 'react-native-hyperlink';
-// import {
-//   View,
-//   Text,
-//   StyleSheet,
-//   TouchableOpacity,
-//   TextInput,
-//   Image,
-// } from 'react-native';
-// import ClickableTextButton from './ClickableTextButton';
+// import { View, TextInput, TouchableOpacity, Text, StyleSheet ,Modal} from 'react-native';
 
-// const CommentBox = () => {
-//   const people = [
-//     {
-//       id: '1',
-//       name: 'Shivam',
-//     }
-//   ];
+// import { Icon } from 'react-native-elements';
+// import EmojiModal from 'react-native-emoji-modal';
+// const CommentBox = (props) => {
 //   const [comment, setComment] = useState('');
 //   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
-//   const handlePostComment = () => {
-//     console.log('Posting comment', comment);
-//     setComment('');
+//   const handleCommentChange = (text) => {
+//     setComment(text);
 //   };
-
-
-//   const onEmojiSelected = (emoji) => {
+//   const handleAddEmoji = (emoji) => {
 //     setComment(comment + emoji);
 //   };
-
-//   const onFileSelected = async () => {
-//     try {
-//       const result = await DocumentPicker.pick({
-//         type: [DocumentPicker.types.allFiles],
-//       });
-//       console.log(result.uri);
-//     } catch (err) {
-//       if (DocumentPicker.isCancel(err)) {
-//         console.log('User cancelled the picker');
-//       } else {
-//         console.log(err);
-//       }
-//     }
+//   const toggleEmojiPicker = () => {
+//     setShowEmojiPicker(!showEmojiPicker);
 //   };
 
-//   const renderEmojiPicker = () => {
-//     return (
-//       <View style={styles.emojiContainer}>
-//         <EmojiSelector onEmojiSelected={onEmojiSelected} />
-//       </View>
-//     );
-//   };
-
-//   const renderAttachments = () => {
-//     return (
-//       <TouchableOpacity style={styles.attachmentContainer} onPress={onFileSelected}>
-//         <Image source={require('../../asset/Assets/user.jpeg')} style={styles.attachmentIcon} />
-//         <Text style={styles.attachmentText}>Attach Files</Text>
-//       </TouchableOpacity>
-//     );
-//   };
-
-//   const renderCommentInput = (people) => {
-//     return (
-//       <MentionsTextInput
-//         style={styles.commentInput}
-//         value={comment}
-//         onChangeText={(text) => setComment(text)}
-//         placeholder={'Write a comment...'}
-//         underlineColorAndroid={'transparent'}
-//         inputContainerStyle={{backgroundColor: '#fff'}}
-//         placeholderTextColor={'#ccc'}
-//         autoCapitalize={'none'}
-//         autoCorrect={true}
-//         multiline={false}
-//         returnKeyType={'done'}
-//         onContentSizeChange={() => {}}
-//         textInputStyle={{fontSize: 16, color: '#000'}}
-//         trigger={'$'}
-//         triggerLocation={'anywhere'}
-//         renderSuggestions={(people) => (
-//           <View style={styles.suggestionsContainer}>
-//             {people.map((person) => (
-//               <TouchableOpacity
-//                 style={styles.suggestion}
-//                 key={person.id}
-//                 onPress={() => console.log(`mentioning ${person.name}`)}>
-//                 <Text style={styles.suggestionText}>{person.name}</Text>
-//               </TouchableOpacity>
-//             ))}
-//           </View>
-//         )}
-        
-//       />
-//     );
+//   const postButton = () => {
+//     props.onPostComment(comment);
+//     setComment('');
 //   };
 
 //   return (
 //     <View style={styles.container}>
-//       {showEmojiPicker && renderEmojiPicker()}
-//       {renderAttachments()}
-//       {renderCommentInput(people)}
-//        <TouchableOpacity style={styles.postButton} onPress={() =>handlePostComment()}>
+//       {/* <View style={styles.inputContainer}> */}
+//         <TextInput
+//           placeholder="Add a comment..."
+//           value={comment}
+//           onChangeText={handleCommentChange}
+//           style={styles.input}
+//         />
+//         <TouchableOpacity onPress={toggleEmojiPicker}>
+//           <Icon name="ios-heart-outline" type="ionicon" size={24} color="black" />
+//         </TouchableOpacity>
+//       {/* </View> */}
+//       {showEmojiPicker && (
+//         <View style={styles.emojiPickerContainer}>
+//           <Modal  visible={showEmojiPicker} transparent={true} animationType="slide" onRequestClose={toggleEmojiPicker} style={styles.Modal}
+//           >
+//           <EmojiModal
+//             onEmojiSelected={handleAddEmoji}
+//             rows={7}
+//             localizedCategories={[ 
+//               'Smileys and emotion',
+//               'People and body',
+//               'Animals and nature',
+//               'Food and drink',
+//               'Activities',
+//               'Travel and places',
+//               'Objects',
+//               'Symbols',
+//             ]}
+//             onPressOutside={toggleEmojiPicker}
+//             />
+            
+//       </Modal>  
+//         </View>
+//       )}
+//       <TouchableOpacity style={styles.postButton} 
+//       onPress={postButton}>
 //         <Text style={styles.postButtonText}>Post</Text>
 //       </TouchableOpacity>
-//       <ClickableTextButton/>
 //     </View>
 //   );
 // };
 
 // const styles = StyleSheet.create({
 //   container: {
-//     backgroundColor: '#fff',
-//     borderRadius: 10,
-//     marginHorizontal: 20,
-//     marginVertical: 10,
-//     padding: 10,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 3.84,
-//     elevation: 5,
-//   },
-//   commentInput: {
-//     minHeight: 80,
-//     maxHeight: 200,
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     borderColor: '#ccc',
-//     paddingHorizontal: 10,
-//     paddingTop: 10,
-//     paddingBottom: 20,
-//     backgroundColor: '#fff',
-//   },
-//   suggestionsContainer: {
-//     backgroundColor: '#fff',
-//     borderRadius: 5,
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     padding: 10,
-//     marginTop: 5,
-//   },
-//   suggestion: {
-//     padding: 5,
-//   },
-//   suggestionText: {
-//     fontSize: 16,
-//     color: '#000',
-//   },
-//   emojiContainer: {
-//     position: 'absolute',
-//     bottom: 70,
-//     right: 10,
-//     zIndex: 1,
-//     backgroundColor: '#fff',
-//     borderRadius: 10,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 3.84,
-//     elevation: 5,
-//   },
-//   attachmentContainer: {
 //     flexDirection: 'row',
 //     alignItems: 'center',
-//     marginBottom: 10,
+//     paddingHorizontal: 16,
+//     paddingVertical: 8,
+//     borderTopWidth: StyleSheet.hairlineWidth,
+//     borderTopColor: 'gray',
 //   },
-//   attachmentIcon: {
-//     width: 20,
-//     height: 20,
-//     marginRight: 10,
+//   inputContainer: {
+//     flex: 1,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     backgroundColor: '#F2F2F2',
+//     borderRadius: 20,
+//     paddingHorizontal: 12,
+//     paddingVertical: 8,
 //   },
-//   attachmentText: {
+//   input: {
+//     flex: 1,
 //     fontSize: 16,
-//     color: '#000',
+//     marginLeft: 8,
+//     color : 'black'
+    
 //   },
 //   postButton: {
-//     backgroundColor: '#0066CC',
-//     borderRadius: 5,
-//     paddingHorizontal: 20,
-//     paddingVertical: 10,
-//     alignSelf: 'flex-end',
+//     paddingHorizontal: 16,
+//     paddingVertical: 8,
+//     borderRadius: 20,
+//     backgroundColor: 'orange',
+//     marginLeft: 16,
+    
 //   },
 //   postButtonText: {
+//     color: 'black',
 //     fontSize: 16,
-//     color: '#fff',
 //   },
+//   emojiPickerContainer: {
+//     position: 'absolute',
+//     bottom: 60,
+//     left: 0,
+//     right: 0,
+//   },
+//   Modal:{
+//     // stick to input box
+//     position: 'absolute',
+//     bottom: 0,
+//     left: 0,
+//     right: 0,
+//     }
 // });
 
 
 // export default CommentBox;
 
-
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal } from 'react-native';
 
-const CommentBox = ({ IdentityID, ItemID }) => {
-  const [comment, setComment] = useState('');
+import { Icon } from 'react-native-elements';
+import EmojiModal from 'react-native-emoji-modal';
 
-  const postComment = async () => {
-    const args = { Body: comment, IdentityID, ItemID, ItemType: 2 };
-    const { data, error } = await supa.from('Comments').insert(args);
-    console.log('POSTCOMMENT', data, error);
+const CommentBox = (props) => {
+  const [comment, setComment] = useState(props.editComment || '');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const handleCommentChange = (text) => {
+    setComment(text);
+  };
+  const handleAddEmoji = (emoji) => {
+    setComment(comment + emoji);
+  };
+  const toggleEmojiPicker = () => {
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const postButton = () => {
+    if (props.editComment) {
+      props.onEditComment(comment);
+    } else {
+      props.onPostComment(comment);
+    }
     setComment('');
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
+        placeholder="Add a comment..."
         value={comment}
-        onChangeText={setComment}
-        placeholder="Leave a comment"
-        multiline
+        onChangeText={handleCommentChange}
+        style={styles.input}
       />
-      <Button title="Post" onPress={postComment} color="#FFA500" />
+      <TouchableOpacity onPress={toggleEmojiPicker}>
+        <Icon name="ios-heart-outline" type="ionicon" size={24} color="black" />
+      </TouchableOpacity>
+      {showEmojiPicker && (
+        <View style={styles.emojiPickerContainer}>
+          <Modal
+            visible={showEmojiPicker}
+            transparent={true}
+            animationType="slide"
+            onRequestClose={toggleEmojiPicker}
+          >
+            <EmojiModal
+              onEmojiSelected={handleAddEmoji}
+              rows={7}
+              localizedCategories={[
+                'Smileys and emotion',
+                'People and body',
+                'Animals and nature',
+                'Food and drink',
+                'Activities',
+                'Travel and places',
+                'Objects',
+                'Symbols',
+              ]}
+              onPressOutside={toggleEmojiPicker}
+            />
+          </Modal>
+        </View>
+      )}
+      <TouchableOpacity style={styles.postButton} onPress={postButton}>
+        <Text style={styles.postButtonText}>{props.editComment ? 'Update' : 'Post'}</Text>
+      </TouchableOpacity>
+      {props.editComment && (
+        <TouchableOpacity style={styles.cancelButton} onPress={props.onCancelEdit}>
+          <Text style={styles.cancelButtonText}>Cancel</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    borderRadius: 5,
-    marginVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'gray',
   },
   input: {
-    height: 80,
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-    color : "black"
+    flex: 1,
+    fontSize: 16,
+    marginLeft: 8,
+    color: 'black',
   },
+  postButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'orange',
+    marginLeft: 16,
+  },
+  cancelButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'gray',
+    marginLeft: 16,
+  },
+  postButtonText: {
+    color: 'black',
+    fontSize: 16,
+  },
+  cancelButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  emojiPickerContainer: {
+    position: 'absolute',
+    bottom: 60,
+    left: 0,
+    right: 0,
+  },
+  Modal: {
+    // stick to input box
+    position: 'absolute',
+    bottom: 0
+  }
 });
-
 export default CommentBox;
