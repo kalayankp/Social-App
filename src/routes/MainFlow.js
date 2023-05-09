@@ -16,6 +16,8 @@ import TradeStatusScreen from '../screens/TradeStatusScreen';
 import ChatScreen from '../screens/ChatScreen';
 import AllChatScreen from '../screens/AllChatScreen';
 import {FeedRow} from '../components/Reels/FeedRow';
+import Reels from '../components/ReelsUpdated/Reels';
+import ReelsScreenUpdated from '../screens/ReelScreenUpdated';
 import ReelsScreen from '../screens/ReelsScreen';
 import ActiveListingScreen from '../screens/ActiveListingScreen';
 import AddCards from '../components/CreateTrade/AddCards';
@@ -129,8 +131,10 @@ const DrawerNavigation = () => {
         />
 
         <Stack.Screen
-          name="ReelsScreen"
-          component={ReelsScreen}
+          name="Reels"
+          // component={ReelsScreen}
+          // component={Reels}
+          component={ReelsScreenUpdated}
           options={{headerShown: false}}
         />
         <Stack.Screen
