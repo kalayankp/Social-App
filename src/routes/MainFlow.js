@@ -132,8 +132,6 @@ const DrawerNavigation = () => {
 
         <Stack.Screen
           name="Reels"
-          // component={ReelsScreen}
-          // component={Reels}
           component={ReelsScreenUpdated}
           options={{headerShown: false}}
         />
