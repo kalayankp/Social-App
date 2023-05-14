@@ -282,7 +282,7 @@ function ReelCard({
       <Pressable style={styles.SecondHalf} onPress={onSecondHalfPress} />
       <Video
         ref={VideoPlayer}
-        source={uri}
+        source={{uri : uri}}
         style={VideoDimensions}
         resizeMode="contain"
         onError={videoError}
