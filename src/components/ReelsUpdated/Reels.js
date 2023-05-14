@@ -26,6 +26,12 @@ function Reels({
   thumbTintColor,
   timeElapsedColor,
   totalTimeColor,
+  username,
+  profilePic,
+  caption,
+  likes,
+  comments,
+  shares
 }) {
   const FlatlistRef = useRef(null);
   const [ViewableItem, SetViewableItem] = useState('');
@@ -51,6 +57,13 @@ function Reels({
     thumbTintColor: thumbTintColor,
     timeElapsedColor: timeElapsedColor,
     totalTimeColor: totalTimeColor,
+    username: username,
+    profilePic: profilePic,
+    caption: caption,
+    likes: likes,
+    comments: comments,
+    shares: shares
+    
   };
 
   // Viewable configuration

@@ -4,12 +4,16 @@ import {View, StyleSheet, Dimensions, Text, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 
+
+import User from '../../components/ReelsUpdated/User';
 import Buttons from  '../../components/ReelsUpdated/Button';
 import Header from './Header';
 import helper from '../../components/ReelsUpdated/utils/helper';
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
+
+
 
 function ReelCard({
   uri,
@@ -48,6 +52,15 @@ function ReelCard({
   // Time Props
   timeElapsedColor = 'white',
   totalTimeColor = 'white',
+
+  // User Props
+  username = 'Username',
+  profilePic = 'https://picsum.photos/200',
+  caption = 'Caption',
+  likes = 2,
+  comments = 3,
+  shares = 4,
+
 }) {
   // ref for Video Player
   const VideoPlayer = useRef(null);
@@ -216,23 +229,22 @@ function ReelCard({
       <View style={styles.OptionsContainer}>
         {optionsComponent ? null : (
           <>
+
             <Buttons
               name={liked ? 'like1' : 'like2'}
               text="like"
               color={liked ? 'dodgerblue' : 'white'}
               onPress={() => onLikePress(_id)}
             />
-            <Buttons
-              name={disliked ? 'dislike1' : 'dislike2'}
-              text="like"
-              color={disliked ? 'dodgerblue' : 'white'}
-              onPress={() => onDislikePress(_id)}
-            />
+            
+         
+           
             <Buttons
               name="message1"
               text="comment"
               onPress={() => onCommentPress(_id)}
             />
+          
             <Buttons
               name="sharealt"
               text="share"
@@ -244,6 +256,23 @@ function ReelCard({
     ),
     [ShowOptions, optionsComponent, liked, disliked],
   );
+
+  // useMemo for User
+  const GetUser = useMemo(
+    () => (
+      <View style={styles.UserContainer}>
+        <User
+          username={username}
+          profilePic={profilePic}
+          caption={caption}
+          onPress={() => onUserPress(_id)}
+        />
+      </View>
+    ),
+    [profilePic, username],
+  );
+
+
 
   return (
     <Pressable
@@ -269,9 +298,11 @@ function ReelCard({
 
       {ShowOptions ? (
         <>
+         {GetUser}
           {GetHeader}
-          {GetButtons}
+          {GetButtons} 
           {GetSlider}
+         
         </>
       ) : null}
     </Pressable>
@@ -338,4 +369,13 @@ const styles = StyleSheet.create({
     height: ScreenHeight,
     zIndex: 99,
   },
+  UserContainer: {
+    position: 'absolute',
+    width: ScreenWidth,
+    bottom: 90,
+    height: 50,
+    right: -10,
+    zIndex: 100,
+  },
+
 });
