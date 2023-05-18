@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {View, StyleSheet, Dimensions, Text, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
-
+import { Image } from 'react-native-elements';
 
 import User from '../../components/ReelsUpdated/User';
 import Buttons from  '../../components/ReelsUpdated/Button';
@@ -18,6 +18,7 @@ const ScreenHeight = Dimensions.get('window').height;
 function ReelCard({
   uri,
   _id,
+  type,
   ViewableItem,
   liked = false,
   disliked = false,
@@ -280,21 +281,32 @@ function ReelCard({
       onPress={onMiddlePress}>
       <Pressable style={styles.FirstHalf} onPress={onFirstHalfPress} />
       <Pressable style={styles.SecondHalf} onPress={onSecondHalfPress} />
-      <Video
-        ref={VideoPlayer}
-        source={{uri : uri}}
-        style={VideoDimensions}
-        resizeMode="contain"
-        onError={videoError}
-        playInBackground={false}
-        progressUpdateInterval={1000}
-        paused={Paused}
-        muted={false}
-        repeat={true}
-        onLoad={onLoadComplete}
-        onProgress={PlayBackStatusUpdate}
-        onEnd={() => onFinishPlaying(index)}
-      />
+      {type == "Video" ? (
+  <Video
+    ref={VideoPlayer}
+    source={{ uri: uri }}
+    style={VideoDimensions}
+    resizeMode="contain"
+    onError={videoError}
+    playInBackground={false}
+    progressUpdateInterval={1000}
+    paused={Paused}
+    muted={false}
+    repeat={true}
+    onLoad={onLoadComplete}
+    onProgress={PlayBackStatusUpdate}
+    onEnd={() => onFinishPlaying(index)}
+  />
+) : (
+  <Image
+    source={{ uri: uri }}
+    style={VideoDimensions}
+    resizeMode="contain"
+    onError={videoError}
+    onLoad={onLoadComplete}
+  />
+)}
+
 
       {ShowOptions ? (
         <>
