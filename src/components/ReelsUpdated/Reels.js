@@ -1,5 +1,5 @@
-import React, {useRef, useState} from 'react';
-import {Dimensions, FlatList} from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Dimensions, FlatList } from 'react-native';
 
 import ReelCard from './ReelCard';
 const ScreenHeight = Dimensions.get('window').height;
@@ -35,7 +35,7 @@ function Reels({
 }) {
   const FlatlistRef = useRef(null);
   const [ViewableItem, SetViewableItem] = useState('');
-  const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 70});
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 70 });
   const applyProps = {
     backgroundColor: backgroundColor,
     headerTitle: headerTitle,
@@ -63,7 +63,6 @@ function Reels({
     likes: likes,
     comments: comments,
     shares: shares
-    
   };
 
   // Viewable configuration
@@ -72,19 +71,22 @@ function Reels({
       SetViewableItem(viewableItems.viewableItems[0].item._id || 0);
   });
 
+  const onEndReached = () => {
+    console.log('end reached');  
+  };
+
   return (
     <FlatList
       ref={FlatlistRef}
       data={videos}
       keyExtractor={item => item._id.toString()}
-      renderItem={({item, index}) => (
+      renderItem={({ item, index }) => (
         <ReelCard
           {...item}
           index={index}
           ViewableItem={ViewableItem}
           onFinishPlaying={index => {
             if (index !== videos.length - 1) {
-              // @ts-ignore: Object is possibly 'null'.
               FlatlistRef.current.scrollToIndex({
                 index: index + 1,
               });
@@ -102,8 +104,13 @@ function Reels({
       decelerationRate={0.9}
       onViewableItemsChanged={onViewRef.current}
       viewabilityConfig={viewConfigRef.current}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
     />
   );
 }
 
 export default Reels;
+
+
+      

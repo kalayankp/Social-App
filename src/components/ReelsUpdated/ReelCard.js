@@ -297,6 +297,18 @@ function ReelCard({
     onProgress={PlayBackStatusUpdate}
     onEnd={() => onFinishPlaying(index)}
   />
+) : type == 'Text' ? (
+  
+  <View>
+    <Text
+      style={{
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'center',
+      }}>
+    {uri}</Text>
+  </View>
 ) : (
   <Image
     source={{ uri: uri }}
