@@ -37,6 +37,7 @@ import {
 import BuyTokensScreen from '../screens/BuyTokensScreen';
 import NetworkHomeScreen from '../screens/NetworkHomeScreen';
 import CommentScreen from '../components/Reels/CommentScreen';
+import CommentHistory from '../components/ReelsUpdated/CommentHistory';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -190,6 +191,7 @@ const MainFlow = () => {
         />
       </Stack.Group>
       <Stack.Screen name="Comment" component={CommentScreen} />
+      <Stack.Screen name="CommentHistory" component={CommentHistory} />
     </Stack.Navigator>
   );
 };

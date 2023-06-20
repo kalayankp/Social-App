@@ -1,4 +1,8 @@
 import React, {useEffect, useState} from 'react';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+
+
+
 import {
   View,
   Text,
@@ -13,6 +17,12 @@ import CommentBox from './CommentBox';
 import {supabase} from '../../utils/supabase';
 
 const CommentScreen = () => {
+  const navigation = useNavigation();
+
+  const handleOpenCommentHistory = (commentId) => {
+    // Navigate to the CommentHistory page and pass the commentId as a parameter
+    navigation.navigate('CommentHistory', { commentId });
+  };
   // supabase
   async function PostComments(comment) {
     try {
@@ -35,7 +45,7 @@ const CommentScreen = () => {
         .select('*')
         .eq('ItemType', 2)
         .order('CreatedAt', {ascending: true})
-      console.log('GETCOMMENT', data, error);
+      // console.log('GETCOMMENT', data, error);
       return data;
     } catch (error) {
       console.log('error', error);
@@ -50,6 +60,7 @@ const CommentScreen = () => {
       try {
         const data = await GetComments();
         setComments(data);
+        console.log('data', data);
         setLoading(false);
       } catch (error) {
         console.log('error', error);
@@ -58,7 +69,6 @@ const CommentScreen = () => {
     };
     fetchData();
   }, []);
-
   const renderItem = ({item}) => (
     <Comment
       IdentityID={item.IdentityID}
@@ -69,13 +79,13 @@ const CommentScreen = () => {
       ItemID={item.ItemID}
       Upvotes={item.Upvotes}
       id = {item.id}
+      LastestEditAt={item.LatestEditID}
+      onOpenCommentHistory={handleOpenCommentHistory}
       onEditComment={(id)=>{
         console.log('onEditComment', id);
-
       }}
     />
   );
-
   const onPostComment = async comment => {
     const newComment = {
       username: 'johndoe',
