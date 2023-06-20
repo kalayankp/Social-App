@@ -1,6 +1,6 @@
 // packages Imports
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {View, StyleSheet, Dimensions, Text, Pressable} from 'react-native';
+import {View, StyleSheet, Dimensions, Text, Pressable,ActivityIndicator} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 import { Image } from 'react-native-elements';
@@ -12,8 +12,6 @@ import helper from '../../components/ReelsUpdated/utils/helper';
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
-
-
 
 function ReelCard({
   uri,
@@ -75,6 +73,7 @@ function ReelCard({
   const [Duration, SetDuration] = useState(0);
   const [Paused, SetPaused] = useState(false);
   const [ShowOptions, SetShowOptions] = useState(false);
+ 
 
   // Play/Pause video according to viisibility
   useEffect(() => {
@@ -114,7 +113,7 @@ function ReelCard({
   // function for getting video dimensions on load complete
   const onLoadComplete = event => {
     const {naturalSize} = event;
-
+    
     try {
       const naturalWidth = naturalSize.width;
       const naturalHeight = naturalSize.height;
@@ -130,7 +129,10 @@ function ReelCard({
         });
       }
       SetDuration(event.duration * 1000);
-    } catch (error) {}
+      
+    } catch (error) {
+    
+    }
   };
 
   // function for showing options
@@ -275,49 +277,63 @@ function ReelCard({
 
 
 
+const [isloading, setLoading] = useState(true)
+
+const loadend = () => {
+  
+  console.log("loading ended")
+}
+
+
   return (
     <Pressable
       style={[styles.container, {backgroundColor: backgroundColor}]}
       onPress={onMiddlePress}>
       <Pressable style={styles.FirstHalf} onPress={onFirstHalfPress} />
       <Pressable style={styles.SecondHalf} onPress={onSecondHalfPress} />
-      {type == "Video" ? (
+      {type === "Video" && !isloading ? (
+  <ActivityIndicator size="large" color="white" style={styles.loading} />
+) : type === "Video" ? (
   <Video
-    ref={VideoPlayer}
-    source={{ uri: uri }}
-    style={VideoDimensions}
-    resizeMode="contain"
-    onError={videoError}
-    playInBackground={false}
-    progressUpdateInterval={1000}
-    paused={Paused}
-    muted={false}
-    repeat={true}
-    onLoad={onLoadComplete}
-    onProgress={PlayBackStatusUpdate}
-    onEnd={() => onFinishPlaying(index)}
-  />
-) : type == 'Text' ? (
-  
-  <View>
-    <Text
-      style={{
-        fontSize: 30,
-        fontWeight: 'bold',
-        color: 'white',
-        textAlign: 'center',
-      }}>
-    {uri}</Text>
-  </View>
-) : (
-  <Image
-    source={{ uri: uri }}
-    style={VideoDimensions}
-    resizeMode="contain"
-    onError={videoError}
-    onLoad={onLoadComplete}
-  />
-)}
+        loading indicator
+        ref={VideoPlayer}
+        source={{ uri: uri }}
+        style={VideoDimensions}
+        resizeMode="contain"
+        onError={videoError}
+        playInBackground={false}
+        progressUpdateInterval={1000}
+        paused={Paused}
+        muted={false}
+        repeat={true}
+        onLoad={onLoadComplete}
+        onProgress={PlayBackStatusUpdate}
+        onEnd={() => {
+          onFinishPlaying(index)
+          loadend()
+        }}
+      />
+    ) : type === "Text" ? (
+      <View>
+        <Text
+          style={{
+            fontSize: 30,
+            fontWeight: "bold",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          {uri}
+        </Text>
+      </View>
+    ) : (
+      <Image
+        source={{ uri }}
+        style={VideoDimensions}
+        resizeMode="contain"
+        onError={videoError}
+      />
+    )}
 
 
       {ShowOptions ? (
@@ -400,6 +416,11 @@ const styles = StyleSheet.create({
     height: 50,
     right: -10,
     zIndex: 100,
+  },
+  loading: {
+    position: "absolute",
+    alignSelf: "center",
+    top: "50%",
   },
 
 });
