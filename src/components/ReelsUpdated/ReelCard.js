@@ -55,7 +55,7 @@ function ReelCard({
   // User Props
   username = 'Username',
   profilePic = 'https://picsum.photos/200',
-  caption = 'Caption',
+  caption = 'https://picsum.photos/200   this is my caption',
   likes = 2,
   comments = 3,
   shares = 4,

@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet ,TouchableOpacity} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { convertTimestampToHours } from '../../helper';
 import { handleTime } from '../../helper';
 import { useEffect } from 'react';
-
 
 const Comment = ({
   IdentityID,
@@ -35,6 +34,17 @@ const Comment = ({
     onOpenCommentHistory(LastestEditAt);
   };
 
+  const handleBodyClick = () => {
+    if (Body.includes('http://') || Body.includes('https://')) {
+      const urls = Body.match(/https?:\/\/[^\s]+/g);
+      if (urls && urls.length > 0) {
+        urls.forEach((url) => {
+          Linking.openURL(url);
+        });
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image style={styles.profilePic} source={{ uri: profilePic }} />
@@ -43,14 +53,16 @@ const Comment = ({
           <Text style={styles.username}>Shivam Singh</Text>
           <Text style={styles.time}>{time}</Text>
         </View>
-        <Text style={styles.commentText}>
-          {Body}
-          {LastestEditAt == null ? null : (
-            <Text style={styles.edited} onPress={handleOpenCommentHistory}>
-              (edited)
-            </Text>
-          )}
-        </Text>
+        <TouchableOpacity onPress={handleBodyClick}>
+          <Text style={styles.commentText}>
+            {Body}
+            {LastestEditAt == null ? null : (
+              <Text style={styles.edited} onPress={handleOpenCommentHistory}>
+                (edited)
+              </Text>
+            )}
+          </Text>
+        </TouchableOpacity>
         <View style={styles.actions}>
           <Icon name="ios-heart-outline" type="ionicon" size={24} color="black" />
           <TouchableOpacity onPress={handleEditComment}>
@@ -61,6 +73,7 @@ const Comment = ({
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -120,7 +133,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     textDecorationLine: 'underline',
   },
-
 });
 
 export default Comment;
