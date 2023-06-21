@@ -1,14 +1,14 @@
-// packages Imports
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {View, StyleSheet, Dimensions, Text, Pressable,ActivityIndicator} from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 import { Image } from 'react-native-elements';
 
 import User from '../../components/ReelsUpdated/User';
-import Buttons from  '../../components/ReelsUpdated/Button';
+import Buttons from '../../components/ReelsUpdated/Button';
 import Header from './Header';
 import helper from '../../components/ReelsUpdated/utils/helper';
+
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -59,7 +59,6 @@ function ReelCard({
   likes = 2,
   comments = 3,
   shares = 4,
-
 }) {
   // ref for Video Player
   const VideoPlayer = useRef(null);
@@ -73,15 +72,15 @@ function ReelCard({
   const [Duration, SetDuration] = useState(0);
   const [Paused, SetPaused] = useState(false);
   const [ShowOptions, SetShowOptions] = useState(false);
- 
+  const [isloading, setLoading] = useState(true);
 
-  // Play/Pause video according to viisibility
+  // Play/Pause video according to visibility
   useEffect(() => {
     if (ViewableItem === _id) SetPaused(false);
     else SetPaused(true);
   }, [ViewableItem]);
 
-  // Pause when use toggle options to True
+  // Pause when user toggles options to True
   useEffect(() => {
     if (pauseOnOptionsShow) {
       if (ShowOptions) SetPaused(true);
@@ -89,31 +88,29 @@ function ReelCard({
     }
   }, [ShowOptions, pauseOnOptionsShow]);
 
-  // Callbhack for Seek Update
+  // Callback for Seek Update
   const SeekUpdate = useCallback(
-    async seekTime => {
+    async (seekTime) => {
       try {
-        if (VideoPlayer.current)
-          VideoPlayer.current.seek((seekTime * Duration) / 100 / 1000);
+        if (VideoPlayer.current) VideoPlayer.current.seek((seekTime * Duration) / 100 / 1000);
       } catch (error) {}
     },
-    [Duration, ShowOptions],
+    [Duration, ShowOptions]
   );
 
-  // Callback for PlayBackStatusUpdate
-  const PlayBackStatusUpdate = playbackStatus => {
+  // Callback for PlaybackStatusUpdate
+  const PlayBackStatusUpdate = (playbackStatus) => {
     try {
       let currentTime = Math.round(playbackStatus.currentTime);
       let duration = Math.round(playbackStatus.seekableDuration);
-      if (currentTime)
-        if (duration) SetProgress((currentTime / duration) * 100);
+      if (currentTime && duration) SetProgress((currentTime / duration) * 100);
     } catch (error) {}
   };
 
-  // function for getting video dimensions on load complete
-  const onLoadComplete = event => {
-    const {naturalSize} = event;
-    
+  // Function for getting video dimensions on load complete
+  const onLoadComplete = (event) => {
+    const { naturalSize } = event;
+
     try {
       const naturalWidth = naturalSize.width;
       const naturalHeight = naturalSize.height;
@@ -129,20 +126,17 @@ function ReelCard({
         });
       }
       SetDuration(event.duration * 1000);
-      
-    } catch (error) {
-    
-    }
+    } catch (error) {}
   };
 
-  // function for showing options
+  // Function for showing options
   const onMiddlePress = async () => {
     try {
       SetShowOptions(!ShowOptions);
     } catch (error) {}
   };
 
-  // fuction to Go back 10 seconds
+  // Function to go back 10 seconds
   const onFirstHalfPress = async () => {
     try {
       if (VideoPlayer.current) {
@@ -152,7 +146,7 @@ function ReelCard({
     } catch (error) {}
   };
 
-  // fuction to skip 10 seconds
+  // Function to skip 10 seconds
   const onSecondHalfPress = async () => {
     try {
       if (VideoPlayer.current) {
@@ -163,26 +157,26 @@ function ReelCard({
   };
 
   // Manage error here
-  const videoError = error => {};
+  const videoError = (error) => {};
 
   // useMemo for Slider
   const GetSlider = useMemo(
     () => (
       <View style={styles.SliderContainer}>
-        <Text style={[styles.TimeOne, {color: timeElapsedColor}]}>
+        <Text style={[styles.TimeOne, { color: timeElapsedColor }]}>
           {helper.GetDurationFormat(Math.floor((Progress * Duration) / 100))}
         </Text>
         <Slider
-          style={{height: 40, width: '100%'}}
+          style={{ height: 40, width: '100%' }}
           minimumValue={0}
           maximumValue={100}
           minimumTrackTintColor={minimumTrackTintColor}
           maximumTrackTintColor={maximumTrackTintColor}
           thumbTintColor={thumbTintColor}
           value={Progress}
-          onSlidingComplete={data => SeekUpdate(data)}
+          onSlidingComplete={(data) => SeekUpdate(data)}
         />
-        <Text style={[styles.TimeTwo, {color: totalTimeColor}]}>
+        <Text style={[styles.TimeTwo, { color: totalTimeColor }]}>
           {helper.GetDurationFormat(Duration || 0)}
         </Text>
       </View>
@@ -196,10 +190,10 @@ function ReelCard({
       timeElapsedColor,
       minimumTrackTintColor,
       maximumTrackTintColor,
-    ],
+    ]
   );
 
-  // useMemo for Slider
+  // useMemo for Header
   const GetHeader = useMemo(
     () => (
       <View style={styles.HeaderContainer}>
@@ -223,7 +217,7 @@ function ReelCard({
       headerIconSize,
       headerTitle,
       onHeaderIconPress,
-    ],
+    ]
   );
 
   // useMemo for Options
@@ -232,22 +226,17 @@ function ReelCard({
       <View style={styles.OptionsContainer}>
         {optionsComponent ? null : (
           <>
-
             <Buttons
               name={liked ? 'like1' : 'like2'}
               text="like"
               color={liked ? 'dodgerblue' : 'white'}
               onPress={() => onLikePress(_id)}
             />
-            
-         
-           
             <Buttons
               name="message1"
               text="comment"
               onPress={() => onCommentPress(_id)}
             />
-          
             <Buttons
               name="sharealt"
               text="share"
@@ -257,7 +246,7 @@ function ReelCard({
         )}
       </View>
     ),
-    [ShowOptions, optionsComponent, liked, disliked],
+    [ShowOptions, optionsComponent, liked, disliked]
   );
 
   // useMemo for User
@@ -272,77 +261,96 @@ function ReelCard({
         />
       </View>
     ),
-    [profilePic, username],
+    [profilePic, username]
   );
 
+  // Function to handle video loading completion
+  const onLoadEnd = () => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+  };
+
+  // Function to handle video loading
+  const onLoadStart = () => {
+    setLoading(true);
+  };
+
+  // Function to handle video loading
+  const loadend = () => {
+    setLoading(false);
+  };
 
 
-const [isloading, setLoading] = useState(true)
-
-const loadend = () => {
-  
-  console.log("loading ended")
-}
+  const LoadingIndicator = () => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="white" />
+      </View>
+    );
+  };
 
 
   return (
     <Pressable
-      style={[styles.container, {backgroundColor: backgroundColor}]}
-      onPress={onMiddlePress}>
+      style={[styles.container, { backgroundColor: backgroundColor }]}
+      onPress={onMiddlePress}
+    >
       <Pressable style={styles.FirstHalf} onPress={onFirstHalfPress} />
       <Pressable style={styles.SecondHalf} onPress={onSecondHalfPress} />
-      {type === "Video" && !isloading ? (
-  <ActivityIndicator size="large" color="white" style={styles.loading} />
-) : type === "Video" ? (
-  <Video
-        loading indicator
-        ref={VideoPlayer}
-        source={{ uri: uri }}
-        style={VideoDimensions}
-        resizeMode="contain"
-        onError={videoError}
-        playInBackground={false}
-        progressUpdateInterval={1000}
-        paused={Paused}
-        muted={false}
-        repeat={true}
-        onLoad={onLoadComplete}
-        onProgress={PlayBackStatusUpdate}
-        onEnd={() => {
-          onFinishPlaying(index)
-          loadend()
-        }}
-      />
-    ) : type === "Text" ? (
-      <View>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            color: "white",
-            textAlign: "center",
+      {type === 'Video' && isloading ? (
+        <LoadingIndicator />
+      ) : type === 'Video' ? (
+        <Video
+          ref={VideoPlayer}
+          source={{ uri: uri }}
+          style={VideoDimensions}
+          resizeMode="contain"
+          onError={videoError}
+          playInBackground={false}
+          progressUpdateInterval={1000}
+          paused={Paused}
+          muted={false}
+          repeat={true}
+          onLoad={onLoadComplete}
+          onProgress={PlayBackStatusUpdate}
+          onEnd={() => {
+            onFinishPlaying(index);
+            loadend();
           }}
-        >
-          {uri}
-        </Text>
-      </View>
-    ) : (
-      <Image
-        source={{ uri }}
-        style={VideoDimensions}
-        resizeMode="contain"
-        onError={videoError}
-      />
-    )}
-
+          onLoadEnd={onLoadEnd}
+        />
+      ) : type === 'Text' ? (
+        <View>
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: 'bold',
+              color: 'white',
+              textAlign: 'center',
+            }}
+          >
+            {uri}
+          </Text>
+        </View>
+      ) : (
+        <Image
+          source={{ uri }}
+          style={VideoDimensions}
+          resizeMode="contain"
+          onError={videoError}
+        />
+      )}
 
       {ShowOptions ? (
         <>
-         {GetUser}
+          {GetUser}
           {GetHeader}
-          {GetButtons} 
+          {GetButtons}
           {GetSlider}
-         
         </>
       ) : null}
     </Pressable>
