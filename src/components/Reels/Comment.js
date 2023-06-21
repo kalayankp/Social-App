@@ -1,9 +1,16 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+  TextInput,
+} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { convertTimestampToHours } from '../../helper';
 import { handleTime } from '../../helper';
-import { useEffect } from 'react';
 
 const Comment = ({
   IdentityID,
@@ -15,8 +22,11 @@ const Comment = ({
   id,
   LastestEditAt,
   onEditComment,
-  onOpenCommentHistory, // New prop for opening the CommentHistory page
+  onOpenCommentHistory,
 }) => {
+  const [editedComment, setEditedComment] = React.useState(Body);
+  const [isEditing, setIsEditing] = React.useState(false);
+
   useEffect(() => {
     console.log('comment', Body);
     console.log('comment', LastestEditAt);
@@ -27,7 +37,12 @@ const Comment = ({
   const profilePic = 'https://picsum.photos/200';
 
   const handleEditComment = () => {
-    onEditComment(id);
+    if (isEditing) {
+      onEditComment(id, editedComment);
+      setIsEditing(false)
+    } else {
+      setIsEditing(true);
+    }
   };
 
   const handleOpenCommentHistory = () => {
@@ -53,20 +68,31 @@ const Comment = ({
           <Text style={styles.username}>Shivam Singh</Text>
           <Text style={styles.time}>{time}</Text>
         </View>
-        <TouchableOpacity onPress={handleBodyClick}>
-          <Text style={styles.commentText}>
-            {Body}
-            {LastestEditAt == null ? null : (
-              <Text style={styles.edited} onPress={handleOpenCommentHistory}>
-                (edited)
-              </Text>
-            )}
-          </Text>
-        </TouchableOpacity>
+        {isEditing ? (
+          <TextInput
+            style={styles.commentText}
+            value={editedComment}
+            onChangeText={setEditedComment}
+            multiline
+            numberOfLines={2}
+          />
+        ) : (
+          <TouchableOpacity onPress={handleBodyClick}>
+            <Text style={styles.commentText}>
+              {Body}
+              {LastestEditAt == null ? null : (
+                <Text style={styles.edited} onPress={handleOpenCommentHistory}>
+                  (edited)
+                </Text>
+              )}
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <View style={styles.actions}>
           <Icon name="ios-heart-outline" type="ionicon" size={24} color="black" />
           <TouchableOpacity onPress={handleEditComment}>
-            <Text style={styles.action}>Edit</Text>
+            <Text style={styles.action}>{isEditing ? 'Save' : 'Edit'}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -107,6 +133,8 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: '#000',
     marginTop: 4,
+    // undeline 
+
   },
   time: {
     fontSize: 12,
@@ -130,7 +158,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: 'green',
-    marginLeft: 8,
     textDecorationLine: 'underline',
   },
 });
