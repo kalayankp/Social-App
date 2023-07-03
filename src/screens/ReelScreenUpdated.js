@@ -32,7 +32,7 @@ function ReelsScreenUpdated() {
         const post = data[index];
         let type = '';
         if (post.ContentURL != null && post.ContentURL != '') {
-          type = 'video';
+          type = 'Video';
           const videoObject = {
             _id: post.id,
             type: type,

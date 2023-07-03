@@ -283,6 +283,7 @@ function ReelCard({
       ) : type === 'Video' ? (
         <Video
           ref={VideoPlayer}
+          source={{uri : uri}}
           style={VideoDimensions}
           resizeMode="contain"
           onError={videoError}
@@ -300,7 +301,7 @@ function ReelCard({
             onFinishPlaying(index);}}
          
         >
-          <source src={{uri : uri}} type="video/mp4" />
+        
         </Video>
       ) : type === 'Text' ? (
         <View>
