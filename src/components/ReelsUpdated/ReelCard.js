@@ -72,7 +72,7 @@ function ReelCard({
   const [Duration, SetDuration] = useState(0);
   const [Paused, SetPaused] = useState(false);
   const [ShowOptions, SetShowOptions] = useState(false);
-  const [isloading, setLoading] = useState(true);
+  const [isloading, setLoading] = useState(false);
 
   // Play/Pause video according to visibility
   useEffect(() => {
@@ -82,9 +82,11 @@ function ReelCard({
 
   // Pause when user toggles options to True
   useEffect(() => {
+    console.log(uri)
     if (pauseOnOptionsShow) {
       if (ShowOptions) SetPaused(true);
       else SetPaused(false);
+      
     }
   }, [ShowOptions, pauseOnOptionsShow]);
 
@@ -109,8 +111,8 @@ function ReelCard({
 
   // Function for getting video dimensions on load complete
   const onLoadComplete = (event) => {
+    console.log("loading complete");
     const { naturalSize } = event;
-
     try {
       const naturalWidth = naturalSize.width;
       const naturalHeight = naturalSize.height;
@@ -126,7 +128,10 @@ function ReelCard({
         });
       }
       SetDuration(event.duration * 1000);
-    } catch (error) {}
+      setLoading(false); // Set loading state to false when loading is complete
+    } catch (error) {
+      setLoading(false); // Set loading state to false in case of an error
+    }
   };
 
   // Function for showing options
@@ -264,36 +269,6 @@ function ReelCard({
     [profilePic, username]
   );
 
-  // Function to handle video loading completion
-  const onLoadEnd = () => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 5000);
-  };
-
-  // Function to handle video loading
-  const onLoadStart = () => {
-    setLoading(true);
-  };
-
-  // Function to handle video loading
-  const loadend = () => {
-    setLoading(false);
-  };
-
-
-  const LoadingIndicator = () => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="white" />
-      </View>
-    );
-  };
-
-
   return (
     <Pressable
       style={[styles.container, { backgroundColor: backgroundColor }]}
@@ -301,12 +276,13 @@ function ReelCard({
     >
       <Pressable style={styles.FirstHalf} onPress={onFirstHalfPress} />
       <Pressable style={styles.SecondHalf} onPress={onSecondHalfPress} />
-      {type === 'Video' && isloading ? (
-        <LoadingIndicator />
+      { type == 'Video' &&  isloading ? (
+         <View style={styles.loadingContainer}>
+         <ActivityIndicator size="large" color="white" />
+       </View>
       ) : type === 'Video' ? (
         <Video
           ref={VideoPlayer}
-          source={{ uri: uri }}
           style={VideoDimensions}
           resizeMode="contain"
           onError={videoError}
@@ -315,14 +291,17 @@ function ReelCard({
           paused={Paused}
           muted={false}
           repeat={true}
+          onBuffer={() => {
+            setLoading(true);
+          }}
           onLoad={onLoadComplete}
           onProgress={PlayBackStatusUpdate}
           onEnd={() => {
-            onFinishPlaying(index);
-            loadend();
-          }}
-          onLoadEnd={onLoadEnd}
-        />
+            onFinishPlaying(index);}}
+         
+        >
+          <source src={{uri : uri}} type="video/mp4" />
+        </Video>
       ) : type === 'Text' ? (
         <View>
           <Text
@@ -342,6 +321,7 @@ function ReelCard({
           style={VideoDimensions}
           resizeMode="contain"
           onError={videoError}
+          onLoad={onLoadComplete}
         />
       )}
 
