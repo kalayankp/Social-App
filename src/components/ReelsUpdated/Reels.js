@@ -6,7 +6,7 @@ const ScreenHeight = Dimensions.get('window').height;
 
 function Reels({
   videos,
-  backgroundColor = 'black',
+  backgroundColor = 'white',
   headerTitle,
   headerIconName,
   headerIconColor,
