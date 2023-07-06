@@ -38,6 +38,7 @@ import BuyTokensScreen from '../screens/BuyTokensScreen';
 import NetworkHomeScreen from '../screens/NetworkHomeScreen';
 import CommentScreen from '../components/Reels/CommentScreen';
 import CommentHistory from '../components/ReelsUpdated/CommentHistory';
+import CreatePost from '../screens/CreatePost';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -156,6 +157,11 @@ const DrawerNavigation = () => {
         <Stack.Screen
           name="Signing"
           component={SigningScreen}
+          // options={{headerShown: false}}
+        />
+         <Stack.Screen
+          name="CreatePost"
+          component={CreatePost}
           // options={{headerShown: false}}
         />
       </Drawer.Group>
