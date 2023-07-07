@@ -2,21 +2,9 @@ import React, { useState } from 'react';
 import { View, Button, Image, Text } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import Video from 'react-native-video';
-import { createClient } from '@supabase/supabase-js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import 'react-native-url-polyfill/auto';
+import { supabase } from '../utils/supabase';
 
-// Initialize Supabase client with your Supabase project URL and public API key
-const supabase = createClient('https://hvvrkmvdbhxivmykshhi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2dnJrbXZkYmh4aXZteWtzaGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzc2NjYxNTEsImV4cCI6MTk5MzI0MjE1MX0.WB_GvyWcmhypSRBAn4b-CFyYYFEE4I4HLSFFB9wacLE', {
-  auth: {
-    storage: AsyncStorage,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
-  },
-});
-
-const App = () => {
+const CreatePost = () => {
   const [selectedMedia, setSelectedMedia] = useState([]);
 
   const openMediaPicker = () => {
@@ -34,16 +22,20 @@ const App = () => {
 
   const uploadMediaToSupabase = async () => {
     for (const media of selectedMedia) {
-      const fileData = await supabase.storage
-        .from('media')
-        .upload(`media/${media.path}`, media.data);
-
+      console.log(media);
+      const fileName = media.path.split('/').pop(); // Extract the file name from the path
+    
+      // Upload the file using the obtained file data
+      const uploadedFile = await supabase.storage
+        .from('hashx-reels')
+        .upload(fileName, media.data);
+    
       // Get the public URL of the uploaded file
       const publicURL = supabase.storage
-        .from('media')
-        .getPublicUrl(`media/${media.path}`);
-
-      console.log('File uploaded:', fileData);
+        .from('hashx-reels')
+        .getPublicUrl(fileName);
+    
+      console.log('File uploaded:', uploadedFile);
       console.log('Public URL:', publicURL);
     }
   };
@@ -79,4 +71,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default CreatePost;
