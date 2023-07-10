@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { View, Button, Image, Text } from 'react-native';
+import { View, Button, Image, ActivityIndicator, Text , Video } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import Video from 'react-native-video';
 import { supabase } from '../utils/supabase';
 
 const CreatePost = () => {
   const [selectedMedia, setSelectedMedia] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const openMediaPicker = () => {
     ImagePicker.openPicker({
@@ -20,35 +20,38 @@ const CreatePost = () => {
       });
   };
 
-
   const uploadMediaToSupabase = async () => {
+    setLoading(true); // Set loading state to true
+
     for (const media of selectedMedia) {
       const fileName = media.path.split('/').pop();
       const fileExt = fileName.split('.').pop();
       const filePath = `${Date.now()}.${fileExt}`;
-  
+
       const file = {
         uri: media.path,
         name: fileName,
         type: media.mime,
       };
-  
+
       const { data, error } = await supabase.storage
         .from('hashx-reels')
         .upload(filePath, file);
-  
+
       if (error) {
         console.log('Error uploading file:', error);
       } else {
         console.log('File uploaded successfully:', data);
       }
-  
+
       const publicURL = supabase.storage
         .from('hashx-reels')
         .getPublicUrl(filePath);
-  
+
       console.log('Public URL:', publicURL);
     }
+
+    setLoading(false); // Set loading state to false
   };
 
   return (
@@ -76,8 +79,14 @@ const CreatePost = () => {
         </View>
       ))}
 
-      <Button title="Select Media" onPress={openMediaPicker} />
-      <Button title="Upload to Supabase" onPress={uploadMediaToSupabase} />
+      {loading ? (
+        <ActivityIndicator size="large" color="blue" />
+      ) : (
+        <>
+          <Button title="Select Media" onPress={openMediaPicker} />
+          <Button title="Upload to Supabase" onPress={uploadMediaToSupabase} />
+        </>
+      )}
     </View>
   );
 };
