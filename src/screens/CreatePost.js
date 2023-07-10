@@ -20,22 +20,33 @@ const CreatePost = () => {
       });
   };
 
+
   const uploadMediaToSupabase = async () => {
     for (const media of selectedMedia) {
-      console.log(media);
-      const fileName = media.path.split('/').pop(); // Extract the file name from the path
-    
-      // Upload the file using the obtained file data
-      const uploadedFile = await supabase.storage
+      const fileName = media.path.split('/').pop();
+      const fileExt = fileName.split('.').pop();
+      const filePath = `${Date.now()}.${fileExt}`;
+  
+      const file = {
+        uri: media.path,
+        name: fileName,
+        type: media.mime,
+      };
+  
+      const { data, error } = await supabase.storage
         .from('hashx-reels')
-        .upload(fileName, media.data);
-    
-      // Get the public URL of the uploaded file
+        .upload(filePath, file);
+  
+      if (error) {
+        console.log('Error uploading file:', error);
+      } else {
+        console.log('File uploaded successfully:', data);
+      }
+  
       const publicURL = supabase.storage
         .from('hashx-reels')
-        .getPublicUrl(fileName);
-    
-      console.log('File uploaded:', uploadedFile);
+        .getPublicUrl(filePath);
+  
       console.log('Public URL:', publicURL);
     }
   };
