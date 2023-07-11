@@ -1,11 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, Image, ActivityIndicator, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
+import { View, Button, Image, ActivityIndicator, Text, StyleSheet, ScrollView, TextInput, Dimensions } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import Geolocation from 'react-native-geolocation-service';
 import { supabase } from '../utils/supabase';
 import { useNavigation } from '@react-navigation/native';
 import { v4 as uuidv4 } from 'uuid';
+import { Icon } from 'react-native-elements';
+import Video from 'react-native-video';
+import ReelCard from  "../components/ReelsUpdated/ReelCard"
+
+const screenWidth = Dimensions.get('window').width;
+  const screenHeight = Dimensions.get('window').height;
+
+  
 const CreatePost = () => {
+
+
+  const AppBar = () => {
+    return (
+      <View style={styles.appBarContainer}>
+        <Icon  raised reverse name="plus" type="font-awesome" color="#FFA500" onPress={openMediaPicker} />
+      </View>
+    );
+  };
+
+  const AppBar2 = () => {
+    return (
+      <View style={styles.appBarContainer}>
+        <Icon   raised reverse  name="undo" color="#FFA500" onPress={resetSelectedMedia} />
+        <Icon   raised reverse  name="upload" type="font-awesome" color="#FFA500"  onPress={uploadMediaToSupabase}/>
+      </View>
+    );
+  };
+
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -13,6 +40,8 @@ const CreatePost = () => {
   const [address, setAddress] = useState('');
   const navigation = useNavigation();
   const [publicurls, setPublicURL] = useState([]);
+  
+  
   useEffect(() => {
     getLocation();
   }, []);
@@ -45,18 +74,14 @@ const CreatePost = () => {
         type: media.mime,
       };
 
-      const { data, error } = await supabase.storage
-        .from('hashx-reels')
-        .upload(filePath, file);
+      const { data, error } = await supabase.storage.from('hashx-reels').upload(filePath, file);
 
       if (error) {
         console.log('Error uploading file:', error);
       } else {
         console.log('File uploaded successfully:', data);
-        const publicURL = supabase.storage
-          .from('hashx-reels')
-          .getPublicUrl(filePath);
-        setPublicURL(oldArray => [...oldArray,publicURL.data.publicUrl] );
+        const publicURL = supabase.storage.from('hashx-reels').getPublicUrl(filePath);
+        setPublicURL((oldArray) => [...oldArray, publicURL.data.publicUrl]);
         console.log('P : ', publicURL.data.publicUrl);
       }
     }
@@ -89,81 +114,59 @@ const CreatePost = () => {
   };
 
   const uploadPost = async () => {
-    const { data, error } = await supabase
-          .from('Post')
-          .insert([
-            {
-              IdentityUUID : "00000000-0000-0000-0000-000000000003",
-              Description  : description,
-              ContentURL : publicurls,
-              
-              // address,
-              // title
-            },
-          ]);
+    const { data, error } = await supabase.from('Post').insert([
+      {
+        IdentityUUID: '00000000-0000-0000-0000-000000000003',
+        Description: description,
+        ContentURL: publicurls,
+        // address,
+        // title
+      },
+    ]);
 
-        if (error) {
-          console.log('Error creating post:', error);
-        } else {
-          console.log('Post created successfully:', data);
-        }
-      }
-
+    if (error) {
+      console.log('Error creating post:', error);
+    } else {
+      console.log('Post created successfully:', data);
+    }
+  };
 
   return (
+    <>
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.mediaContainer}>
-        {selectedMedia.map((media, index) => (
-          <View key={index}>
-            {media.mime.match('image/') ? (
-              <>
-                <Image source={{ uri: media.path }} style={styles.image} />
-                <Text>{media.mime}</Text>
-              </>
-            ) : (
-              <>
-                <Button title={media.path.split('/').pop()} onPress={() => navigateToVideoScreen(media)} />
-                <Text>{media.mime}</Text>
-              </>
-            )}
-          </View>
-        ))}
-      </View>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Title"
-        value={title}
-        onChangeText={setTitle}
-        placeholderTextColor="#000" 
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-        placeholderTextColor="#000" 
-      />
-
-      <Text>{address}</Text>
-
-      {loading ? (
+      <ScrollView horizontal={true}>
+        <View style={styles.mediaContainer}>
+          {selectedMedia.map((media, index) => (
+            <View key={index} style={styles.imageContainer}>
+              {
+                (media.mime.match("image/"))?(<Image source={{ uri: media.path }} style={styles.image} />):
+                (
+                <Video
+                  style={styles.video}
+                source={{uri : media.path}}
+                resizeMode="contain"
+                controls
+                />
+                  )
+              }
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </ScrollView>
+    {loading ? (
         <ActivityIndicator size="large" color="blue" />
       ) : (
-        <View style={styles.buttonContainer}>
+        <View>
           {selectedMedia.length === 0 ? (
-            <Button title="Select Media" onPress={openMediaPicker} color="#FFA500" />
+            <AppBar/>
           ) : (
-            <Button title="Reset" onPress={resetSelectedMedia} color="#FFA500" />
+            <AppBar2/>
           )}
-
-          {selectedMedia.length !== 0 ? (
-            <Button title="Next" onPress={uploadMediaToSupabase} color="#FFA500" />
-          ) : null}
         </View>
       )}
-    </ScrollView>
+   
+    </>
   );
 };
 
@@ -172,15 +175,21 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: '#000000', // Set background color to black
   },
   mediaContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  imageContainer: {
+    marginRight: 10,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: screenWidth,
+    height: screenHeight,
+    
+  },
+  video : {
+    width: screenWidth,
+    height: screenHeight,
   },
   buttonContainer: {
     marginBottom: 20,
@@ -195,9 +204,17 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     width: '80%',
-    color: '#000000', 
+    color: '#000000',
   },
-
+  appBarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: 'gray',
+    height: 60,
+  },
 });
 
 export default CreatePost;
