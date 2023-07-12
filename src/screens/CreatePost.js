@@ -10,7 +10,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-
+import InputBox from '../components/CreateReel/InputBox';
 import ImagePicker from 'react-native-image-crop-picker';
 import { supabase } from '../utils/supabase';
 import { useNavigation } from '@react-navigation/native';
@@ -28,6 +28,11 @@ const CreatePost = () => {
   useEffect(() => {
     getLocation();
   }, []);
+
+  const handleInputChange = (value) => {
+    setDescription(value)
+  };
+
 
   const openMediaPicker = () => {
     ImagePicker.openPicker({
@@ -104,7 +109,6 @@ const CreatePost = () => {
     } else {
       console.log('Post created successfully:', data);
     }
-    
   };
 
   const onSave = () => {
@@ -118,7 +122,7 @@ const CreatePost = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
      <MediaDisplay selectedMedia={selectedMedia} openMediaPicker={openMediaPicker} />
-      <TextInput
+      {/* <TextInput
         style={styles.descriptionInput}
         placeholder="Description"
         value={description}
@@ -126,7 +130,8 @@ const CreatePost = () => {
         placeholderTextColor="black"
         multiline={true}
         numberOfLines={4}
-      />
+      /> */}
+       <InputBox onInputChange={handleInputChange} />
       {loading ? (
         <ActivityIndicator size="large" color="blue" />
       ) : (
@@ -143,17 +148,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
   
-  },
-  descriptionInput: {
-    borderWidth: 2,
-    borderColor: 'gray',
-    borderRadius: 10,
-    padding: 10,
-    margin:'5%',
-    marginBottom: 10,
-    width: '90%',
-    color: '#000000',
-    textAlignVertical: 'top'
   },
   saveButton: {
     backgroundColor: 'orange',
