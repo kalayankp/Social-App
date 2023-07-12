@@ -1,47 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, Image, ActivityIndicator, Text, StyleSheet, ScrollView, TextInput, Dimensions } from 'react-native';
+import {
+  View,
+  Button,
+  ActivityIndicator,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
+
 import ImagePicker from 'react-native-image-crop-picker';
-import Geolocation from 'react-native-geolocation-service';
 import { supabase } from '../utils/supabase';
 import { useNavigation } from '@react-navigation/native';
-import { v4 as uuidv4 } from 'uuid';
-import { Icon } from 'react-native-elements';
-import Video from 'react-native-video';
-import ReelCard from  "../components/ReelsUpdated/ReelCard"
+import MediaDisplay from '../components/CreateReel/MediaDisplay';
 
-const screenWidth = Dimensions.get('window').width;
-  const screenHeight = Dimensions.get('window').height;
-
-  
 const CreatePost = () => {
-
-
-  const AppBar = () => {
-    return (
-      <View style={styles.appBarContainer}>
-        <Icon  raised reverse name="plus" type="font-awesome" color="#FFA500" onPress={openMediaPicker} />
-      </View>
-    );
-  };
-
-  const AppBar2 = () => {
-    return (
-      <View style={styles.appBarContainer}>
-        <Icon   raised reverse  name="undo" color="#FFA500" onPress={resetSelectedMedia} />
-        <Icon   raised reverse  name="upload" type="font-awesome" color="#FFA500"  onPress={uploadMediaToSupabase}/>
-      </View>
-    );
-  };
-
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const navigation = useNavigation();
-  const [publicurls, setPublicURL] = useState([]);
-  
-  
+  const [publicUrls, setPublicUrls] = useState([]);
+
   useEffect(() => {
     getLocation();
   }, []);
@@ -61,7 +44,7 @@ const CreatePost = () => {
   };
 
   const uploadMediaToSupabase = async () => {
-    setLoading(true); // Set loading state to true
+    setLoading(true);
 
     for (const media of selectedMedia) {
       const fileName = media.path.split('/').pop();
@@ -74,20 +57,23 @@ const CreatePost = () => {
         type: media.mime,
       };
 
-      const { data, error } = await supabase.storage.from('hashx-reels').upload(filePath, file);
+      const { data, error } = await supabase.storage
+        .from('hashx-reels')
+        .upload(filePath, file);
 
       if (error) {
         console.log('Error uploading file:', error);
       } else {
         console.log('File uploaded successfully:', data);
-        const publicURL = supabase.storage.from('hashx-reels').getPublicUrl(filePath);
-        setPublicURL((oldArray) => [...oldArray, publicURL.data.publicUrl]);
-        console.log('P : ', publicURL.data.publicUrl);
+        const publicURL = supabase.storage
+          .from('hashx-reels')
+          .getPublicUrl(filePath);
+        setPublicUrls((prevUrls) => [...prevUrls, publicURL.data.publicUrl]);
+        console.log('Public URL:', publicURL.data.publicUrl);
       }
     }
-
-    setLoading(false); // Set loading state to false
-    console.log('Public URL:', publicurls);
+    setLoading(false);
+    console.log('Public URLs:', publicUrls);
     uploadPost();
   };
 
@@ -100,30 +86,19 @@ const CreatePost = () => {
   };
 
   const getLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        // Use latitude and longitude to fetch address using a geocoding API
-        // Replace the API call with your preferred geocoding solution
-      },
-      (error) => {
-        console.log('Error getting location:', error);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
+    // Fetch location
   };
 
   const uploadPost = async () => {
+    console.log("final data",publicUrls)
     const { data, error } = await supabase.from('Post').insert([
       {
         IdentityUUID: '00000000-0000-0000-0000-000000000003',
         Description: description,
-        ContentURL: publicurls,
-        // address,
-        // title
+        ContentURL: publicUrls,
       },
-    ]);
-
+    ]
+    );
     if (error) {
       console.log('Error creating post:', error);
     } else {
@@ -131,42 +106,34 @@ const CreatePost = () => {
     }
   };
 
+  const onSave = () => {
+    if (selectedMedia.length === 0) {
+      alert("no media selected")
+      return;
+    }
+    uploadMediaToSupabase();
+  };
+
   return (
-    <>
     <ScrollView contentContainerStyle={styles.container}>
-      <ScrollView horizontal={true}>
-        <View style={styles.mediaContainer}>
-          {selectedMedia.map((media, index) => (
-            <View key={index} style={styles.imageContainer}>
-              {
-                (media.mime.match("image/"))?(<Image source={{ uri: media.path }} style={styles.image} />):
-                (
-                <Video
-                  style={styles.video}
-                source={{uri : media.path}}
-                resizeMode="contain"
-                controls
-                />
-                  )
-              }
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </ScrollView>
-    {loading ? (
+     <MediaDisplay selectedMedia={selectedMedia} openMediaPicker={openMediaPicker} />
+      <TextInput
+        style={styles.descriptionInput}
+        placeholder="Description"
+        value={description}
+        onChangeText={setDescription}
+        placeholderTextColor="black"
+        multiline={true}
+        numberOfLines={4}
+      />
+      {loading ? (
         <ActivityIndicator size="large" color="blue" />
       ) : (
-        <View>
-          {selectedMedia.length === 0 ? (
-            <AppBar/>
-          ) : (
-            <AppBar2/>
-          )}
-        </View>
+        <TouchableOpacity style={styles.saveButton} onPress={onSave}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
       )}
-   
-    </>
+    </ScrollView>
   );
 };
 
@@ -174,46 +141,32 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+  
   },
-  mediaContainer: {
-    flexDirection: 'row',
-  },
-  imageContainer: {
-    marginRight: 10,
-  },
-  image: {
-    width: screenWidth,
-    height: screenHeight,
-    
-  },
-  video : {
-    width: screenWidth,
-    height: screenHeight,
-  },
-  buttonContainer: {
-    marginBottom: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: '100%',
-  },
-  input: {
-    borderWidth: 1,
+  descriptionInput: {
+    borderWidth: 2,
     borderColor: 'gray',
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 10,
+    margin:'5%',
     marginBottom: 10,
-    width: '80%',
+    width: '90%',
     color: '#000000',
+    textAlignVertical: 'top'
   },
-  appBarContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: 'gray',
-    height: 60,
+  saveButton: {
+    backgroundColor: 'orange',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 20,
+    alignSelf: 'flex-end',
+    marginEnd : '5%'
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
