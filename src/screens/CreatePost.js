@@ -45,8 +45,8 @@ const CreatePost = () => {
 
   const uploadMediaToSupabase = async () => {
     setLoading(true);
-
-    for (const media of selectedMedia) {
+    for (let i = 0; i < selectedMedia.length; i++) {
+      const media = selectedMedia[i];
       const fileName = media.path.split('/').pop();
       const fileExt = fileName.split('.').pop();
       const filePath = `${Date.now()}.${fileExt}`;
@@ -74,9 +74,10 @@ const CreatePost = () => {
     }
     setLoading(false);
     console.log('Public URLs:', publicUrls);
-    uploadPost();
+    uploadPost(publicUrls);
   };
 
+  
   const navigateToVideoScreen = (media) => {
     navigation.navigate('VideosScreen', { media });
   };
@@ -90,7 +91,6 @@ const CreatePost = () => {
   };
 
   const uploadPost = async () => {
-    console.log("final data",publicUrls)
     const { data, error } = await supabase.from('Post').insert([
       {
         IdentityUUID: '00000000-0000-0000-0000-000000000003',
@@ -104,6 +104,7 @@ const CreatePost = () => {
     } else {
       console.log('Post created successfully:', data);
     }
+    
   };
 
   const onSave = () => {
