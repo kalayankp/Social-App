@@ -1,33 +1,39 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
+
 const InputBox = ({ onInputChange }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleTextChange = (text) => {
     setInputValue(text);
-    onInputChange(text); // Invoke the callback function
-  };
 
-  const renderColoredText = (text) => {
-    const words = text.split(' ');
+    // Extract the mentioned names and hashtags from the text
+    const mentionedNames = text.match(/@(\w+)/g);
+    const mentionedHashtags = text.match(/#(\w+)/g);
 
-    return words.map((word, index) => {
-      let wordStyle = null;
+    // Update the input text by replacing mentioned names and hashtags with styled text
+    let updatedText = text;
+    if (mentionedNames) {
+      console.log(mentionedNames);
+      mentionedNames.forEach((name) => {
+        updatedText = updatedText.replace(
+          name,
+          `<span style="color: blue;">${name}</span>`
+        );
+      });
+    }
+    if (mentionedHashtags) {
+      console.log(mentionedHashtags);
+      mentionedHashtags.forEach((tag) => {
+        updatedText = updatedText.replace(
+          tag,
+          `<span style="color: blue;">${tag}</span>`
+        );
+      });
+    }
 
-      if (word.startsWith('@')) {
-        wordStyle = styles.mentionText;
-      } else if (word.startsWith('#')) {
-        wordStyle = styles.hashtagText;
-      } else if (word.startsWith('http')) {
-        wordStyle = styles.linkText;
-      }
-
-      return (
-        <Text key={index} style={wordStyle}>
-          {word + ' '}
-        </Text>
-      );
-    });
+    onInputChange(text);
+    setInputValue(text)
   };
 
   return (
@@ -40,9 +46,9 @@ const InputBox = ({ onInputChange }) => {
         multiline={true}
         numberOfLines={4}
         placeholderTextColor="black"
-      >
-        {renderColoredText(inputValue)}
-      </TextInput>
+      
+
+      />
     </View>
   );
 };
@@ -59,15 +65,7 @@ const styles = StyleSheet.create({
     padding: 10,
     color: '#000000',
     textAlignVertical: 'top',
-  },
-  mentionText: {
-    color: 'blue',
-  },
-  hashtagText: {
-    color: 'green',
-  },
-  linkText: {
-    color: 'purple',
+
   },
 });
 
