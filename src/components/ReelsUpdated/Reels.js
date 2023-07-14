@@ -65,7 +65,8 @@ function Reels({
     shares: shares
   };
 
-  // Viewable configuration
+
+
   const onViewRef = useRef(viewableItems => {
     if (viewableItems?.viewableItems?.length > 0)
       SetViewableItem(viewableItems.viewableItems[0].item._id || 0);

@@ -23,7 +23,7 @@ function ReelsScreenUpdated() {
     try {
       setLoading(true);
       const { data, error } = await supabase.from('Post').select('*').order('created_at', { ascending: false });
-      console.log(data);
+      // console.log(data);
       if (error) throw error;
 
       const videoData = [];
@@ -31,23 +31,33 @@ function ReelsScreenUpdated() {
       for (let index = 0; index < data.length; index++) {
         const post = data[index];
         let type = '';
-        if (post.ContentURL != null && post.ContentURL != '') {
+        if (post.ContentURL != null && post.ContentURL.length != 0  && post.ContentURL[0].includes('mov')) {
           type = 'Video';
           const videoObject = {
             _id: post.id,
             type: type,
-            uri: post.ContentURL,
+            uris: post.ContentURL,
             userInfo: {
               id  : post.IdentityUUID,
             }
           };
           videoData.push(videoObject);
-        } else {
-          type = "Text"
+        } else if (post.ContentURL != null && post.ContentURL.length != 0 && post.ContentURL[0].includes('http')) {
+          type = "image"
           const videoObject = {
             _id: post.id,
             type: type,
-            uri: post.Description,
+            uris: [post.Description],
+            userInfo: {
+              id  : post.IdentityUUID,}
+          };
+          videoData.push(videoObject);
+        }else{
+          type = "text"
+          const videoObject = {
+            _id: post.id,
+            type: type,
+            uris: [post.Description],
             userInfo: {
               id  : post.IdentityUUID,}
           };
@@ -57,6 +67,7 @@ function ReelsScreenUpdated() {
       }
 
       setVideos(videoData);
+      // console.log(videoData);
     } catch (error) {
       alert(error.message);
     } finally {
@@ -66,6 +77,7 @@ function ReelsScreenUpdated() {
 
   useEffect(() => {
     fetchVideos();
+    // console.log(videos);
   }, []);
 
   const onHeaderIconPress = () => navigation.goBack();

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 import { Image } from 'react-native-elements';
@@ -14,9 +14,9 @@ const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
 function ReelCard({
-  uri,
-  _id,
+  uris,
   type,
+  _id,
   ViewableItem,
   liked = false,
   disliked = false,
@@ -60,6 +60,7 @@ function ReelCard({
   comments = 3,
   shares = 4,
 }) {
+  
   // ref for Video Player
   const VideoPlayer = useRef(null);
 
@@ -72,22 +73,24 @@ function ReelCard({
   const [Duration, SetDuration] = useState(0);
   const [Paused, SetPaused] = useState(false);
   const [ShowOptions, SetShowOptions] = useState(false);
-  const [isloading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Play/Pause video according to visibility
   useEffect(() => {
     if (ViewableItem === _id) SetPaused(false);
     else SetPaused(true);
+    console.log('ViewableItem', ViewableItem);
+    console.log('_id', _id);
+    console.log('type',type);
   }, [ViewableItem]);
 
   // Pause when user toggles options to True
   useEffect(() => {
-    console.log(uri)
     if (pauseOnOptionsShow) {
       if (ShowOptions) SetPaused(true);
       else SetPaused(false);
-      
     }
+    
   }, [ShowOptions, pauseOnOptionsShow]);
 
   // Callback for Seek Update
@@ -274,16 +277,42 @@ function ReelCard({
       style={[styles.container, { backgroundColor: backgroundColor }]}
       onPress={onMiddlePress}
     >
-      <Pressable style={styles.FirstHalf} onPress={onFirstHalfPress} />
-      <Pressable style={styles.SecondHalf} onPress={onSecondHalfPress} />
-      { type == 'Video' &&  isloading ? (
-         <View style={styles.loadingContainer}>
-         <ActivityIndicator size="large" color="white" />
-       </View>
-      ) : type === 'Video' ? (
+     {loading ? (
+  <ActivityIndicator
+    size="large"
+    color={activityIndicatorColor}
+    style={{ position: 'absolute' }}
+  />
+) : (
+  type === 'text' ? (
+    <View>
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: 'bold',
+              color: 'white',
+              textAlign: 'center',
+            }}
+          >
+            {uris}
+          </Text>
+        </View>
+  ) : (
+    <ScrollView horizontal={true}>
+      {type === 'image' ? (
+        uris.map((imageUri, index) => (
+          <Image
+            key={index}
+            source={{ uri: imageUri }}
+            style={VideoDimensions}
+            resizeMode="contain"
+          />
+        ))
+      ) : type === 'video' ? (
+        uris.map((videoUri, index) => (
         <Video
           ref={VideoPlayer}
-          source={{uri : uri}}
+          source={{ uri: videoUri }}
           style={VideoDimensions}
           resizeMode="contain"
           onError={videoError}
@@ -298,33 +327,14 @@ function ReelCard({
           onLoad={onLoadComplete}
           onProgress={PlayBackStatusUpdate}
           onEnd={() => {
-            onFinishPlaying(index);}}
-         
-        >
-        
-        </Video>
-      ) : type === 'Text' ? (
-        <View>
-          <Text
-            style={{
-              fontSize: 30,
-              fontWeight: 'bold',
-              color: 'white',
-              textAlign: 'center',
-            }}
-          >
-            {uri}
-          </Text>
-        </View>
-      ) : (
-        <Image
-          source={{ uri }}
-          style={VideoDimensions}
-          resizeMode="contain"
-          onError={videoError}
-          onLoad={onLoadComplete}
-        />
-      )}
+            onFinishPlaying(index);
+          }}
+        />))
+      ) : null}
+    </ScrollView>
+  )
+)}
+
 
       {ShowOptions ? (
         <>
@@ -406,10 +416,9 @@ const styles = StyleSheet.create({
     right: -10,
     zIndex: 100,
   },
-  loading: {
-    position: "absolute",
-    alignSelf: "center",
-    top: "50%",
+  loadingContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: '50%',
   },
-
 });
