@@ -50,6 +50,9 @@ const CreatePost = () => {
 
   const uploadMediaToSupabase = async () => {
     setLoading(true);
+    let uploadedImageUrls = [];
+    let uploadedVideoUrls = [];
+
     for (let i = 0; i < selectedMedia.length; i++) {
       const media = selectedMedia[i];
       const fileName = media.path.split('/').pop();
@@ -62,26 +65,45 @@ const CreatePost = () => {
         type: media.mime,
       };
 
-      const { data, error } = await supabase.storage
-        .from('hashx-reels')
-        .upload(filePath, file);
+      if (media.mime.startsWith('image/')) {
+        // Upload images to the 'image' folder
+        const { data, error } = await supabase.storage
+          .from('hashx-reels/image')
+          .upload(filePath, file);
 
-      if (error) {
-        console.log('Error uploading file:', error);
-      } else {
-        console.log('File uploaded successfully:', data);
-        const publicURL = supabase.storage
-          .from('hashx-reels')
-          .getPublicUrl(filePath);
-        setPublicUrls((prevUrls) => [...prevUrls, publicURL.data.publicUrl]);
-        console.log('Public URL:', publicURL.data.publicUrl);
+        if (error) {
+          console.log('Error uploading image:', error);
+        } else {
+          console.log('Image uploaded successfully:', data);
+          const publicURL = supabase.storage.from('hashx-reels/image').getPublicUrl(filePath);
+          uploadedImageUrls.push(publicURL.data.publicUrl);
+          console.log('Public Image URL:', publicURL);
+        }
+      } else if (media.mime.startsWith('video/')) {
+        // Upload videos to the 'video' folder
+        const { data, error } = await supabase.storage
+          .from('hashx-reels/video')
+          .upload(filePath, file);
+
+        if (error) {
+          console.log('Error uploading video:', error);
+        } else {
+          console.log('Video uploaded successfully:', data);
+          const publicURL = supabase.storage.from('hashx-reels/video').getPublicUrl(filePath);
+          uploadedVideoUrls.push(publicURL.data.publicUrl);
+          console.log('Public Video URL:', publicURL);
+        }
       }
     }
-    setLoading(false);
-    console.log('Public URLs:', publicUrls);
-    uploadPost(publicUrls);
-  };
 
+    setLoading(false);
+    setSelectedMedia([]);
+    setDescription('');
+
+    console.log('Uploaded Image URLs:', uploadedImageUrls);
+    console.log('Uploaded Video URLs:', uploadedVideoUrls);
+    uploadPost(uploadedImageUrls, uploadedVideoUrls);
+  };
   
   const navigateToVideoScreen = (media) => {
     navigation.navigate('VideosScreen', { media });
@@ -95,15 +117,35 @@ const CreatePost = () => {
     // Fetch location
   };
 
-  const uploadPost = async () => {
+  const uploadPost = async (uploadedImageUrls, uploadedVideoUrls) => {
+    const contentArray = [];
+  
+    // Add image objects to the contentArray
+    for (const imageUrl of uploadedImageUrls) {
+      contentArray.push({
+        url: imageUrl,
+        mimetype: 'img',
+      });
+    }
+  
+    // Add video objects to the contentArray
+    for (const videoUrl of uploadedVideoUrls) {
+      contentArray.push({
+        url: videoUrl,
+        mimetype: 'video',
+      });
+    }
+  console.log('contentArray', contentArray);
+    const contentJSON = contentArray;
+  
     const { data, error } = await supabase.from('Post').insert([
       {
         IdentityUUID: '00000000-0000-0000-0000-000000000003',
         Description: description,
-        ContentURL: publicUrls,
+        Content: contentJSON, 
       },
-    ]
-    );
+    ])
+  
     if (error) {
       console.log('Error creating post:', error);
     } else {

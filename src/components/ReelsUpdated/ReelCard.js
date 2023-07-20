@@ -329,7 +329,7 @@ function ReelCard({
                     source={{ uri: item.url }}
                     style={VideoDimensions}
                     resizeMode="contain"
-                    onLoad={() => setLoading(false)}
+                    onLoad={() => onLoadComplete(event)}
                   />
                 )
               )}
