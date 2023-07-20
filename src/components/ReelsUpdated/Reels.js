@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, FlatList } from 'react-native';
 
 import ReelCard from './ReelCard';
+import { View } from 'react-native';
 const ScreenHeight = Dimensions.get('window').height;
 
 function Reels({
@@ -69,18 +70,22 @@ function Reels({
 
   const onViewRef = useRef(viewableItems => {
     if (viewableItems?.viewableItems?.length > 0)
-      SetViewableItem(viewableItems.viewableItems[0].item._id || 0);
+      SetViewableItem(viewableItems.viewableItems[0].item.id || 0);
   });
 
   const onEndReached = () => {
     console.log('end reached');  
   };
 
+  useEffect(() => {
+    console.log(videos)
+  }, [videos])
+
   return (
     <FlatList
       ref={FlatlistRef}
       data={videos}
-      keyExtractor={item => item._id.toString()}
+      keyExtractor={item => item.id}
       renderItem={({ item, index }) => (
         <ReelCard
           {...item}
@@ -95,6 +100,7 @@ function Reels({
           }}
           {...applyProps}
         />
+       
       )}
       getItemLayout={(_data, index) => ({
         length: ScreenHeight,

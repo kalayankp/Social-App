@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList , ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 import { Image } from 'react-native-elements';
@@ -14,9 +14,9 @@ const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
 
 function ReelCard({
-  uris,
-  type,
-  _id,
+  videoUrls,
+  id,
+  description,
   ViewableItem,
   liked = false,
   disliked = false,
@@ -77,11 +77,11 @@ function ReelCard({
 
   // Play/Pause video according to visibility
   useEffect(() => {
-    if (ViewableItem === _id) SetPaused(false);
+    if (ViewableItem === id) SetPaused(false);
     else SetPaused(true);
     console.log('ViewableItem', ViewableItem);
-    console.log('_id', _id);
-    console.log('type',type);
+    console.log('id', id);
+    console.log('type',description);
   }, [ViewableItem]);
 
   // Pause when user toggles options to True
@@ -238,17 +238,17 @@ function ReelCard({
               name={liked ? 'like1' : 'like2'}
               text="like"
               color={liked ? 'dodgerblue' : 'white'}
-              onPress={() => onLikePress(_id)}
+              onPress={() => onLikePress(id)}
             />
             <Buttons
               name="message1"
               text="comment"
-              onPress={() => onCommentPress(_id)}
+              onPress={() => onCommentPress(id)}
             />
             <Buttons
               name="sharealt"
               text="share"
-              onPress={() => onSharePress(_id)}
+              onPress={() => onSharePress(id)}
             />
           </>
         )}
@@ -265,7 +265,7 @@ function ReelCard({
           username={username}
           profilePic={profilePic}
           caption={caption}
-          onPress={() => onUserPress(_id)}
+          onPress={() => onUserPress(id)}
         />
       </View>
     ),
@@ -284,7 +284,7 @@ function ReelCard({
     style={{ position: 'absolute' }}
   />
 ) : (
-  type === 'text' ? (
+  videoUrls === null ? (
     <View>
           <Text
             style={{
@@ -294,48 +294,51 @@ function ReelCard({
               textAlign: 'center',
             }}
           >
-            {uris}
+            {description}
           </Text>
         </View>
   ) : (
-    <ScrollView horizontal={true}>
-      {type === 'image' ? (
-        uris.map((imageUri, index) => (
-          <Image
-            key={index}
-            source={{ uri: imageUri }}
-            style={VideoDimensions}
-            resizeMode="contain"
-          />
-        ))
-      ) : type === 'video' ? (
-        uris.map((videoUri, index) => (
-        <Video
-          ref={VideoPlayer}
-          source={{ uri: videoUri }}
-          style={VideoDimensions}
-          resizeMode="contain"
-          onError={videoError}
-          playInBackground={false}
-          progressUpdateInterval={1000}
-          paused={Paused}
-          muted={false}
-          repeat={true}
-          onBuffer={() => {
-            setLoading(true);
-          }}
-          onLoad={onLoadComplete}
-          onProgress={PlayBackStatusUpdate}
-          onEnd={() => {
-            onFinishPlaying(index);
-          }}
-        />))
-      ) : null}
-    </ScrollView>
+    <View>
+    <FlatList
+              horizontal
+              data={videoUrls}
+              renderItem={({ item, index }) => (
+                console.log(item.url),
+                //  load video if mimetype is video else and tehn display
+                item.mimetype === 'video' ? (
+                  <Video
+                    key={index}
+                    ref={VideoPlayer}
+                    source={{ uri: item.url }}
+                    style={VideoDimensions}
+                    resizeMode="contain"
+                    onError={videoError}
+                    playInBackground={false}
+                    progressUpdateInterval={1000}
+                    paused={Paused}
+                    muted={false}
+                    repeat={true}
+                    onBuffer={() => {
+                      setLoading(true);
+                    }}
+                    onLoad={(event) => onLoadComplete(event)}
+                  />
+                ) : (
+                  <Image
+                    key={index}
+                    source={{ uri: item.url }}
+                    style={VideoDimensions}
+                    resizeMode="contain"
+                    onLoad={() => setLoading(false)}
+                  />
+                )
+              )}
+              keyExtractor={(item, index) => index.toString()}
+            />
+            </View>
+   
   )
 )}
-
-
       {ShowOptions ? (
         <>
           {GetUser}

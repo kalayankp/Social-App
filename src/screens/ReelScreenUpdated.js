@@ -19,55 +19,47 @@ function ReelsScreenUpdated() {
   const navigation = useNavigation();
   const [videos, setVideos] = useState([]);
 
+
+
   const fetchVideos = async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase.from('Post').select('*').order('created_at', { ascending: false });
-      // console.log(data);
       if (error) throw error;
 
       const videoData = [];
 
       for (let index = 0; index < data.length; index++) {
         const post = data[index];
-        let type = '';
-        if (post.ContentURL != null && post.ContentURL.length != 0  && post.ContentURL[0].includes('mov')) {
-          type = 'Video';
-          const videoObject = {
-            _id: post.id,
-            type: type,
-            uris: post.ContentURL,
-            userInfo: {
-              id  : post.IdentityUUID,
-            }
-          };
-          videoData.push(videoObject);
-        } else if (post.ContentURL != null && post.ContentURL.length != 0 && post.ContentURL[0].includes('http')) {
-          type = "image"
-          const videoObject = {
-            _id: post.id,
-            type: type,
-            uris: [post.Description],
-            userInfo: {
-              id  : post.IdentityUUID,}
-          };
-          videoData.push(videoObject);
-        }else{
-          type = "text"
-          const videoObject = {
-            _id: post.id,
-            type: type,
-            uris: [post.Description],
-            userInfo: {
-              id  : post.IdentityUUID,}
-          };
-          videoData.push(videoObject);
+        if(post.Content != null){
+          videoData.push({
+            id: post.id,
+            videoUrls: post.Content,
+            // user: {
+            //   name: post.User_Name,
+            //   avatar: post.User_Profile_Pic,
+            // },
+            likes: post.Likes,
+            comments: post.Comments,
+            description: post.Description
+          })
+        } 
+        else{
+          videoData.push({
+            id: post.id,
+            videoUrls: null,
+            // user: {
+            //   name: post.User_Name,
+            //   avatar: post.User_Profile_Pic,
+            // },
+            likes: post.Likes,
+            comments: post.Comments,
+            description: post.Description
+          })
         }
-        
       }
 
       setVideos(videoData);
-      // console.log(videoData);
     } catch (error) {
       alert(error.message);
     } finally {
@@ -115,6 +107,7 @@ function ReelsScreenUpdated() {
           onFinishPlaying={onFinishPlaying}
           userInfo={userInfo}
         />
+      
       )}
     </View>
   );
