@@ -8,7 +8,7 @@ import User from '../../components/ReelsUpdated/User';
 import Buttons from '../../components/ReelsUpdated/Button';
 import Header from './Header';
 import helper from '../../components/ReelsUpdated/utils/helper';
-
+import DropDownFilter from './DropDownFilter';
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -272,6 +272,23 @@ function ReelCard({
     [profilePic, username]
   );
 
+  const [feedFilter, setFeedFilter] = useState('Trending');
+
+  const handleFilterChange = (filter) => {
+    setFeedFilter(filter);
+    console.log('Selected Filter:', filter);
+  };
+
+  const GetDropDown  = useMemo(
+    () => (
+      <View style={styles.DropDownFilter}>
+        <DropDownFilter onChangeFilter={handleFilterChange}/>
+      </View>
+    ),
+    []
+  );
+
+
   
   return (
     <Pressable
@@ -346,6 +363,7 @@ function ReelCard({
           {GetHeader}
           {GetButtons}
           {GetSlider}
+          {GetDropDown}
         </>
       ) : null}
     </Pressable>
@@ -425,4 +443,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     top: '50%',
   },
+  DropDownFilter: {
+    position: 'absolute',
+    marginTop: 10,
+    width: '100%', /* Take the full width of the screen */
+    top: 50, /* Adjust this value as per your preference for vertical positioning */
+    zIndex: 100,
+    left:ScreenWidth/6
+  }
 });
