@@ -272,6 +272,7 @@ function ReelCard({
     [profilePic, username]
   );
 
+  
   return (
     <Pressable
       style={[styles.container, { backgroundColor: backgroundColor }]}

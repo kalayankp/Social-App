@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList } from 'react-native';
+import { Dimensions, FlatList  ,  RefreshControl} from 'react-native';
 
 import ReelCard from './ReelCard';
 import { View } from 'react-native';
@@ -8,6 +8,7 @@ const ScreenHeight = Dimensions.get('window').height;
 function Reels({
   videos,
   backgroundColor = 'white',
+  fetchVideos,
   headerTitle,
   headerIconName,
   headerIconColor,
@@ -81,6 +82,19 @@ function Reels({
     console.log(videos)
   }, [videos])
 
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      // Trigger the fetchVideos function provided as prop
+      await fetchVideos();
+    } catch (error) {
+      console.error('Error while refreshing:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
   return (
     <FlatList
       ref={FlatlistRef}
@@ -113,6 +127,8 @@ function Reels({
       viewabilityConfig={viewConfigRef.current}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     />
   );
 }

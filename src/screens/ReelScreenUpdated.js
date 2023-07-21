@@ -95,6 +95,7 @@ function ReelsScreenUpdated() {
         <Reels
           videos={videos}
           backgroundColor={backgroundColor}
+          fetchVideos={fetchVideos}
           headerTitle={headerTitle}
           headerIconName={headerIconName}
           headerIconColor={headerIconColor}
