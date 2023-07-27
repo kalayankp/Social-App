@@ -12,7 +12,7 @@ function DropDownFilter({ onChangeFilter }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Filter by:</Text>
+      {/* <Text style={styles.label}>Filter by:</Text> */}
       <View style={styles.pickerContainer}>
         <Picker
           style={styles.picker}
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    // paddingHorizontal: 16,
+    // marginBottom: 16,
   },
   label: {
     fontSize: 16,
@@ -41,18 +41,19 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   pickerContainer: {
-    flex: 0.75,
+    flex: 1,
+    // padding :10,
     borderWidth:0,
     borderRadius: 5,
     borderColor: 'white',
-    // overflow: 'hidden',
+    overflow: 'hidden',
 
   },
   picker: {
-    height: 50,
-    width: '100%',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    height: 10,
+    // width: "50%" ,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
 });
 
