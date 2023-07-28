@@ -14,10 +14,16 @@ import {
   StatusBar,
 } from 'react-native';
 
+import { supabase } from '../utils/supabase';
+
 import {Input, Text} from 'react-native-elements';
 import {Button} from 'react-native-elements';
 
 import {Context as AuthContext} from '../context/AuthContext';
+import { on } from 'events';
+import { userInfo } from 'os';
+import { set } from 'react-native-reanimated';
+import { ActivityIndicator } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -26,11 +32,62 @@ const LoginScreen = ({navigation}) => {
   const [isLogin, setIsLogin] = useState(true);
 
   const LoginComponent = () => {
+    const {state  , updateLoginStatus} = useContext(AuthContext)
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [loading , setLoading] = useState(false)
+
+    async function handelLogin(){
+      console.log("handelLogin")
+      console.log(email , password)
+      setLoading(true)
+      try {
+        const {data , error} = await supabase.from("UserInfo")
+        .select("*")
+        .eq("Email" , email)
+        console.log("data " , data)
+        
+        if(data[0].Email == email){
+          console.log(data[0].id)
+
+          try{
+            let { data : pass, error } = await supabase.from('Password')
+          .select("*")
+          .eq("User_Id",data[0].id)
+          console.log("pass" , pass)
+          if(pass[0].SaltedHash === password){
+            console.log("Login Successfull")
+            setLoading(false)
+            updateLoginStatus({userInfo :{email ,id : data.id}})
+          }
+            else{
+              console.log("Password is incorrect")
+              setLoading(false)
+        }
+          }
+          catch(error){
+            console.log(error)
+          }
+      }
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+    }
+  }
+
+
+
+
     return (
       <View>
-        <View style={{marginTop: 14}}>
+        {
+          loading ? <ActivityIndicator size="large" color="#0000ff" /> : 
+          <View>
+             <View style={{marginTop: 14}}>
           <TextInput
             placeholder="Enter Your Email"
+            onChange={(e) => setEmail(e.nativeEvent.text)}
             style={{
               height: 50,
               borderRadius: 10,
@@ -44,6 +101,7 @@ const LoginScreen = ({navigation}) => {
           />
           <TextInput
             placeholder="Enter Your Password"
+            onChange={(e) => setPassword(e.nativeEvent.text)}
             style={{
               height: 50,
               borderRadius: 10,
@@ -66,6 +124,7 @@ const LoginScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
+        onPress={handelLogin}
           style={{
             height: 50,
             backgroundColor: '#5851BC',
@@ -105,13 +164,90 @@ const LoginScreen = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
+
+
+
+
+            </View>
+        }
       </View>
     );
   };
   const SignUpComponent = () => {
+
+    const [loading , setLoading] = useState(false)
+    async function handleSignUpSupa({userInfo}) {
+      setLoading(true)
+      try {
+        userInfo = {email , password}
+      const { data, error } = await supabase.from('UserInfo').insert([
+        {
+          Email: userInfo.email
+        },
+      ]);
+      
+      if (error) {
+        console.log('Error creating User:', error);
+      } else {
+        console.log('User created successfully');
+      }
+      const { data: userData, error: selectError } = await supabase.from('UserInfo').select().eq('Email', userInfo.email);
+      
+      if (selectError) {
+        console.log('Error fetching user data:', selectError);
+        setLoading(false)
+      } else {
+        console.log('User data:', userData);
+  
+  
+      if(userData){
+              const {data : pass , error : passError} = await supabase.from("Password")
+              .insert([
+                {
+                  SaltedHash : userInfo.password,
+                  User_Id : userData[0].id
+                }
+              ])
+              if(passError){
+                console.log('Error creating Password:', passError);
+              }else{
+                console.log('Password created successfully' , pass);
+                console.log(userData[0].id);
+                handleSignUp({email : userInfo.email  ,  id:userData[0].id})
+      }
+      }
+      }
+      } catch (error) {
+        console.log('Error signing up:', error.message);
+        setLoading(false)
+      }
+      setLoading(false)
+    }
+    const [email, setEmail] = useState('')
+    const [password , setPassword] = useState('')
+    const [confirmPassword , setConfirmPassword] = useState('')
+
+    const {state  , handleSignUp} = useContext(AuthContext)
+
+    const onSubmit = () => {
+      if (password !== confirmPassword) {
+        console.log('password not match');
+        setConfirmPassword("");
+        return;
+      }
+      handleSignUpSupa({userInfo : {email , password}})
+    };
+    useEffect(() => {
+      if (state.errorMessage) {
+        Alert.alert('Oops!', state.errorMessage, [{text: 'OK'}]);
+      }
+    }, [state.errorMessage]);
     return (
       <View>
-        <View style={{marginTop: 14}}>
+
+        {loading ? <ActivityIndicator size="large" color="#0000ff" /> : (
+          <View>
+             <View style={{marginTop: 14}}>
           <TextInput
             placeholder="Enter Your Email"
             style={{
@@ -124,6 +260,10 @@ const LoginScreen = ({navigation}) => {
               color: 'black',
             }}
             placeholderTextColor="#707070"
+            onChange={(e) => 
+              {
+                setEmail(e.nativeEvent.text)}
+            }
           />
           <TextInput
             placeholder="Enter Your Password"
@@ -138,6 +278,7 @@ const LoginScreen = ({navigation}) => {
               marginTop: 14,
             }}
             placeholderTextColor="#707070"
+            onChange={(e) => setPassword(e.nativeEvent.text)}
           />
           <TextInput
             placeholder="Enter Your Password"
@@ -152,6 +293,7 @@ const LoginScreen = ({navigation}) => {
               marginTop: 14,
             }}
             placeholderTextColor="#707070"
+            onChange={(e) => setConfirmPassword(e.nativeEvent.text)}
           />
         </View>
 
@@ -164,7 +306,9 @@ const LoginScreen = ({navigation}) => {
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+          onPress={onSubmit}
+          >
           <Text style={{color: 'white'}}>SIGNUP</Text>
         </TouchableOpacity>
         <Text style={{textAlign: 'center', marginVertical: 14}}>OR</Text>
@@ -195,6 +339,16 @@ const LoginScreen = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
+
+
+
+            </View>
+        )
+        
+        
+        
+        }
+       
       </View>
     );
   };

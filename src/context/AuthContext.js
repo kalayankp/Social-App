@@ -4,48 +4,71 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'update_user_info':
-      return {...state, userInfo: action.payload};
+      return { ...state, userInfo: action.payload };
     case 'update_login_state':
-      return {...state, isSignedIn: action.payload};
+      return { ...state, isSignedIn: action.payload };
     case 'update_login_info':
-      return {...state, userInfo: action.payload};
+      return { ...state, userInfo: action.payload };
     case 'update_Loading_state':
-      return {...state, isLoading: action.payload};
+      return { ...state, isLoading: action.payload };
+    case 'update_signup_state':
+      return { ...state, isSignedUp: action.payload };
     default:
       return state;
   }
 };
 
-const updateLoginStatus =
-  dispatch =>
-  async ({userInfo}) => {
-    try {
-      await AsyncStorage.setItem('user_info', JSON.stringify(userInfo));
-      dispatch({type: 'update_login_info', payload: {...userInfo}});
-      dispatch({type: 'update_login_state', payload: true});
-    } catch (error) {
-      throw error;
-    }
-  };
 
-const localSignIn = dispatch => async () => {
-  dispatch({type: 'update_login_state', payload: false});
-  dispatch({type: 'update_Loading_state', payload: false});
+
+const updateLoginStatus = (dispatch) => async ({ userInfo }) => {
+  try {
+    await AsyncStorage.setItem('user_info', JSON.stringify(userInfo));
+    dispatch({ type: 'update_login_info', payload: { ...userInfo } });
+    dispatch({ type: 'update_login_state', payload: true });
+  } catch (error) {
+    throw error;
+  }
 };
 
-const handleSignOut = dispatch => async () => {
-  //handel sign out
-  dispatch({type: 'update_login_state', payload: false});
-  dispatch({type: 'update_Loading_state', payload: false});
+const localSignIn = (dispatch) => async () => {
+  dispatch({ type: 'update_login_state', payload: false });
+  dispatch({ type: 'update_Loading_state', payload: false });
+};
+
+const handleSignOut = (dispatch) => async () => {
+  dispatch({ type: 'update_login_state', payload: false });
+  dispatch({ type: 'update_Loading_state', payload: false });
   await AsyncStorage.removeItem('user_info');
 };
 
-export const {Provider, Context} = createDataContext(
+const handleSignUp = (dispatch) => async ({ email , id }) => {
+  try {
+    console.log("user Info email dispatch: ",email);
+    console.log("user Info id dispatch : ",id);
+    const userInfo = { email , id };
+    // After successful signup, you can store the user info in AsyncStorage
+    await AsyncStorage.setItem('user_info', JSON.stringify(userInfo));
+    // Dispatch the update_signup_state action to indicate that signup is successful
+    dispatch({ type: 'update_signup_state', payload: true });
+
+    // You might want to dispatch update_login_state action as well to set the user as signed in
+    dispatch({ type: 'update_login_state', payload: true });
+      
+    }
+  catch (error) {
+    throw error;
+  }
+};
+
+
+
+export const { Provider, Context } = createDataContext(
   authReducer,
   {
     updateLoginStatus,
     localSignIn,
     handleSignOut,
+    handleSignUp,
   },
-  {isSignedIn: false, isLoading: true, userInfo: {}},
+  { isSignedIn: false, isSignedUp: false, isLoading: true, userInfo: {} },
 );
