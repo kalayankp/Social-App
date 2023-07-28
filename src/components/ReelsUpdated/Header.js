@@ -22,7 +22,7 @@ function Header({
             <AntDesign name={name} color={color} size={size} />
           )}
 
-          <Text style={styles.Text}>{text}</Text>
+          {/* <Text style={styles.Text}>{text}</Text> */}
         </View>
       )}
     </Pressable>

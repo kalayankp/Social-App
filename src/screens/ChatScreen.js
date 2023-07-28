@@ -81,7 +81,7 @@ const ChatScreen = ({navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
-      <MainHeader title="CHATS" rightComponent={Back} />
+      <MainHeader title="CHAT" rightComponent={Back} />
       <GiftedChat
         messages={messages}
         onSend={messages => onSend(messages)}

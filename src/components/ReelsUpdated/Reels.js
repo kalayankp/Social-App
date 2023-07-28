@@ -1,12 +1,14 @@
-import React, {useRef, useState} from 'react';
-import {Dimensions, FlatList} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Dimensions, FlatList  ,  RefreshControl} from 'react-native';
 
 import ReelCard from './ReelCard';
+import { View } from 'react-native';
 const ScreenHeight = Dimensions.get('window').height;
 
 function Reels({
   videos,
-  backgroundColor = 'black',
+  backgroundColor = 'white',
+  fetchVideos,
   headerTitle,
   headerIconName,
   headerIconColor,
@@ -35,7 +37,7 @@ function Reels({
 }) {
   const FlatlistRef = useRef(null);
   const [ViewableItem, SetViewableItem] = useState('');
-  const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 70});
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 70 });
   const applyProps = {
     backgroundColor: backgroundColor,
     headerTitle: headerTitle,
@@ -63,28 +65,48 @@ function Reels({
     likes: likes,
     comments: comments,
     shares: shares
-    
   };
 
-  // Viewable configuration
+
+
   const onViewRef = useRef(viewableItems => {
     if (viewableItems?.viewableItems?.length > 0)
-      SetViewableItem(viewableItems.viewableItems[0].item._id || 0);
+      SetViewableItem(viewableItems.viewableItems[0].item.id || 0);
   });
 
+  const onEndReached = () => {
+    console.log('end reached');  
+  };
+
+  useEffect(() => {
+    console.log(videos)
+  }, [videos])
+
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      // Trigger the fetchVideos function provided as prop
+      await fetchVideos();
+    } catch (error) {
+      console.error('Error while refreshing:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
   return (
     <FlatList
       ref={FlatlistRef}
       data={videos}
-      keyExtractor={item => item._id.toString()}
-      renderItem={({item, index}) => (
+      keyExtractor={item => item.id}
+      renderItem={({ item, index }) => (
         <ReelCard
           {...item}
           index={index}
           ViewableItem={ViewableItem}
           onFinishPlaying={index => {
             if (index !== videos.length - 1) {
-              // @ts-ignore: Object is possibly 'null'.
               FlatlistRef.current.scrollToIndex({
                 index: index + 1,
               });
@@ -92,6 +114,7 @@ function Reels({
           }}
           {...applyProps}
         />
+       
       )}
       getItemLayout={(_data, index) => ({
         length: ScreenHeight,
@@ -102,8 +125,15 @@ function Reels({
       decelerationRate={0.9}
       onViewableItemsChanged={onViewRef.current}
       viewabilityConfig={viewConfigRef.current}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     />
   );
 }
 
 export default Reels;
+
+
+      

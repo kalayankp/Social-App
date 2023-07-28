@@ -37,6 +37,9 @@ import {
 import BuyTokensScreen from '../screens/BuyTokensScreen';
 import NetworkHomeScreen from '../screens/NetworkHomeScreen';
 import CommentScreen from '../components/Reels/CommentScreen';
+import CommentHistory from '../components/ReelsUpdated/CommentHistory';
+import CreatePost from '../screens/CreatePost';
+import VideoScreen from '../components/CreateReel/VideoScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -157,6 +160,11 @@ const DrawerNavigation = () => {
           component={SigningScreen}
           // options={{headerShown: false}}
         />
+         <Stack.Screen
+          name="CreatePost"
+          component={CreatePost}
+          // options={{headerShown: false}}
+        />
       </Drawer.Group>
 
       {/* <Drawer.Group screenOptions={{presentation: 'modal'}}>
@@ -188,8 +196,15 @@ const MainFlow = () => {
           component={AddCards}
           options={{headerLeft: null}}
         />
+        <Stack.Screen 
+        name =  "VideosScreen" 
+        component = {VideoScreen}
+        
+            />
       </Stack.Group>
       <Stack.Screen name="Comment" component={CommentScreen} />
+      <Stack.Screen name="CommentHistory" component={CommentHistory} />
+      
     </Stack.Navigator>
   );
 };

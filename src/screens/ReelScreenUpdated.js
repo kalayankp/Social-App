@@ -1,95 +1,127 @@
-import React , {useEffect} from 'react';
-import {View ,StatusBar , StyleSheet , Image} from 'react-native';
-import Reels from  '../components/ReelsUpdated/Reels'
+import React, { useEffect, useState } from 'react';
+import { View, StatusBar, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import Reels from '../components/ReelsUpdated/Reels';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../utils/supabase';
 import Video from 'react-native-video';
+import { LazyLoadComponent } from 'react-lazyload';
+import { set } from 'react-native-reanimated';
+
+const headerTitle = 'My Reels';
+const headerIconName = 'back';
+const headerIconColor = '#fff';
+const headerIconSize = 30;
+const backgroundColor = '#000';
+const userInfo = { name: 'John Doe', age: 25, city: 'New York' };
+
 function ReelsScreenUpdated() {
-
-async function getvideo () {
- const data =  await supabase
- .storage.from('hashx-reels')
- .getPublicUrl('cardlook.jpeg')
-//  from('hashx-reels').download('cardlook.jpeg')
- console.log(data)
-//  return data
-console.log(data.data.publicUrl)
-setData(data.data.publicUrl)
-return data
-}
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+  const [videos, setVideos] = useState([]);
 
 
-async function getlisting () {
-let { data, error } = await supabase
-.from('ActiveListing')
-.select('*')
-console.log(data)
-}
 
-useEffect(() => {
-  getlisting()
-  // console.log(c)
-  // setData(c)
-}, [])
+  const fetchVideos = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.from('Post').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
 
-  
+      const videoData = [];
 
-  
-      const videos = [
-        { _id: '1', uri: require('../asset/Assets/video2.mov')},
-        { _id: '2', uri: require('../asset/Assets/video3.mov') },
-        { _id: '3', uri:  require('../asset/Assets/video4.mov') },
-      ];
-  const headerTitle = 'My Reels';
-  const headerIconName = 'back';
-  const headerIconColor = '#fff';
-  const headerIconSize = 30;
-  const backgroundColor = '#000';
-  const onHeaderIconPress = () => console.log('Header icon pressed');
+      for (let index = 0; index < data.length; index++) {
+        const post = data[index];
+        if(post.Content != null){
+          videoData.push({
+            id: post.id,
+            videoUrls: post.Content,
+            // user: {
+            //   name: post.User_Name,
+            //   avatar: post.User_Profile_Pic,
+            // },
+            likes: post.Likes,
+            comments: post.Comments,
+            description: post.Description
+          })
+        } 
+        else{
+          videoData.push({
+            id: post.id,
+            videoUrls: null,
+            // user: {
+            //   name: post.User_Name,
+            //   avatar: post.User_Profile_Pic,
+            // },
+            likes: post.Likes,
+            comments: post.Comments,
+            description: post.Description
+          })
+        }
+      }
+
+      setVideos(videoData);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideos();
+    // console.log(videos);
+  }, []);
+
+  const onHeaderIconPress = () => navigation.goBack();
   const onSharePress = () => console.log('Share button pressed');
-  const onCommentPress = () =>navigation.navigate('Comment')
+  const onCommentPress = () => navigation.navigate('Comment');
   const onLikePress = () => console.log('Like button pressed');
   const onDislikePress = () => console.log('Dislike button pressed');
   const onFinishPlaying = index => console.log(`Finished playing video ${index}`);
-  const userInfo = { name: 'John Doe', age: 25, city: 'New York' };
-  const navigation = useNavigation();
+
+  const LoadingIndicator = (
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      <ActivityIndicator size="large" color="#fff" />
+      <Text style={styles.loading}>Loading...</Text>
+    </View>
+  );
+
   return (
-    <View style={{flex: 1, backgroundColor: '#000' }}>
-        <StatusBar hidden={true} />
-    <Reels
-      videos={videos}
-      backgroundColor={backgroundColor}
-      headerTitle={headerTitle}
-      headerIconName={headerIconName}
-      headerIconColor={headerIconColor}
-      headerIconSize={headerIconSize}
-      onHeaderIconPress={onHeaderIconPress}
-      onSharePress={onSharePress}
-      onCommentPress={onCommentPress}
-      onLikePress={onLikePress}
-      onFinishPlaying={onFinishPlaying}
-      userInfo={userInfo}
-    />
-
-{/* <Video
-        source={{ uri: 'https://hvvrkmvdbhxivmykshhi.supabase.co/storage/v1/object/public/hashx-reels/the%20creative%20tech%20club%20of%20sunderbans.mp4' }}
-        style={styles.video}
-        controls={true}
-      /> */}
-
-</View>
+    <View style={{ flex: 1, backgroundColor: '#000' }}>
+      <StatusBar hidden={true} />
+      {loading ? (
+        LoadingIndicator
+      ) : (
+        <Reels
+          videos={videos}
+          backgroundColor={backgroundColor}
+          fetchVideos={fetchVideos}
+          headerTitle={headerTitle}
+          headerIconName={headerIconName}
+          headerIconColor={headerIconColor}
+          headerIconSize={headerIconSize}
+          onHeaderIconPress={onHeaderIconPress}
+          onSharePress={onSharePress}
+          onCommentPress={onCommentPress}
+          onLikePress={onLikePress}
+          onDislikePress={onDislikePress}
+          onFinishPlaying={onFinishPlaying}
+          userInfo={userInfo}
+        />
+      
+      )}
+    </View>
   );
 }
 
+export default ReelsScreenUpdated;
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  video: {
-    width: 300,
-    height: 200,
+  loading: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginTop: 20,
   },
 });
-export default ReelsScreenUpdated;
