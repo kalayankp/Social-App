@@ -9,6 +9,7 @@ import Buttons from '../../components/ReelsUpdated/Button';
 import Header from './Header';
 import helper from '../../components/ReelsUpdated/utils/helper';
 import DropDownFilter from './DropDownFilter';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -16,6 +17,7 @@ const ScreenHeight = Dimensions.get('window').height;
 function ReelCard({
   videoUrls,
   id,
+  user,
   description,
   ViewableItem,
   liked = false,
@@ -50,11 +52,13 @@ function ReelCard({
 
   // Time Props
   timeElapsedColor = 'white',
-  totalTimeColor = 'white',
+  totalTimeColor = 'white'
 
   // User Props
-  username = 'Username',
-  profilePic = 'https://picsum.photos/200',
+  // username = 'Username',
+  // profilePic = 'https://picsum.photos/200',
+  ,onSendDataToParent
+  ,
   caption = 'https://picsum.photos/200   this is my caption',
   likes = 2,
   comments = 3,
@@ -262,21 +266,24 @@ function ReelCard({
     () => (
       <View style={styles.UserContainer}>
         <User
-          username={username}
-          profilePic={profilePic}
+          username={user.name}
+          profilePic={user.avatar}
           caption={caption}
           onPress={() => onUserPress(id)}
         />
       </View>
     ),
-    [profilePic, username]
+    [user]
   );
 
   const [feedFilter, setFeedFilter] = useState('Trending');
 
-  const handleFilterChange = (filter) => {
+
+  async function handleFilterChange(filter){
+    
     setFeedFilter(filter);
-    console.log('Selected Filter:', filter);
+    onSendDataToParent(filter);
+  
   };
 
   const GetDropDown  = useMemo(

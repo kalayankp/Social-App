@@ -20,15 +20,6 @@ const authReducer = (state, action) => {
 
 
 
-const updateLoginStatus = (dispatch) => async ({ userInfo }) => {
-  try {
-    await AsyncStorage.setItem('user_info', JSON.stringify(userInfo));
-    dispatch({ type: 'update_login_info', payload: { ...userInfo } });
-    dispatch({ type: 'update_login_state', payload: true });
-  } catch (error) {
-    throw error;
-  }
-};
 
 const localSignIn = (dispatch) => async () => {
   dispatch({ type: 'update_login_state', payload: false });
@@ -40,6 +31,25 @@ const handleSignOut = (dispatch) => async () => {
   dispatch({ type: 'update_Loading_state', payload: false });
   await AsyncStorage.removeItem('user_info');
 };
+
+const updateLoginStatus = (dispatch) => async ({ email , id }) => {
+  try {
+    console.log("user Info email dispatch: ",email);
+    console.log("user Info id dispatch : ",id);
+    const userInfo = { email , id };
+    console.log(userInfo)
+    // After successful signup, you can store the user info in AsyncStorage
+
+    await AsyncStorage.setItem('user_info', JSON.stringify(userInfo));
+    dispatch({ type: 'update_signup_state', payload: true });
+    dispatch({ type: 'update_login_state', payload: true });
+    dispatch({type : 'update_user_info' , payload : userInfo})
+
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 const handleSignUp = (dispatch) => async ({ email , id }) => {
   try {

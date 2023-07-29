@@ -59,7 +59,9 @@ const LoginScreen = ({navigation}) => {
           if(pass[0].SaltedHash === password){
             console.log("Login Successfull")
             setLoading(false)
-            updateLoginStatus({userInfo :{email ,id : data.id}})
+            id = data[0].id
+            console.log(" this id from login screen" , id)
+            updateLoginStatus({email,id})
           }
             else{
               console.log("Password is incorrect")
@@ -174,15 +176,15 @@ const LoginScreen = ({navigation}) => {
     );
   };
   const SignUpComponent = () => {
-
     const [loading , setLoading] = useState(false)
     async function handleSignUpSupa({userInfo}) {
       setLoading(true)
       try {
-        userInfo = {email , password}
+        userInfo = {email ,name, password}
       const { data, error } = await supabase.from('UserInfo').insert([
         {
-          Email: userInfo.email
+          Email: userInfo.email,
+          name : userInfo.name,
         },
       ]);
       
@@ -226,6 +228,7 @@ const LoginScreen = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password , setPassword] = useState('')
     const [confirmPassword , setConfirmPassword] = useState('')
+    const [name , setName] = useState('')
 
     const {state  , handleSignUp} = useContext(AuthContext)
 
@@ -235,7 +238,7 @@ const LoginScreen = ({navigation}) => {
         setConfirmPassword("");
         return;
       }
-      handleSignUpSupa({userInfo : {email , password}})
+      handleSignUpSupa({userInfo : {email ,name, password}})
     };
     useEffect(() => {
       if (state.errorMessage) {
@@ -248,6 +251,21 @@ const LoginScreen = ({navigation}) => {
         {loading ? <ActivityIndicator size="large" color="#0000ff" /> : (
           <View>
              <View style={{marginTop: 14}}>
+              <TextInput
+                placeholder="Enter Your Name"
+                style={{
+                  height: 50,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: '#C7C6C6',
+                  marginHorizontal: 14,
+                  paddingHorizontal: 14,
+                  color: 'black',
+                  margin: 14,
+                }}
+                placeholderTextColor="#707070"
+                onChange={(e) => setName(e.nativeEvent.text)}
+              />
           <TextInput
             placeholder="Enter Your Email"
             style={{

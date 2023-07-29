@@ -15,6 +15,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { supabase } from '../utils/supabase';
 import { useNavigation } from '@react-navigation/native';
 import MediaDisplay from '../components/CreateReel/MediaDisplay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CreatePost = () => {
   const [selectedMedia, setSelectedMedia] = useState([]);
@@ -137,10 +138,16 @@ const CreatePost = () => {
     }
   console.log('contentArray', contentArray);
     const contentJSON = contentArray;
-  
+
+    const user = await AsyncStorage.getItem('user_info');
+    const {email , id } = JSON.parse(user);
+    console.log('IdentityUUID',id);
+    console.log('email', email);
+
+
     const { data, error } = await supabase.from('Post').insert([
       {
-        IdentityUUID: '00000000-0000-0000-0000-000000000003',
+        IdentityUUID: id,
         Description: description,
         Content: contentJSON, 
       },
