@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View,Image} from 'react-native';
 import {Text} from 'react-native-elements';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import metrics from '../contents/metrics';
@@ -11,17 +11,22 @@ const ExploreNavigationOption = {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
+       
         width: metrics.width >= 800 ? 150 : null,
       }}>
-      <Icons name="home" light color={color} size={20} />
+      <Image
+        source={require('../asset/images/Home.png')}
+        style={{ tintColor: '#000' }}
+      />
       <Text
         style={{
           // top: 8,
           fontSize: 12,
-          color: '#939393',
+          color: '#000',
           fontWeight: '500',
+          top:2
         }}>
-        Explore
+        Home
       </Text>
     </View>
   ),
@@ -36,14 +41,19 @@ const MyCardsNavigationOption = {
         alignItems: 'center',
         width: metrics.width >= 800 ? 150 : null,
       }}>
-      <Icons name="clone" color={color} size={20} />
+      <Image
+        source={require('../asset/images/Cards.png')}
+        style={{tintColor: '#000' }}
+      />
       <Text
         style={{
           fontSize: 12,
-          color: '#939393',
+          color: '#000',
           fontWeight: '500',
+          bottom:2,
+          tintColor: color 
         }}>
-        My Cards
+         Cards
       </Text>
     </View>
   ),
@@ -58,19 +68,51 @@ const InsightNavigationOption = {
         width: metrics.width >= 800 ? 150 : null,
         // flex: 1,
       }}>
-      <Icons name="poll" color={color} size={20} />
+ <Image
+        source={require('../asset/images/Shape.png')}
+        style={{tintColor: '#000' ,}}
+      />
       <Text
         style={{
           // flex: 1,
-          color: '#939393',
+          color: '#000',
           fontSize: 12,
           fontWeight: '500',
+          tintColor: color,
+          top:6 
         }}>
         Insight
       </Text>
     </View>
   ),
 };
+
+const CommunityScreenNavigation = {
+  tabBarIcon: ({size, color}) => (
+    <View
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: metrics.width >= 800 ? 150 : null,
+        // flex: 1,
+      }}>
+    <Image
+        source={require('../asset/images/People.png')}
+        style={{tintColor: '#000' }}
+      />
+      <Text
+        style={{
+          color: '#000',
+          fontSize: 12,
+
+          fontWeight: '500',
+        }}>
+        Community
+      </Text>
+    </View>
+  ),
+};
+
 const ProfileNavigationOptions = {
   tabBarIcon: ({size, color}) => (
     <View
@@ -80,10 +122,13 @@ const ProfileNavigationOptions = {
         width: metrics.width >= 800 ? 150 : null,
         // flex: 1,
       }}>
-      <Icons name="user" size={20} color={color} />
+    <Image
+        source={require('../asset/images/Profile.png')}
+        style={{tintColor: '#000' }}
+      />
       <Text
         style={{
-          color: '#939393',
+          color: '#000',
           fontSize: 12,
 
           fontWeight: '500',
@@ -94,20 +139,27 @@ const ProfileNavigationOptions = {
   ),
 };
 
+
 const BottomNavigationScreenOption = {
   headerShown: false,
   tabBarShowLabel: false,
-  // tabBarStyle: {
-  //   position: 'absolute',
-  //   bottom: 10,
-  //   borderRadius: 15,
-  // },
+  tabBarStyle: {
+    position: 'absolute',
+bottom:-10,
+    borderRadius: 15,
+    width: 414,
+    height: 86,
+    backgroundColor:'#FFFFFF',
+    borderRadius:20,
+    
+  },
 };
 
 export {
   ExploreNavigationOption,
   MyCardsNavigationOption,
   InsightNavigationOption,
+  CommunityScreenNavigation,
   ProfileNavigationOptions,
   BottomNavigationScreenOption,
 };

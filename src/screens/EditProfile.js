@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,7 +7,9 @@ import {
   Pressable,
   ScrollView,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
+
 } from 'react-native';
 import {Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
@@ -61,26 +64,33 @@ const ProfileName = ({name}) => {
   );
 };
 
-const ProfileImage = ({ navigation }) => {
-  const handleEditProfile = () => {
-    navigation.navigate('EditProfile');
-  };
+const ProfileImage = ({navigation}) => {
 
+  const handleEditProfile =()=> {
+   navigation.navigate('Edit')
+  }
   return (
-    <View style={{ marginTop: 20, marginHorizontal: 8, position: 'relative' }}>
-      <Image source={require('../asset/images/Clipped.png')} style={styles.profileImage} />
-      <TouchableOpacity style={styles.editEllipseIcon}>
-        <Image source={require('../asset/images/ed.png')} />
+    <View style={{ marginTop: 20,
+      marginHorizontal: 8,
+      position: 'relative',}}>
+    <Image source={require('../asset/images/Clipped.png')} style={styles.profileImage} />
+    <TouchableOpacity style={styles.editEllipseIcon}>
+    <Image source={require('../asset/images/ed.png')} />
+    </TouchableOpacity>
+    <TouchableOpacity onPress={handleEditProfile}style={styles.editProfileIcon} >
+      <Icon name="pencil" size={15} color="white" />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.editProfileIcon} >
-        <Icon name="pencil" size={15} color="white" onPress={handleEditProfile}/>
-      </TouchableOpacity>
-    </View>
+  </View>
   );
 };
 
-
 const ProfileScreen = () => {
+
+  const [username, setUsername] = useState('neo_kitsch'); 
+  const [bio, setBio] = useState(
+    'I Like to help real people behind real change\n#energy-guru.com\n@alchimia_organics\nDocs.google.com/document/d/1c9B1A5Uf_g7h2mwkm…'
+  ); 
+
   return (
     <View style={{flex: 1, backgroundColor: 'white', marginHorizontal: 3}}>
       <MainHeader title="VIEW PROFILE" rightComponent={RightIcons} />
@@ -154,63 +164,35 @@ const ProfileScreen = () => {
                 style={{
                   flexDirection: 'row',
                   backgroundColor: '#f1f6fb',
-                  paddingHorizontal: 60,
+                  paddingHorizontal: 30,
                   borderRadius: 10,
                   marginLeft: 30,
                   // width: 150,
                   alignItems: 'center',
                 }}>
-                <Image source={require('../asset/images/send.png')} />
+              <Icon name="pencil" size={15} color="black" />
                 <Text style={{marginRight:2, padding: 10, fontSize: 14}}>
-                  Follow
+                  Update Profile
                 </Text>
               </View>
             </View>
           </View>
 
-          <View style={styles.aboutContainer}>
-            <Text
-              style={{
-                marginBottom: 5,
-                fontSize: 13,
-                fontWeight: '700',
-                color: '#2e3e5c',
-              }}>
-              I Like to help real people behind real change
-            </Text>
-            <Text
-              style={{
-                marginBottom: 5,
-                fontSize: 13,
-                fontWeight: '700',
-                color: '#1557a5',
-              }}>
-              @neo_kitsch
-            </Text>
-            <Text style={{marginBottom: 5, fontSize: 13, fontWeight: '700'}}>
-              #energy-guru.com
-            </Text>
-            <Text
-              style={{
-                marginBottom: 5,
-                fontSize: 13,
-                fontWeight: '700',
-                color: '#1557a5',
-              }}>
-              @alchimia_organics
-            </Text>
-            <Pressable>
-              <Text
-                style={{
-                  marginBottom: 5,
-                  fontSize: 13,
-                  fontWeight: '700',
-                  color: '#1557a5',
-                }}>
-                Docs.google.com/document/d/1c9B1A5Uf_g7h2mwkm…
-              </Text>
-            </Pressable>
-          </View>
+        <View style={styles.container}>
+      <TextInput
+        style={styles.usernameInput}
+        value={username}
+        onChangeText={setUsername}
+        placeholder="Username"
+      />
+      <TextInput
+        style={styles.bioInput}
+        value={bio}
+        onChangeText={setBio}
+        placeholder="Bio"
+        multiline={true}
+      />
+    </View>
 
           <View>
             <Text style={styles.networkText}>Networks</Text>
@@ -346,10 +328,28 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // justifyContent: 'space-evenly',
   },
-  aboutContainer: {
-    // alignItems: 'center',
-    marginLeft: 20,
-    marginTop: 45,
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  usernameInput: {
+    marginBottom: 20,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1557a5',
+    borderBottomWidth: 1,
+    borderBottomColor: '#1557a5',
+    paddingBottom: 5,
+
+  },
+  bioInput: {
+    marginBottom: 20,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1557a5',
+    borderBottomWidth: 1,
+    borderBottomColor: '#1557a5',
+    paddingBottom: 5,
   },
   imgStyle: {
     margin: 10,

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
+
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
@@ -9,6 +10,7 @@ import ExploreScreen from '../screens/ExploreScreen';
 import MyCardsScreen from '../screens/MyCardsScreen';
 import InsightScreen from '../screens/InsightScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import CommunityScreen from '../screens/CommunityScreen'
 import AddScreen from '../screens/AddScreen';
 import CreateTradeScreen from '../screens/CreateTradeScreen';
 import SelectLocationScreen from '../screens/SelectLocationScreen';
@@ -32,14 +34,15 @@ import {
   ProfileNavigationOptions,
   MyCardsNavigationOption,
   InsightNavigationOption,
+  CommunityScreenNavigation,
   BottomNavigationScreenOption,
 } from '../components/TabBottomIcons';
 import BuyTokensScreen from '../screens/BuyTokensScreen';
 import NetworkHomeScreen from '../screens/NetworkHomeScreen';
 import CommentScreen from '../components/Reels/CommentScreen';
+
 import CommentHistory from '../components/ReelsUpdated/CommentHistory';
 import CreatePost from '../screens/CreatePost';
-import VideoScreen from '../components/CreateReel/VideoScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -58,18 +61,24 @@ function BottomTabNavigation() {
         component={MyCardsScreen}
         options={MyCardsNavigationOption}
       />
-      <Tab.Screen
+       <Tab.Screen
+        name="Insight"
+        component={InsightScreen}
+        options={InsightNavigationOption}
+      />
+      {/* <Tab.Screen
         name="Add"
         component={AddScreen}
         options={{
           tabBarIcon: ({}) => <AddIcon />,
         }}
+      /> */}
+        <Tab.Screen
+        name="Community"
+        component={CommunityScreen}
+        options={CommunityScreenNavigation}
       />
-      <Tab.Screen
-        name="Insight"
-        component={InsightScreen}
-        options={InsightNavigationOption}
-      />
+     
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
@@ -88,7 +97,9 @@ const MainStackFlow = () => {
           component={BottomTabNavigation}
           options={{headerShown: false}}
         />
+     
       </Stack.Group>
+      
     </Stack.Navigator>
   );
 };
@@ -196,15 +207,10 @@ const MainFlow = () => {
           component={AddCards}
           options={{headerLeft: null}}
         />
-        <Stack.Screen 
-        name =  "VideosScreen" 
-        component = {VideoScreen}
-        
-            />
       </Stack.Group>
+      
       <Stack.Screen name="Comment" component={CommentScreen} />
       <Stack.Screen name="CommentHistory" component={CommentHistory} />
-      
     </Stack.Navigator>
   );
 };
