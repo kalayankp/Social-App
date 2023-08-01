@@ -81,11 +81,17 @@ function ReelCard({
 
   // Play/Pause video according to visibility
   useEffect(() => {
+    if(!VideoPlayer.current) return;
     if (ViewableItem === id) SetPaused(false);
     else SetPaused(true);
     console.log('ViewableItem', ViewableItem);
     console.log('id', id);
     console.log('type',description);
+    const element = VideoPlayer.current;
+
+
+
+
   }, [ViewableItem]);
 
   // Pause when user toggles options to True
@@ -334,7 +340,16 @@ function ReelCard({
                   <Video
                     key={index}
                     ref={VideoPlayer}
-                    source={{ uri: item.url }}
+                    source={{ uri: item.url 
+
+                    }}
+                    
+                    bufferConfig={{
+                      minBufferMs: 1000,
+                      maxBufferMs: 50000,
+                      bufferForPlaybackMs: 2500,
+                      bufferForPlaybackAfterRebufferMs: 5000
+                    }}
                     style={VideoDimensions}
                     resizeMode="contain"
                     onError={videoError}
@@ -343,9 +358,6 @@ function ReelCard({
                     paused={Paused}
                     muted={false}
                     repeat={true}
-                    onBuffer={() => {
-                      setLoading(true);
-                    }}
                     onLoad={(event) => onLoadComplete(event)}
                   />
                 ) : (
