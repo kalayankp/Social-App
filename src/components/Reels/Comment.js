@@ -11,7 +11,7 @@ import {
 import { Icon } from 'react-native-elements';
 import { convertTimestampToHours } from '../../helper';
 import { handleTime } from '../../helper';
-
+import { supabase } from '../../utils/supabase';
 const Comment = ({
   IdentityID,
   Body,
@@ -20,16 +20,34 @@ const Comment = ({
   ItemID,
   Upvotes,
   id,
-  LastestEditAt,
+  LatestEditID,
   onEditComment,
   onOpenCommentHistory,
 }) => {
   const [editedComment, setEditedComment] = React.useState(Body);
   const [isEditing, setIsEditing] = React.useState(false);
-
+  const [name, setName] = React.useState("Shivam");
   useEffect(() => {
     console.log('comment', Body);
-    console.log('comment', LastestEditAt);
+    console.log('comment', LatestEditID);
+
+    // get the name of the user from the Identityid using UserInfo table
+    async function getName() {
+      try {
+        await supabase
+          .from('UserInfo')
+          .select('name')
+          .eq('id', IdentityID)
+          .then((data) => {
+            console.log(data.data[0].name);
+            setName(data.data[0].name);
+          });
+      }
+      catch (error) {
+        console.log('error', error);
+      }
+    }
+    getName();
   }, []);
 
   const hours = convertTimestampToHours(CreatedAt);
@@ -44,11 +62,9 @@ const Comment = ({
       setIsEditing(true);
     }
   };
-
   const handleOpenCommentHistory = () => {
-    onOpenCommentHistory(LastestEditAt);
+    onOpenCommentHistory(LatestEditID);
   };
-
   const handleBodyClick = () => {
     if (Body.includes('http://') || Body.includes('https://')) {
       const urls = Body.match(/https?:\/\/[^\s]+/g);
@@ -59,13 +75,12 @@ const Comment = ({
       }
     }
   };
-
   return (
     <View style={styles.container}>
       <Image style={styles.profilePic} source={{ uri: profilePic }} />
       <View style={styles.commentContainer}>
         <View style={styles.header}>
-          <Text style={styles.username}>Shivam Singh</Text>
+          <Text style={styles.username}> {name}</Text>
           <Text style={styles.time}>{time}</Text>
         </View>
         {isEditing ? (
@@ -80,7 +95,7 @@ const Comment = ({
           <TouchableOpacity onPress={handleBodyClick}>
             <Text style={styles.commentText}>
               {Body}
-              {LastestEditAt == null ? null : (
+              {  LatestEditID == null ? null : (
                 <Text style={styles.edited} onPress={handleOpenCommentHistory}>
                   (edited)
                 </Text>

@@ -39,7 +39,7 @@ function ReelsScreenUpdated() {
         .eq("id", post.IdentityUUID)
         .single();
       
-        console.log("from loop" , userData.name);
+        // console.log("from loop" , userData.name);
         const {name , Email} = userData;
         if (userEror) throw userEror;
 
@@ -83,12 +83,17 @@ function ReelsScreenUpdated() {
 
   useEffect(() => {
     fetchVideos();
-    console.log("these are final video from item ",videos);
+    // console.log("these are final video from item ",videos);
   }, []);
+
 
   const onHeaderIconPress = () => navigation.goBack();
   const onSharePress = () => console.log('Share button pressed');
-  const onCommentPress = () => navigation.navigate('Comment');
+  const onCommentPress = (id) =>{
+    console.log(id)
+    console.log('Comment button pressed');
+    navigation.navigate('Comment' ,{ postId: id })
+  };
   const onLikePress = () => console.log('Like button pressed');
   const onDislikePress = () => console.log('Dislike button pressed');
   const onFinishPlaying = index => console.log(`Finished playing video ${index}`);
@@ -106,12 +111,12 @@ function ReelsScreenUpdated() {
   async function handelfiltererData(data){
     setFiltererData(data);
     if(data  == "MyPosts"){
-      console.log("from parent" , data);
-      console.log("from parent" , filtererData);
+      // console.log("from parent" , data);
+      // console.log("from parent" , filtererData);
       const user = await AsyncStorage.getItem('user_info');
       const {email , id} = JSON.parse(user);
-      console.log('User ID:', id);
-      console.log('User Email:', email);
+      // console.log('User ID:', id);
+      // console.log('User Email:', email);
       setVideos(videos.filter((item) => item.user.Email == email));
     }
     

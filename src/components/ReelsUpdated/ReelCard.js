@@ -93,6 +93,16 @@ function ReelCard({
 
 
   }, [ViewableItem]);
+  useEffect(() => {
+    if (VideoPlayer.current && !Paused) {
+      setTimeout(() => {
+        VideoPlayer.current.seek(0); // Start from the beginning
+        SetPaused(false); // Set paused to false to play the video
+      }, 1000); // Wait for 1 second before playing
+    }
+  }, [Paused]);
+
+
 
   // Pause when user toggles options to True
   useEffect(() => {
@@ -346,15 +356,16 @@ function ReelCard({
                     
                     bufferConfig={{
                       minBufferMs: 1000,
-                      maxBufferMs: 50000,
+                      maxBufferMs: 5000,
                       bufferForPlaybackMs: 2500,
                       bufferForPlaybackAfterRebufferMs: 5000
                     }}
+
+                    progressUpdateInterval={100}
                     style={VideoDimensions}
                     resizeMode="contain"
                     onError={videoError}
                     playInBackground={false}
-                    progressUpdateInterval={1000}
                     paused={Paused}
                     muted={false}
                     repeat={true}

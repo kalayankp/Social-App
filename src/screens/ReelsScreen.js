@@ -63,7 +63,7 @@ const ReelsScreen = () => {
   };
 
   const renderItem = ({ item, index }) => {
-    console.log(item);
+    // console.log(item);
     const scrollIndex = scrollInfo?.index || 0;
     const isNext = index >= scrollIndex - 1 && index <= scrollIndex + 1;
     return (

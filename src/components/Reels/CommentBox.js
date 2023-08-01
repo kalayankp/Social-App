@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal } from 'react-native';
 
@@ -11,6 +9,7 @@ const CommentBox = (props) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const handleCommentChange = (text) => {
     setComment(text);
+    console.log('comment', comment);
   };
   const handleAddEmoji = (emoji) => {
     setComment(comment + emoji);
