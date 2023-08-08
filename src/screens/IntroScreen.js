@@ -1,83 +1,112 @@
 import React from 'react';
-import {StyleSheet, View, Image} from 'react-native';
-import {Text} from 'react-native-elements';
+import { StyleSheet, View, Image, ImageBackground } from 'react-native';
+import { Text } from 'react-native-elements';
 import LoginScreen from './LoginScreen';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icons from 'react-native-vector-icons/FontAwesome5';
-const IntroScreen = ({navigation}) => {
+const IntroScreen = ({ navigation }) => {
   //   const [isDone, setIsDone] = useState(false);
 
   const slides = [
     {
       key: 'one',
-      title: 'Promote your business',
-      text: 'Find new customers, Affiliations & ',
-      text2: 'Partnerships Easily ',
-      image: require('../asset/images/intro1.png'),
-      backgroundColor: '#59b2ab',
+
+      image: require('../asset/images/Log.png'),
+
     },
     {
       key: 'two',
-      title: 'Engage your audience',
-      text: 'Gain access & insights like never before ',
-      text2: 'Reach new people and deepen',
-      text3: 'Relationships.',
-      image: require('../asset/images/intro2.png'),
-      backgroundColor: '#febe29',
+      title: 'Connecting ',
+      text: 'Your',
+      text2: 'Future',
+
+      image: require('../asset/images/Log.png'),
+
     },
-    {
-      key: 'three',
-      title: 'Develop Your Brand',
-      text: 'Leverage cutting edge technology to scale ',
-      text2: 'Up your efforts & profits exponentially',
-      image: require('../asset/images/intro3.png'),
-      backgroundColor: '#22bcb5',
-      styles: {marginTop: 60},
-    },
+    // {
+    //   key: 'three',
+    //   title: 'Develop Your Brand',
+    //   text: 'Leverage cutting edge technology to scale ',
+    //   text2: 'Up your efforts & profits exponentially',
+    //   image: require('../asset/images/intro3.png'),
+    //   backgroundColor: '#22bcb5',
+    //   styles: {marginTop: 60},
+    // },
   ];
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
-      <View style={styles.container}>
-        <Image
-          source={item.image}
-          resizeMode="contain"
-          style={[styles.img, item.styles]}
-        />
-        <View style={{marginHorizontal: 10}}>
-          <Text
-            style={{
-              fontSize: 27,
-              fontWeight: 'bold',
-              marginBottom: 20,
+      <ImageBackground source={require('../asset/images/Angle.png')} style={styles.backgroundImage}>
+        <View style={styles.container}>
+
+          <Image
+            source={item.image}
+            resizeMode="contain"
+            style={[styles.img, item.styles]}
+          />
+          <View style={{ marginHorizontal: 10 }}>
+            <Text
+              style={{
+                color: '#A2C1C5',
+                textAlign: 'center',
+                fontFamily: 'Gilroy',
+                fontSize: 36.681,
+                fontStyle: 'normal',
+                fontWeight: '800',
+                lineHeight: 35.662,
+                letterSpacing: -0.734,
+                top:170,
+              }}>
+              {item.title}
+            </Text>
+            <Text
+              style={{
+                color: '#A2C1C5',
+                textAlign: 'center',
+                fontFamily: 'Gilroy',
+                fontSize: 24.454,
+                fontStyle: 'normal',
+                fontWeight: '800',
+                lineHeight: 35.662,
+                letterSpacing: -0.489,
+                top:170,
+              }}>
+              {item.text}
+            </Text>
+            <Text
+              style={{
+                color: '#F2FF46',
+                textAlign: 'center',
+                fontFamily: 'Gilroy',
+                fontSize: 65.21,
+                fontStyle: 'normal',
+                fontWeight: '800',
+                top:160,
+                letterSpacing: -1.304,
+                width: 290.389,
+                height: 82.983,
+                transform: [{ rotate: '0.043deg' }],
+                flexShrink: 0,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              {item.text2}
+            </Text>
+            <Text style={{
+              color: '#F2FF46',
               textAlign: 'center',
-              color: '#2e3e5c',
+              fontFamily: 'Gilroy',
+              fontSize: 65.21,
+              fontStyle: 'normal',
+              fontWeight: '800',
+              lineHeight: 35.662,
+              letterSpacing: -1.304,
             }}>
-            {item.title}
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              textAlign: 'center',
-              marginBottom: 8,
-              color: '#7a809d',
-            }}>
-            {item.text}
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              textAlign: 'center',
-              color: '#7a809d',
-              marginBottom: 8,
-            }}>
-            {item.text2}
-          </Text>
-          <Text style={{fontSize: 15, textAlign: 'center', color: '#7a809d'}}>
-            {item?.text3}
-          </Text>
+              {item?.text3}
+            </Text>
+          </View>
         </View>
-      </View>
+      </ImageBackground>
     );
   };
   const renderDoneButton = () => {
@@ -86,7 +115,7 @@ const IntroScreen = ({navigation}) => {
         <Image source={require('../asset/images/nextBtnBackground.png')} />
         <Icons
           name="angle-right"
-          style={{position: 'absolute', left: 18, top: 12, fontSize: 18}}
+          style={{ position: 'absolute', left: 18, top: 12, fontSize: 18 }}
         />
       </View>
     );
@@ -97,7 +126,7 @@ const IntroScreen = ({navigation}) => {
         <Image source={require('../asset/images/nextBtnBackground.png')} />
         <Icons
           name="angle-right"
-          style={{position: 'absolute', left: 18, top: 12, fontSize: 18}}
+          style={{ position: 'absolute', left: 18, top: 12, fontSize: 18 }}
         />
       </View>
     );
@@ -113,7 +142,7 @@ const IntroScreen = ({navigation}) => {
           color: '#8d8d8d',
           fontWeight: 'bold',
           position: 'absolute',
-          top: 10,
+          top: 760,
           left: 5,
         }}>
         Skip
@@ -129,7 +158,7 @@ const IntroScreen = ({navigation}) => {
       renderNextButton={renderNextButton}
       renderDoneButton={renderDoneButton}
       renderSkipButton={renderSkipButton}
-      activeDotStyle={{backgroundColor: '#6180d5'}}
+      activeDotStyle={{ backgroundColor: '#6180d5' }}
       onDone={onDone}
     />
   );
@@ -143,8 +172,24 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: 100,
+
   },
   img: {
-    width: 200,
+    width: 183.913,
+    height: 36.1,
+    transform: [{ rotate: '-0.043deg' }],
+    flexShrink: 0,
+    top: 360
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    bottom: 18,
+    position: 'relative',
+    width:414,
+    height:816
+
+
   },
 });
