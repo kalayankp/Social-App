@@ -33,7 +33,8 @@ function Reels({
   caption,
   likes,
   comments,
-  shares
+  shares,
+  onSendDataTogradParent
 }) {
   const FlatlistRef = useRef(null);
   const [ViewableItem, SetViewableItem] = useState('');
@@ -67,6 +68,13 @@ function Reels({
     shares: shares
   };
 
+  const [dataFromChild, setDataFromChild] = useState(null);
+  const handleDataFromChild = (data) => {
+    console.log('Data received from child:', data);
+    
+    onSendDataTogradParent(data);
+    setDataFromChild(data);
+  };
 
 
   const onViewRef = useRef(viewableItems => {
@@ -105,6 +113,7 @@ function Reels({
           {...item}
           index={index}
           ViewableItem={ViewableItem}
+          onSendDataToParent={handleDataFromChild}
           onFinishPlaying={index => {
             if (index !== videos.length - 1) {
               FlatlistRef.current.scrollToIndex({

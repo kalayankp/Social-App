@@ -9,6 +9,8 @@ import Buttons from '../../components/ReelsUpdated/Button';
 import Header from './Header';
 import helper from '../../components/ReelsUpdated/utils/helper';
 import DropDownFilter from './DropDownFilter';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import PlaybackRate from "./PlaybackRate";
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -16,6 +18,7 @@ const ScreenHeight = Dimensions.get('window').height;
 function ReelCard({
   videoUrls,
   id,
+  user,
   description,
   ViewableItem,
   liked = false,
@@ -50,11 +53,13 @@ function ReelCard({
 
   // Time Props
   timeElapsedColor = 'white',
-  totalTimeColor = 'white',
+  totalTimeColor = 'white'
 
   // User Props
-  username = 'Username',
-  profilePic = 'https://picsum.photos/200',
+  // username = 'Username',
+  // profilePic = 'https://picsum.photos/200',
+  ,onSendDataToParent
+  ,
   caption = 'https://picsum.photos/200   this is my caption',
   likes = 2,
   comments = 3,
@@ -63,6 +68,10 @@ function ReelCard({
   
   // ref for Video Player
   const VideoPlayer = useRef(null);
+  const videoRef = useRef(null);
+  const progressRef = useRef(null);
+  const bufferRef = useRef(null);
+
 
   // States
   const [VideoDimensions, SetVideoDimensions] = useState({
@@ -77,12 +86,78 @@ function ReelCard({
 
   // Play/Pause video according to visibility
   useEffect(() => {
+
+    if (!videoRef.current) {
+      return;
+    }
+
+    const onWaiting = () => {
+      if (isPlaying) setIsPlaying(false);
+      setIsWaiting(true);
+    };
+
+    const onPlay = () => {
+      if (isWaiting) setIsWaiting(false);
+      setIsPlaying(true);
+    };
+
+
+    const onPause = () => {
+      setIsPlaying(false);
+      setIsWaiting(false);
+    };
+
+    const element = videoRef.current;
+
+    const onProgress = () => {
+      if (!element.buffered || !bufferRef.current) return;
+      if (!element.buffered.length) return;
+      const bufferedEnd = element.buffered.end(element.buffered.length - 1);
+      const duration = element.duration;
+      if (bufferRef && duration > 0) {
+        bufferRef.current.style.width = (bufferedEnd / duration) * 100 + "%";
+      }
+    };
+
+
+    const onTimeUpdate = () => {
+      setIsWaiting(false);
+      if (!element.buffered || !progressRef.current) return;
+      const duration = element.duration;
+      setDurationSec(duration);
+      setElapsedSec(element.currentTime);
+      if (progressRef && duration > 0) {
+        progressRef.current.style.width =
+          (element.currentTime / duration) * 100 + "%";
+      }
+    };
+
+
+
     if (ViewableItem === id) SetPaused(false);
     else SetPaused(true);
     console.log('ViewableItem', ViewableItem);
     console.log('id', id);
     console.log('type',description);
-  }, [ViewableItem]);
+  }, [videoRef.current]);
+
+
+  useEffect(() => {
+    if (VideoPlayer.current && !Paused) {
+      setTimeout(() => {
+        VideoPlayer.current.seek(0); // Start from the beginning
+        SetPaused(false); // Set paused to false to play the video
+      }, 1000); // Wait for 1 second before playing
+    }
+  }, [Paused]);
+
+
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+  //   if (videoRef.current.playbackRate === playbackRate) return;
+  //   videoRef.current.playbackRate = playbackRate;
+  // }, [playbackRate]);
+
 
   // Pause when user toggles options to True
   useEffect(() => {
@@ -102,6 +177,18 @@ function ReelCard({
     },
     [Duration, ShowOptions]
   );
+
+
+  const seekToPosition = (pos) => {
+    if (!videoRef.current) return;
+    if (pos < 0 || pos > 1) return;
+
+    const durationMs = videoRef.current.duration * 1000 || 0;
+
+    const newElapsedMs = durationMs * pos;
+    const newTimeSec = newElapsedMs / 1000;
+    videoRef.current.currentTime = newTimeSec;
+  };
 
   // Callback for PlaybackStatusUpdate
   const PlayBackStatusUpdate = (playbackStatus) => {
@@ -262,21 +349,24 @@ function ReelCard({
     () => (
       <View style={styles.UserContainer}>
         <User
-          username={username}
-          profilePic={profilePic}
+          username={user.name}
+          profilePic={user.avatar}
           caption={caption}
           onPress={() => onUserPress(id)}
         />
       </View>
     ),
-    [profilePic, username]
+    [user]
   );
 
   const [feedFilter, setFeedFilter] = useState('Trending');
 
-  const handleFilterChange = (filter) => {
+
+  async function handleFilterChange(filter){
+    
     setFeedFilter(filter);
-    console.log('Selected Filter:', filter);
+    onSendDataToParent(filter);
+  
   };
 
   const GetDropDown  = useMemo(
@@ -324,23 +414,35 @@ function ReelCard({
                 console.log(item.url),
                 //  load video if mimetype is video else and tehn display
                 item.mimetype === 'video' ? (
+                  // <Video
+                  //   key={index}
+                  //   ref={videoRef}
+                  //   source={{ uri: item.url}}
+                  //   progressUpdateInterval={100}
+                  //   style={VideoDimensions}
+                  //   resizeMode="contain"
+                  //   onError={videoError}
+                  //   playInBackground={false}
+                  //   paused={Paused}
+                  //   muted={false}
+                  //   repeat={true}
+                  //   onLoad={(event) => onLoadComplete(event)}
+                  // />
                   <Video
                     key={index}
-                    ref={VideoPlayer}
-                    source={{ uri: item.url }}
-                    style={VideoDimensions}
-                    resizeMode="contain"
-                    onError={videoError}
-                    playInBackground={false}
-                    progressUpdateInterval={1000}
+                    // autoPlay={autoPlay}
+                    // muted={muted}
                     paused={Paused}
                     muted={false}
                     repeat={true}
-                    onBuffer={() => {
-                      setLoading(true);
-                    }}
+                    style={VideoDimensions}
+                    source={{ uri: item.url}}
+                    // onClick={handlePlayPauseClick}
+                    ref={videoRef}
+                    resizeMode="contain"
                     onLoad={(event) => onLoadComplete(event)}
                   />
+
                 ) : (
                   <Image
                     key={index}
