@@ -83,6 +83,7 @@ function ReelCard({
 
   // Play/Pause video according to visibility
   useEffect(() => {
+
     if(!VideoPlayer.current) return;
     if (ViewableItem === id) SetPaused(false);
     else SetPaused(true);
@@ -90,12 +91,15 @@ function ReelCard({
     console.log('id', id);
     console.log('type',description);
     const element = VideoPlayer.current;
+
+    console.log(videoUrls)
   }, [ViewableItem]);
   useEffect(() => {
     if (VideoPlayer.current && !Paused) {
         VideoPlayer.current.seek(0); 
         SetPaused(false); 
     }
+  
   }, [Paused]);
   // Pause when user toggles options to True
   useEffect(() => {
@@ -327,7 +331,7 @@ function ReelCard({
     style={{ position: 'absolute' }}
   />
 ) : (
-  videoUrls === null ? (
+  videoUrls === null || videoUrls.length === 0  ? (
     <View>
           <Text
             style={{
@@ -337,7 +341,7 @@ function ReelCard({
               textAlign: 'center',
             }}
           >
-            {description}
+            {description} 
           </Text>
         </View>
   ) : (

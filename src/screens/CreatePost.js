@@ -10,6 +10,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker'
 import InputBox from '../components/CreateReel/InputBox';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -18,7 +19,8 @@ import { useNavigation } from '@react-navigation/native';
 import MediaDisplay from '../components/CreateReel/MediaDisplay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import ContractForm from '../components/CreatePost/ContractForm';
+import { set } from 'react-native-reanimated';
 const CreatePost = () => {
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,6 +28,7 @@ const CreatePost = () => {
   const navigation = useNavigation();
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
+  const [isModalOpen, setModalOpen] = useState(false);
   useEffect(() => {
     getLocation();
    async function  getContract(){
@@ -36,7 +39,8 @@ const CreatePost = () => {
             let { data: Contract, error } = await supabase
               .from('Contract')
               .select('*')
-              .eq('owner_id', id);
+              .eq('owner_id', id)
+              .order('created_at', { ascending: false })
             console.log('Contract:', Contract);
             console.log('Error:', error);
             if (Contract && Contract.length > 0) {
@@ -167,7 +171,8 @@ const CreatePost = () => {
       {
         IdentityUUID: id,
         Description: description,
-        Content: contentJSON, 
+        Content: contentJSON,
+        contract: selectedOption,
       },
     ])
   
@@ -191,6 +196,45 @@ const CreatePost = () => {
     uploadMediaToSupabase();
   };
 
+
+  const handleAddContract = (contract) => {
+    console.log('Added Contract:', contract);
+    async function  getContract(){
+      const user = await AsyncStorage.getItem('user_info');
+            const {email , id } = JSON.parse(user);
+            console.log(typeof(id))
+            try {
+              // create a new contract
+              const { data, error } = await supabase.from('Contract').insert([
+                {
+                  title: contract.title,
+                  owner_id: id,
+                },
+              ]);
+            
+        
+              let { data: Contract, error:call } = await supabase
+              .from('Contract')
+              .select('*')
+              .eq('owner_id', id)
+              .order('created_at', { ascending: false })
+            console.log('Contract:', Contract);
+            console.log('Error:', call);
+            if (Contract && Contract.length > 0) {
+              setOptions(Contract)
+              setModalOpen(false);
+            } else {
+              console.log('No contracts found for this owner_id');
+            }
+            } catch (error) {
+              console.error('Error creating contract:', error);
+              setModalOpen(false);
+              alert("Error creating contract")
+            }
+          }
+      getContract()
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
      <MediaDisplay selectedMedia={selectedMedia} openMediaPicker={openMediaPicker} />
@@ -205,6 +249,7 @@ const CreatePost = () => {
             style={styles.icon}
             onPress={() => {
               console.log('Create contract');
+              setModalOpen(true);
             }}
           />
         </View>
@@ -215,15 +260,30 @@ const CreatePost = () => {
             console.log(itemValue)
           }}
           style={styles.picker}
+      
         >
+
+          
           {options.map((option) => (
             <Picker.Item
               key={option.id}
               label={option.title}
-              value={option.title}
+              value={option.id}
             />
           ))}
         </Picker>
+        <Modal
+        isVisible={isModalOpen}
+        // onBackdropPress={() => setModalOpen(false)} 
+        backdropOpacity={0.7} 
+        animationIn="slideInUp" 
+        animationOut="slideOutDown" 
+      >
+        <ContractForm
+          onClose={() => setModalOpen(false)}
+          onAddContract={handleAddContract}
+        />
+      </Modal>
         </View>
       {loading ? (
         <ActivityIndicator size="large" color="blue" />
@@ -232,6 +292,7 @@ const CreatePost = () => {
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
       )}
+    
     </ScrollView>
   );
 };

@@ -83,12 +83,10 @@ function ReelsScreenUpdated() {
 
   useEffect(() => {
     fetchVideos();
-    // console.log("these are final video from item ",videos);
   }, []);
 
 
   const onHeaderIconPress = () => navigation.goBack();
-  // const onSharePress = () => console.log('Share button pressed')
   const onShare = async (id) => {
     try {
       const info  =  supabase.from('Post').select('*').eq('id', id);
