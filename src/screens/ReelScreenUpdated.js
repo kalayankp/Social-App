@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../utils/supabase';
 import Video from 'react-native-video';
 import { LazyLoadComponent } from 'react-lazyload';
-import { set } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const headerTitle = 'My Reels';
@@ -144,7 +143,10 @@ const onSharePress = (id) => {
   
 
   // onContractPress
-  const onDislikePress = (id) => console.log(id);
+  const onDislikePress = (id) => {
+    console.log(id)
+    navigation.navigate('ShowContract', { postId: id })
+  }
 
 
   const onFinishPlaying = index => console.log(`Finished playing video ${index}`);
@@ -162,12 +164,8 @@ const onSharePress = (id) => {
   async function handelfiltererData(data){
     setFiltererData(data);
     if(data  == "MyPosts"){
-      // console.log("from parent" , data);
-      // console.log("from parent" , filtererData);
       const user = await AsyncStorage.getItem('user_info');
       const {email , id} = JSON.parse(user);
-      // console.log('User ID:', id);
-      // console.log('User Email:', email);
       setVideos(videos.filter((item) => item.user.Email == email));
     }
     

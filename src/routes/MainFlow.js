@@ -43,6 +43,7 @@ import CommentScreen from '../components/Reels/CommentScreen';
 
 import CommentHistory from '../components/ReelsUpdated/CommentHistory';
 import CreatePost from '../screens/CreatePost';
+import ShowContract from '../components/ReelsUpdated/ShowContract';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -107,8 +108,8 @@ const MainStackFlow = () => {
 const DrawerNavigation = () => {
   return (
     <Drawer.Navigator 
-    // initialRouteName="Reels"
-    initialRouteName="CreatePost"
+    initialRouteName="Reels"
+    // initialRouteName="CreatePost"
     >
       
       <Drawer.Group>
@@ -215,6 +216,7 @@ const MainFlow = () => {
       
       <Stack.Screen name="Comment" component={CommentScreen} />
       <Stack.Screen name="CommentHistory" component={CommentHistory} />
+      <Stack.Screen name="ShowContract" component={ShowContract} />
     </Stack.Navigator>
   );
 };
