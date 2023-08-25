@@ -35,6 +35,7 @@ export default function DynamicDropdown({handelSelectContract}) {
   
           setOptions(mappedContracts);
         } else {
+          setOptions([{value: 'createNew', label: 'Create New'}])
           console.log('No contracts found for this owner_id');
         }
       } catch (error) {
@@ -243,6 +244,9 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     zIndex: 1,
+    padding : 10,
+    marginLeft :10,
+    paddingLeft : 20
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -262,7 +266,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   createNewOption: {
-    backgroundColor: '#f0f0f0', // Add a different background color
+    backgroundColor: '#f0f0f0', 
     justifyContent: 'center',
     alignItems: 'center',
   },
