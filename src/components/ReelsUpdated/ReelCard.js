@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList , ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList , ScrollView  ,   Button} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 import { Image } from 'react-native-elements';
@@ -11,6 +11,8 @@ import helper from '../../components/ReelsUpdated/utils/helper';
 import DropDownFilter from './DropDownFilter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { color } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
+
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -80,6 +82,7 @@ function ReelCard({
   const [Paused, SetPaused] = useState(false);
   const [ShowOptions, SetShowOptions] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   // Play/Pause video according to visibility
   useEffect(() => {
@@ -299,12 +302,14 @@ function ReelCard({
   const [feedFilter, setFeedFilter] = useState('Trending');
 
 
+
   async function handleFilterChange(filter){
     
     setFeedFilter(filter);
     onSendDataToParent(filter);
   
   };
+
 
   const GetDropDown  = useMemo(
     () => (
@@ -315,8 +320,22 @@ function ReelCard({
     []
   );
 
-  
 
+  const StartTrade  = useMemo(
+    () => (
+      <View style={styles.trade}>
+        <Button 
+        title="Start Trade"
+        color={'#1A3837'}
+        onPress={() => {
+          console.log(id)
+          navigation.navigate('Trade', { id: id })
+        }} 
+        />
+      </View>
+    ),
+    []
+  );
 
 
   return (
@@ -401,6 +420,7 @@ function ReelCard({
           {GetButtons}
           {GetSlider}
           {GetDropDown}
+          {StartTrade}
           
         </>
       ) : null}
@@ -489,6 +509,16 @@ const styles = StyleSheet.create({
     top: 50, 
     zIndex: 100,
     left:ScreenWidth/6
+  },
+  trade: {
+    position: 'absolute',
+    width: ScreenWidth,
+    bottom: 90,
+    height: ScreenHeight / 10,
+    alignItems: 'center', // Center horizontally
+    justifyContent: 'flex-end', 
+    marginBottom: 50,
+    zIndex: 100,
   },
 
 });

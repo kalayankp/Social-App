@@ -44,6 +44,7 @@ import CommentScreen from '../components/Reels/CommentScreen';
 import CommentHistory from '../components/ReelsUpdated/CommentHistory';
 import CreatePost from '../screens/CreatePost';
 import ShowContract from '../components/ReelsUpdated/ShowContract';
+import TradeScreen from '../screens/TradeScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -110,17 +111,14 @@ const DrawerNavigation = () => {
     <Drawer.Navigator 
     initialRouteName="Reels"
     // initialRouteName="CreatePost"
+    // initialRouteName="CreatePost"
+    
     >
       
       <Drawer.Group>
         <Drawer.Screen
           name="MainStackFlow"
           component={MainStackFlow}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CreateTrade"
-          component={CreateTradeScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -153,6 +151,11 @@ const DrawerNavigation = () => {
           name="Reels"
           component={ReelsScreenUpdated}
           options={{headerShown: false}}
+        />
+         <Stack.Screen
+          name="Trade"
+          component={TradeScreen}
+          // options={{headerShown: false}}
         />
         <Stack.Screen
           name="ActiveListing"
