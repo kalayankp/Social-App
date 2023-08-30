@@ -7,6 +7,7 @@ const ScreenHeight = Dimensions.get('window').height;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../utils/supabase';
 import DropArea from '../components/TradeComponents/DropArea';
+import DraggableAssets from '../components/TradeComponents/DragableAssets';
 function TradeScreen() {
   const route = useRoute();
   const { id } = route.params;
@@ -16,8 +17,18 @@ function TradeScreen() {
   const [Assets1, setAssets1] = useState([]);
   const [Assets2, setAssets2] = useState([]);
 
-  const [trader1, settrader1] = useState();
-  const [trader2, settrader2] = useState();
+
+
+
+  const [bundle, setBundle] = useState([]); //loged in user cards
+
+
+
+
+  const [trader1, settrader1] = useState(); //loged in user id
+  const [trader2, settrader2] = useState(); // whose card is selected
+
+
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -27,16 +38,20 @@ const getTrader1 = async () => {
     try {
       const user = await AsyncStorage.getItem('user_info');
       const { id } = JSON.parse(user);
-      // console.log("trader2 ======> ",id);
       settrader2(id);
 
+      const { data, error } = await supabase
+        .from('Post')
+        .select('*')
+        .eq('IdentityUUID', id)
+
+      if (error) throw error;
+      console.log('bundel ==>',data);
+      setBundle(data);
     } catch (error) {
       alert(error.message);
     }
   };
-
-
-
   const getTrader2Assets = async (id) => {
     try {
       const { data, error } = await supabase
@@ -47,7 +62,6 @@ const getTrader1 = async () => {
       if (error) throw error;
       console.log(data);
       settrader1(data.IdentityUUID);
-      // console.log("trader1 ======> ", data.IdentityUUID);
       setAssets1(data);
     } catch (error) {
       alert(error.message);
@@ -64,7 +78,7 @@ const getTrader1 = async () => {
     };
   
     fetchData();
-  }, []);
+  }, [id]);
 
 
   return (
@@ -80,43 +94,22 @@ const getTrader1 = async () => {
        
       <View style={styles.topContainer}>
         <View style={styles.verticalCardContainer}>
-          <Text style={styles.cardText}>Card 1</Text>
+          
           {Assets1.Content && Assets1.Content.length > 0 && (
-             <DraxView
-             style={styles.receiver}
-             receivingStyle={styles.receiving}
-             onReceiveDragDrop={(event) => {
-                console.log("dragged" , event.dragged.payload);
-             }}
-         >
-            <Image
-              source={{ uri: Assets1.Content[0].url }}
-              style={{ width: '100%', height: '100%' }}
-              resizeMode="cover"
-            />
-            </DraxView>
-
-       
+             <DropArea asset = {Assets1}/>
           )}
         </View>
         <View style={styles.verticalCardContainer}>
-          <Text style={styles.cardText}>Card 2</Text>
+          <Text style={styles.cardText}> + </Text>
         </View>
       </View>
       <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
-        <View style={styles.smallCardContainer}>
-        <DropArea />
-        </View>
-        <View style={styles.smallCardContainer}>
-          <Text style={styles.smallCardText}>Small Card 2</Text>
-        </View>
-        <View style={styles.smallCardContainer}>
-          <Text style={styles.smallCardText}>Small Card 2</Text>
-        </View>
-        <View style={styles.smallCardContainer}>
-          <Text style={styles.smallCardText}>Small Card 2</Text>
-        </View>
-        {/* Add more small cards here */}
+
+      {bundle.map(item => (
+       <View style={styles.smallCardContainer} key={item.id}>
+        <DraggableAssets  data={item}/>
+     </View>
+        ))}
       </ScrollView>
       <View style={styles.container}>
     </View>
@@ -137,7 +130,7 @@ const styles = StyleSheet.create({
   },
   verticalCardContainer: {
     borderColor: 'black',
-    borderWidth: 1,
+    // borderWidth: 1,
     padding: 10,
     width: ScreenWidth / 2 - 10,
     height: ScreenHeight / 2,
@@ -151,8 +144,6 @@ const styles = StyleSheet.create({
   smallCardContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: 'black',
-    borderWidth: 1,
     padding: 5,
     marginHorizontal: 5,
     width: ScreenWidth/3,

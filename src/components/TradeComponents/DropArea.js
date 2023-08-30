@@ -2,41 +2,43 @@ import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { DraxView } from 'react-native-drax';
 
-const DropArea = () => {
+const DropArea = ({ asset }) => {
   return (
-    <DraxView
-      draggable
-      payload="IMAGE"
-      style={styles.dropArea}
-    >
-      <View style={styles.rectangle}>
+    <View style={styles.container}>
+      <DraxView
+        style={styles.receiver}
+        receivingStyle={styles.receiving}
+        onReceiveDragDrop={(event) => {
+          console.log("dragged", event.dragged.payload);
+        }}
+      >
         <Image
-          source={{ uri: 'https://images.unsplash.com/photo-1564910443496-5fd2d76b47fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1935&q=80' }}
-          style={styles.image}
+          source={{ uri: asset.Content[0].url }}  
+          style={{ width: '100%', height: '100%' }}
           resizeMode="cover"
         />
-      </View>
-    </DraxView>
+      </DraxView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  dropArea: {
-    width: 200,
-    height: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
+  container: {
+    flex: 1,
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    overflow: 'hidden',
   },
-  rectangle: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'blue',
-    justifyContent: 'center',
-    alignItems: 'center',
+  receiver: {
+    flex: 1,
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 10,
+    overflow: 'hidden',
   },
-  image: {
-    width: '100%',
-    height: '100%',
+  receiving: {
+    borderColor: 'purple',
   },
 });
 
