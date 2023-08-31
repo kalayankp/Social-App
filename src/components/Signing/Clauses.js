@@ -1,11 +1,12 @@
-import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
 
 const Clause = (props) => {
   const [wordCount, setWordCount] = React.useState(props.clause.trim().split(/\s+/).length);
 
   return (
     <View style={styles.container}>
+      
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{props.clause}</Text>
       </View>

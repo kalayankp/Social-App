@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StatusBar, StyleSheet, ActivityIndicator, Text,Alert, Share } from 'react-native';
+import { View, StatusBar, StyleSheet, ActivityIndicator, Text,Alert, Share, Image } from 'react-native';
 import Reels from '../components/ReelsUpdated/Reels';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../utils/supabase';
@@ -84,7 +84,7 @@ function ReelsScreenUpdated() {
     fetchVideos();
   }, []);
 
-
+  
   const onHeaderIconPress = () => navigation.goBack();
   const onShare = async (id) => {
     try {
@@ -178,7 +178,7 @@ const onSharePress = (id) => {
       <StatusBar hidden={true} />
       {loading ? (
         LoadingIndicator
-      ) : (
+      ) :  (
         <Reels
           videos={videos}
           backgroundColor={backgroundColor}
@@ -197,7 +197,9 @@ const onSharePress = (id) => {
           onSendDataTogradParent={handelfiltererData}
         />
       
-      )}
+      )
+     
+      }
     </View>
   );
 }

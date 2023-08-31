@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {Picker} from '@react-native-picker/picker'
+
 import InputBox from '../components/CreateReel/InputBox';
 import ImagePicker from 'react-native-image-crop-picker';
 import { supabase } from '../utils/supabase';
@@ -149,7 +149,7 @@ const CreatePost = () => {
         IdentityUUID: id,
         Description: description,
         Content: contentJSON,
-        contract: selectedOption,
+        Contract: selectedOption,
       },
     ])
   
@@ -172,7 +172,7 @@ const CreatePost = () => {
     }
     uploadMediaToSupabase();
   };
-  const handelSelectContract = (contract) => {
+  const handleSelectContract = (contract) => {
     console.log('value from the create post',contract);
     if(contract == null){
       setSelectedOption(null);
@@ -189,7 +189,7 @@ const CreatePost = () => {
        <View style={styles.pickerLabelContainer}>
           <Text style={styles.pickerLabelText}>Select a Contract:</Text>
         </View>
-        < DynamicDropdown  handelSelectContract= {handelSelectContract} />
+        < DynamicDropdown  handleSelectContract= {handleSelectContract} />
         </View>
       {loading ? (
         <ActivityIndicator size="large" color="blue" />
