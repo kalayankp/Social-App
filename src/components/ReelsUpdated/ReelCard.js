@@ -12,7 +12,7 @@ import DropDownFilter from './DropDownFilter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { color } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
-
+import { supabase } from '../../utils/supabase';
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -321,15 +321,80 @@ function ReelCard({
   );
 
 
+
+  const CreateNewTrade = async (listingid) => {
+    try {
+      const user = await AsyncStorage.getItem('user_info');
+      const { id } = JSON.parse(user);
+  
+      // Get the trader1 and Assets1 values
+      const { trader1, Assets1 } = await getTrader1(listingid);
+  
+      if (!trader1) {
+        console.error('Error in CreateNewTrade: Invalid trader1');
+        return;
+      }
+  
+      const { data, error } = await supabase
+        .from('Trade')
+        .insert([
+          {
+            ListingID: listingid,
+            Trader1: trader1,
+            Assets1: Assets1,
+            Trader2: id,
+            Status1: 1,
+            Status2: 1,
+          },
+        ])
+        .select();
+  
+      if (error) {
+        console.error('Error in CreateNewTrade:', error);
+      } else if (data && data[0] && data[0].id) {
+        navigation.navigate('Trade', {
+          id: data[0].id,
+        });
+      }
+    } catch (error) {
+      console.error('Error in CreateNewTrade:', error);
+    }
+  };
+  
+  const getTrader1 = async (id) => {
+    try {
+      const { data, error } = await supabase
+        .from('Post')
+        .select('*')
+        .eq('id', id);
+  
+      if (data && data.length > 0) {
+        return {
+          trader1: data[0].IdentityUUID,
+          Assets1: [data[0].id],
+        };
+      } else {
+        return {
+          trader1: '', // Set to a default value or handle it differently
+          Assets1: [],
+        };
+      }
+    } catch (error) {
+      console.error('Error in getTrader1:', error);
+      return {
+        trader1: '', // Set to a default value or handle it differently
+        Assets1: [],
+      };
+    }
+  };
   const StartTrade  = useMemo(
     () => (
       <View style={styles.trade}>
         <Button 
         title="Start Trade"
         color={'#1A3837'}
-        onPress={() => {
-          console.log(id)
-          navigation.navigate('Trade', { id: id })
+        onPress={  async () => {
+          await CreateNewTrade(id)
         }} 
         />
       </View>

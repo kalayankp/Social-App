@@ -1,140 +1,181 @@
-import React, { useEffect   , useState} from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Dimensions, StyleSheet, Image ,ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  StyleSheet,
+  ActivityIndicator,
+  Switch,
+} from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { DraxProvider, DraxView } from 'react-native-drax';
-const ScreenWidth = Dimensions.get('window').width;
-const ScreenHeight = Dimensions.get('window').height;
+import { DraxProvider } from 'react-native-drax';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../utils/supabase';
 import DropArea from '../components/TradeComponents/DropArea';
 import DraggableAssets from '../components/TradeComponents/DragableAssets';
+
+const ScreenWidth = Dimensions.get('window').width;
+const ScreenHeight = Dimensions.get('window').height;
+
 function TradeScreen() {
   const route = useRoute();
   const { id } = route.params;
 
-
-
-  const [Assets1, setAssets1] = useState([]);
-  const [Assets2, setAssets2] = useState([]);
-
-
-
-
-  const [bundle, setBundle] = useState([]); //loged in user cards
-
-
-
-
-  const [trader1, settrader1] = useState(); //loged in user id
-  const [trader2, settrader2] = useState(); // whose card is selected
-
-
-
+  const [bundle, setBundle] = useState([]); // logged-in user bundle
+  const [othersBundle, setOthersBundle] = useState([]); // other user's bundle
   const [isLoading, setIsLoading] = useState(true);
+  const [trade, setTrade] = useState(null); // Initialize trade state as null
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
 
 
-const getTrader1 = async () => {
+  const [Assets1 , setAssets1] =  useState([]);
+  const [Assets2 , setAssets2] =  useState([]);
+  
+
+const getasset = async (postID) =>{
+  const {data  , error} = await supabase
+  .from('Post')
+  .select('*')
+  .eq('id' , postID)
+  .single()
+
+  console.log(data)
+  setAssets1([...Assets1 , data])
+}
+  const fetchBundles = async (userId, setBundles) => {
     try {
-      const user = await AsyncStorage.getItem('user_info');
-      const { id } = JSON.parse(user);
-      settrader2(id);
-
       const { data, error } = await supabase
         .from('Post')
         .select('*')
-        .eq('IdentityUUID', id)
+        .eq('IdentityUUID', userId); // Query for user-specific bundles here
 
-      if (error) throw error;
-      console.log('bundel ==>',data);
-      setBundle(data);
+      if (error) {
+        console.error(`Error fetching bundles for user ${userId}:`, error);
+      } else {
+        setBundles(data);
+      }
     } catch (error) {
-      alert(error.message);
+      console.error(`Error fetching bundles for user ${userId}:`, error);
     }
   };
-  const getTrader2Assets = async (id) => {
+
+  const fetchTrade = async (tradeId) => {
     try {
       const { data, error } = await supabase
-        .from('Post') 
+        .from('Trade')
         .select('*')
-        .eq('id', id)
+        .eq('id', tradeId)
         .single();
-      if (error) throw error;
-      console.log(data);
-      settrader1(data.IdentityUUID);
-      setAssets1(data);
+
+      if (error) {
+        console.error('Error fetching trade:', error);
+      } else {
+        setTrade(data);
+        // Fetch bundles for Trader1 and Trader2 here
+        await fetchBundles(data.Trader2, setBundle);
+        await fetchBundles(data.Trader1, setOthersBundle);
+        await  getasset(data.Assets1[0])
+        setIsLoading(false);
+      }
     } catch (error) {
-      alert(error.message);
+      console.error('Error fetching trade:', error);
     }
   };
 
-
-  
   useEffect(() => {
     const fetchData = async () => {
-      await getTrader2Assets(id);
-      await getTrader1();
-      setIsLoading(false);
+      try {
+        await fetchTrade(id);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
-  
     fetchData();
-  }, [id]);
 
+    // const subscription =  supabase
+    // .from('Trade')
+    // .on('*' , (payload) =>{
+    //   console.log("new post" , payload.new);
+    // })
+    // .subscribe();
+    // return () => {
+    //   subscription.unsubscribe();
+    // };
+
+
+  }, [id]);
 
   return (
     <DraxProvider>
       {isLoading ? (
-          <ActivityIndicator style={{ marginTop: 20 }} size="large" color="black" />
-        ) :(
-    <View style={styles.container}>
-    
-        <View>
-            <Text style={{fontSize: 20, fontWeight: 'bold' , color:"black"}}>Information </Text>
-        </View>
-       
-      <View style={styles.topContainer}>
-        <View style={styles.verticalCardContainer}>
-          
-          {Assets1.Content && Assets1.Content.length > 0 && (
-             <DropArea asset = {Assets1}/>
-          )}
-        </View>
-        <View style={styles.verticalCardContainer}>
-          <Text style={styles.cardText}> + </Text>
-        </View>
-      </View>
-      <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
+        <ActivityIndicator style={styles.loadingIndicator} size="large" color="black" />
+      ) : (
+        <View style={styles.container}>
+          <Text style={styles.title}>Information</Text>
 
-      {bundle.map(item => (
-       <View style={styles.smallCardContainer} key={item.id}>
-        <DraggableAssets  data={item}/>
-     </View>
-        ))}
-      </ScrollView>
-      <View style={styles.container}>
-    </View>
-    </View>)}
+          <View style={styles.topContainer}>
+            <View style={styles.verticalCardContainer}>
+              <Text style={styles.cardText}>+</Text>
+            </View>
+            <View style={styles.verticalCardContainer}>
+              <DropArea asset={Assets1[0]} />
+            </View>
+          </View>
+          <Switch
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+          <View style={styles.scrollViewContainer}>
+  <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
+    {isEnabled ? (
+      othersBundle.map((item) => (
+        <View style={styles.smallCardContainer} key={item.id}>
+          <DraggableAssets data={item} />
+        </View>
+      ))
+    ) : (
+      bundle.map((item) => (
+        <View style={styles.smallCardContainer} key={item.id}>
+          <DraggableAssets data={item} />
+        </View>
+      ))
+    )}
+  </ScrollView>
+</View>
+          <View style={styles.additionalContainer}></View>
+        </View>
+      )}
     </DraxProvider>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+  },
   topContainer: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     marginTop: 20,
   },
   verticalCardContainer: {
     borderColor: 'black',
-    // borderWidth: 1,
     padding: 10,
     width: ScreenWidth / 2 - 10,
-    height: ScreenHeight / 2,
-    margin: 5
+    height: ScreenHeight / 2+100,
+    margin: 5,
   },
   cardText: {
     fontSize: 16,
@@ -142,33 +183,34 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   smallCardContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
     padding: 5,
     marginHorizontal: 5,
-    width: ScreenWidth/3,
+    width: ScreenWidth / 3,
     height: ScreenHeight / 5,
-  },
-  smallCardText: {
-    fontSize: 14,
   },
   horizontalScroll: {
     flexGrow: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 20,
+  },
+  scrollViewContainer: {
+    flex: 1, 
+    marginTop:40
+  },
+  loadingIndicator: {
+    marginTop: 20,
   },
   draggable: {
     width: 100,
     height: 100,
     backgroundColor: 'blue',
-},
-receiver: {
+  },
+  receiver: {
     width: 100,
     height: 100,
     backgroundColor: 'green',
-},
+  },
 });
 
 export default TradeScreen;
