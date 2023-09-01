@@ -5,6 +5,8 @@ import { supabase } from "../../utils/supabase"
 
 async function getContract(title, clauses = [], setContractFormOpen) {
 
+
+
   const user = await AsyncStorage.getItem('user_info');
   const { email, id } = JSON.parse(user);
   // console.log(id, 'id');
@@ -28,7 +30,7 @@ async function getContract(title, clauses = [], setContractFormOpen) {
 
 
 
-    const { data: getbytitle, error: titlerror } = await supabase
+    const { data: id, error: titlerror } = await supabase
       .from('Contract')
       .select('*')
       .eq('title', title)
@@ -46,7 +48,7 @@ async function getContract(title, clauses = [], setContractFormOpen) {
       promiseArr.push(new Promise((resolve, reject) => {
         resolve(supabase.from('Clauses').insert([
             {
-              contract_id: getbytitle.id,
+              contract_id: id,
               clause: clauses[i],
             },
           ]))
@@ -87,6 +89,9 @@ async function getContract(title, clauses = [], setContractFormOpen) {
     // setContractFormOpen(false);
     alert('Error creating contract');
   }
+
+  
+  
 
 };
 
