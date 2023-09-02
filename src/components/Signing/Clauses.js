@@ -2,23 +2,24 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
 
 const Clause = (props) => {
-  // const [wordCount, setWordCount] = React.useState(props.clause.trim().split(/\s+/).length);
 
-console.log(props.isEditing,"editmodeeeeeeeeeeee")
+
+  const { clause, index, editClause, isEditing } = props
 
   return (
     <View style={styles.container}>
 
-    <View style={styles.titleContainer}>
 
-        { props.isEditing ? (
+      <View style={styles.titleContainer}>
+
+        {isEditing ? (
           <TextInput
             style={styles.titleInput}
-            value={props.clause}
-            onChangeText={props.editClause}
+            value={clause}
+            onChangeText={(text) => editClause(index, text)}
           />
         ) : (
-          <Text style={styles.title}>{props.clause}</Text>
+          <Text style={styles.title}>{clause}</Text>
         )}
 
 
