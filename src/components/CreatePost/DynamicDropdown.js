@@ -4,48 +4,33 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from "../../utils/supabase"
 import ContractForm from './ContractForm';
+import { useDispatch, useSelector } from 'react-redux';
 const { width, height } = Dimensions.get('window');
+import { fetchContracts, getContract } from '../../actions/contractAction';
 
+export default function DynamicDropdown({ handleSelectContract }) {
 
-export default function DynamicDropdown({handelSelectContract}) {
-  const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isContractFormOpen, setContractFormOpen] = useState(false);
+
+  const dispatch = useDispatch()
+  const options = useSelector((store) => {
+    return store.contractReducer.options
+  })
+
+
+
+//  LOG  [{"label": null, "value": "9a9f17b0-7873-49cc-8aca-4658d6960f8e"}, {"label": null, "value": "68cc953f-4087-4b93-b1da-e360df934238"}, {"label": null, "value": "13a71c66-116c-464c-a0a5-2525fddfd288"}, {"label": null, "value": "bbd5c83f-92d2-4aee-b9fc-aea9a9088329"}, {"label": null, "value": "4841c9aa-00fe-4e9c-bba1-721e5587f511"}, {"label": null, "value": "86684650-80b5-48d7-bbcb-0d1070d7e60d"}, {"label": "TITLE", "value": "419fed41-ee12-490c-88c5-382b8833e056"}, {"label": "Create New", "value": "createNew"}, null] options
+//  LOG  [{"label": null, "value": "9a9f17b0-7873-49cc-8aca-4658d6960f8e"}, {"label": null, "value": "68cc953f-4087-4b93-b1da-e360df934238"}, {"label": null, "value": "13a71c66-116c-464c-a0a5-2525fddfd288"}, {"label": null, "value": "bbd5c83f-92d2-4aee-b9fc-aea9a9088329"}, {"label": null, "value": "4841c9aa-00fe-4e9c-bba1-721e5587f511"}, {"label": null, "value": "86684650-80b5-48d7-bbcb-0d1070d7e60d"}, {"label": "TITLE", "value": "419fed41-ee12-490c-88c5-382b8833e056"}, {"label": "Create New", "value": "createNew"}] options
+
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const user = await AsyncStorage.getItem('user_info');
-        const { id } = JSON.parse(user);
+    dispatch(fetchContracts())
   
-        let { data: contractData, error } = await supabase
-          .from('Contract')
-          .select('*')
-          .eq('owner_id', id)
-          .order('created_at', { ascending: false });
-        if (error) {
-          console.error('Error fetching contract:', error);
-          return;
-        }
-        if (contractData && contractData.length > 0) {
-          const mappedContracts = contractData.map(contract => ({
-            value: contract.id,
-            label: contract.title,
-          }));
-          mappedContracts.push({ value: 'createNew', label: 'Create New' });
-  
-          setOptions(mappedContracts);
-        } else {
-          setOptions([{value: 'createNew', label: 'Create New'}])
-          console.log('No contracts found for this owner_id');
-        }
-      } catch (error) {
-        console.error('Error fetching contract:', error);
-      }
-    }
-  
-    fetchData();
+   
   }, [toggleModal]);
+
+
   
 
   const toggleModal = () => {
@@ -54,8 +39,8 @@ export default function DynamicDropdown({handelSelectContract}) {
 
   const selectOption = (option) => {
     setSelectedOption(option.value);
-    console.log('option.value',option);
-    handelSelectContract(option);
+    console.log('option.value', option);
+    handleSelectContract(option);
     toggleModal();
   };
 
@@ -63,100 +48,37 @@ export default function DynamicDropdown({handelSelectContract}) {
     setContractFormOpen(true);
     console.log('Create New');
   };
-
-  const handleAddContract =async ({title , clauses}) => {
-    console.log('Added Contract:', title);
-    console.log('clauses:', clauses);
+ 
+  const handleAddContract = async ( title, clauses ) => {
+    console.log(title,"titleforomhandleadd")
+  
     try {
-    async function  getContract(){
-      const user = await AsyncStorage.getItem('user_info');
-            const {email , id } = JSON.parse(user);
-            console.log(id)
-            try {
-              const { data, error } = await supabase.from('Contract').insert([
-                {
-                  title: title,
-                  owner_id: id,
-                },
-              ])
-              
-              const {data :getbytitle  ,  error:titlerror  }= await supabase
-              .from('Contract')
-              .select('*')
-              .eq('title', title)
-              .single();
+    
+    dispatch(getContract(setContractFormOpen, clauses, title));
 
-              if (error) {
-                console.log('Error creating contract:', error);
-                setContractFormOpen(false);
-                alert("Error creating contract");
-              } else {
-                console.log('Contract created successfully:', data);
-              }
-              console.log('getbytitle',getbytitle);
-              console.log('titlerror',titlerror);
-
-              for(const element of clauses){
-                const { data, error } = await supabase.from('Clauses').insert([
-                  {
-                    contract_id: getbytitle.id,
-                    clause: element,
-                  },
-                ])
-                if (error) {
-                  console.log('Error creating clause:', error);
-                  setContractFormOpen(false);
-                  alert("Error creating clause");
-                } else {
-                  console.log('Clause created successfully:', data);
-                }
-              }
-              const {data : refreshedContracts ,  error:refresheror }= await supabase
-              .from('Contract')
-              .select('*')
-              .eq('owner_id', id)
-              .order('created_at', { ascending: false });
-              if (refreshedContracts && refreshedContracts.length > 0) {
-                const mappedContracts = refreshedContracts.map(contract => ({
-                  value: contract.id,
-                  label: contract.title,
-                }));
-                mappedContracts.push({ value: 'createNew', label: 'Create New' });
-                setOptions(mappedContracts);
-              } else {
-                console.log(refresheror);
-                console.log('No contracts found for this owner_id');
-              }
-              setContractFormOpen(false);
-            } catch (error) {
-              console.error('Error creating contract:', error);
-              setContractFormOpen(false);
-              alert("Error creating contract");
-            }
-          }
-          getContract();
     } catch (error) {
-      console.error('Error fetching contract:', error);
+      console.error('Error fetching contract: 120', error);
       setContractFormOpen(false);
       alert("Error fetching contract");
     }
   };
 
   const renderOption = ({ item }) => (
+   
     <TouchableOpacity
       style={[
         styles.optionItem,
-        item.value === 'createNew' && styles.createNewOption,
+        item?.value === 'createNew' && styles.createNewOption,
       ]}
       onPress={() => {
-        if (item.value === 'createNew') {
+        if (item?.value === 'createNew') {
           handleCreateNew();
         } else {
           selectOption(item);
         }
       }}
     >
-      <Text style={styles.optionText}>{item.label}</Text>
+      <Text style={styles.optionText}>{item?.label}</Text>
     </TouchableOpacity>
   );
 
@@ -184,29 +106,29 @@ export default function DynamicDropdown({handelSelectContract}) {
               color='orange'
               size={24}
               style={styles.closeIcon}
-              onPress={()=>{
+              onPress={() => {
                 setSelectedOption('')
-                handelSelectContract(null);
+                handleSelectContract(null);
                 toggleModal()
               }}
             />
             <FlatList
               data={options}
               renderItem={renderOption}
-              keyExtractor={(item) => item.id || item.value}
+              keyExtractor={(options) => options?.id || options?.value}
             />
           </View>
         </View>
       </Modal>
 
-      {   isContractFormOpen  && <Modal
-         isVisible={isContractFormOpen}
-        backdropOpacity={0.7} 
-        animationIn="slideInUp" 
-        animationOut="slideOutDown" 
+      {isContractFormOpen && <Modal
+        isVisible={isContractFormOpen}
+        backdropOpacity={0.7}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
       >
         <ContractForm
-          onClose={() => setContractFormOpen(false)} 
+          onClose={() => setContractFormOpen(false)}
           onAddContract={handleAddContract}
         />
       </Modal>}
@@ -245,9 +167,9 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     zIndex: 1,
-    padding : 10,
-    marginLeft :10,
-    paddingLeft : 20
+    padding: 10,
+    marginLeft: 10,
+    paddingLeft: 20
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -267,7 +189,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   createNewOption: {
-    backgroundColor: '#f0f0f0', 
+    backgroundColor: '#f0f0f0',
     justifyContent: 'center',
     alignItems: 'center',
   },

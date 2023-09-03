@@ -16,8 +16,9 @@ const ContractForm = ({ onClose, onAddContract }) => {
   const [editingClauses, setEditingClauses] = useState([]);
 
   const handleAddContract = () => {
+    console.log(title,"contractForm")
     if (title && clauses.length > 0) {
-      onAddContract({ title, clauses });
+      onAddContract( title, clauses );
     } else {
       alert('Please provide a title and at least one clause.');
     }
