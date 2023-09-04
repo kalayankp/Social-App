@@ -156,6 +156,7 @@ const CreatePost = () => {
     if (error) {
       console.log('Error creating post:', error);
     } else {
+      alert("Post created successfully")
       console.log('Post created successfully:', data);
     }
   };

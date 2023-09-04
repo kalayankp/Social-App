@@ -2,7 +2,6 @@ import { ADD_CONTRACT_OPTIONS, CREATE_CLAUSE_FAILURE, CREATE_CLAUSE_SUCCESS, CRE
 
 const initialState = {
     options: [],
-    //  contracts: [],
     error: null,
 };
 

@@ -4,7 +4,7 @@ export const data = [
     post: {
       url: require('../asset/Assets/video2.mov'),
     },
-    
+
     isImage: false,
     user: {
       userId: 1,
@@ -69,7 +69,7 @@ export const data = [
     post: {
       url: require('../asset/Assets/video5.mov'),
     },
-   
+
     isImage: false,
     user: {
       userId: 5,

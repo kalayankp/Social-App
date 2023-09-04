@@ -31,7 +31,7 @@ export default function DynamicDropdown({ handleSelectContract }) {
 
   const selectOption = (option) => {
     setSelectedOption(option.value);
-    console.log('option.value',option);
+   
     handleSelectContract(option);
     toggleModal();
   };
@@ -39,7 +39,7 @@ export default function DynamicDropdown({ handleSelectContract }) {
 
   const handleCreateNew = () => {
     setContractFormOpen(true);
-    console.log('Create New');
+   
   };
  
   const handleAddContract = async ( title, clauses ) => {
@@ -72,6 +72,7 @@ export default function DynamicDropdown({ handleSelectContract }) {
       <Text style={styles.optionText}>{item?.label}</Text>
     </TouchableOpacity>
   );
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.selectedOption} onPress={toggleModal}>
