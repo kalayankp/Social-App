@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import Modal from 'react-native-modal';
-
+import {Picker} from '@react-native-picker/picker'
 import InputBox from '../components/CreateReel/InputBox';
 import ImagePicker from 'react-native-image-crop-picker';
 import { supabase } from '../utils/supabase';
@@ -149,7 +149,7 @@ const CreatePost = () => {
         IdentityUUID: id,
         Description: description,
         Content: contentJSON,
-        Contract: selectedOption,
+        contract: selectedOption,
       },
     ])
   

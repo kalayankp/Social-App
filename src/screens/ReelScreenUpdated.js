@@ -41,8 +41,10 @@ function ReelsScreenUpdated() {
         // console.log("from loop" , userData.name);
         const {name , Email, profile_image_url} = userData;
         if (userEror) throw userEror;
+console.log(profile_image_url,"imgggggggggggggggggg")
+const NoProfilePic = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvQmR2Qrof1aCENRuX8QfnvkqGnN35FByfxeFn4FE&s"  
 
-        
+
         if(post.Content != null){
           videoData.push({
             id: post.id,
@@ -50,7 +52,8 @@ function ReelsScreenUpdated() {
             user: {
               name: name,
               Email : Email,
-              avatar: profile_image_url 
+           
+             avatar: profile_image_url !== null ? profile_image_url  : NoProfilePic 
             },
             likes: post.Likes,
             comments: post.Comments,
@@ -63,7 +66,7 @@ function ReelsScreenUpdated() {
             videoUrls: null,
             user: {
               name: name,
-              avatar: profile_image_url 
+              avatar: profile_image_url !== null ? profile_image_url  : NoProfilePic 
             },
             likes: post.Likes,
             comments: post.Comments,

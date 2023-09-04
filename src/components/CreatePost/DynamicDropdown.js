@@ -31,10 +31,11 @@ export default function DynamicDropdown({ handleSelectContract }) {
 
   const selectOption = (option) => {
     setSelectedOption(option.value);
-    console.log('option.value', option);
+    console.log('option.value',option);
     handleSelectContract(option);
     toggleModal();
   };
+
 
   const handleCreateNew = () => {
     setContractFormOpen(true);
