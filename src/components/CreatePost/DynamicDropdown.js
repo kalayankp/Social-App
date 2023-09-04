@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, Modal, StyleSheet, Dimensions }
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ContractForm from './ContractForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContracts, getContract } from '../../actions/contractAction';
+import { fetchContracts, AddNewContract } from '../../actions/contractAction';
 const { width, height } = Dimensions.get('window');
 
 
@@ -45,10 +45,10 @@ export default function DynamicDropdown({ handleSelectContract }) {
   const handleAddContract = async ( title, clauses ) => {
   try {
     
-    dispatch(getContract(setContractFormOpen, clauses, title));
+  await dispatch (AddNewContract(setContractFormOpen, clauses, title));
 
     } catch (error) {
-      console.error('Error fetching contract', error);
+      console.error('Error fetching contract 51', error);
       setContractFormOpen(false);
       alert("Error fetching contract");
     }
@@ -72,7 +72,6 @@ export default function DynamicDropdown({ handleSelectContract }) {
       <Text style={styles.optionText}>{item?.label}</Text>
     </TouchableOpacity>
   );
-
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.selectedOption} onPress={toggleModal}>
