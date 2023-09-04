@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StatusBar, StyleSheet, ActivityIndicator, Text, Alert, Share, Image } from 'react-native';
+import { View, StatusBar, StyleSheet, ActivityIndicator, Text,Alert, Share } from 'react-native';
 import Reels from '../components/ReelsUpdated/Reels';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../utils/supabase';
@@ -12,8 +12,8 @@ const headerIconName = 'back';
 const headerIconColor = '#fff';
 const headerIconSize = 30;
 const backgroundColor = '#000';
-const userInfo = { name: 'John Doe', age: 25, city: 'New York',profilepic:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlfFv1bg1jZO8p5k-0HVBuu0h-22MAGQEYew&usqp=CAU" };
-console.log(userInfo.profilepic,"nnnnnnnnnnnnnnn")
+const userInfo = { name: 'John Doe', age: 25, city: 'New York' };
+
 function ReelsScreenUpdated() {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -25,47 +25,45 @@ function ReelsScreenUpdated() {
     try {
       setLoading(true);
       const { data, error } = await supabase.from('Post').select('*').order('created_at', { ascending: false });
-       
+      console.log(data,"supdasedataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
       if (error) throw error;
 
       const videoData = [];
 
       for (let index = 0; index < data.length; index++) {
         const post = data[index];
-        const { data: userData, error: userEror } = await supabase.
-          from('UserInfo')
-          .select('name  , Email, avatar')
-          .eq("id", post.IdentityUUID)
-          .single();
-
+        const {data :userData  , error  :userEror } = await supabase.
+        from('UserInfo')
+        .select('name  , Email, profile_image_url')
+        .eq("id", post.IdentityUUID)
+        .single();
+      
         // console.log("from loop" , userData.name);
-        const { name, Email } = userData;
-       
-        if (userEror) throw userEror; 
+        const {name , Email, profile_image_url} = userData;
+        if (userEror) throw userEror;
 
-        if (post.Content != null) {
+        
+        if(post.Content != null){
           videoData.push({
             id: post.id,
             videoUrls: post.Content,
             user: {
               name: name,
-              Email: Email,
-              avatar:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlfFv1bg1jZO8p5k-0HVBuu0h-22MAGQEYew&usqp=CAU"
-             
+              Email : Email,
+              avatar: profile_image_url 
             },
             likes: post.Likes,
             comments: post.Comments,
             description: post.Description
           })
-        }
-        else {
+        } 
+        else{
           videoData.push({
             id: post.id,
             videoUrls: null,
             user: {
               name: name,
-              avatar:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlfFv1bg1jZO8p5k-0HVBuu0h-22MAGQEYew&usqp=CAU"
-              
+              avatar: profile_image_url 
             },
             likes: post.Likes,
             comments: post.Comments,
@@ -82,70 +80,67 @@ function ReelsScreenUpdated() {
     }
   };
 
-
-
   useEffect(() => {
     fetchVideos();
   }, []);
 
- 
 
   const onHeaderIconPress = () => navigation.goBack();
   const onShare = async (id) => {
     try {
-      const info = supabase.from('Post').select('*').eq('id', id);
-      const { data, error } = await info.single();
+      const info  =  supabase.from('Post').select('*').eq('id', id);
+      const {data , error} = await info.single();
       if (error) throw error;
       console.log(data);
-      const { Content, Description } = data;
+      const {Content , Description} = data;
       console.log(Content);
       console.log(Description);
-      if (Content != null) {
-        const result = await Share.share({
-          title: "Hashx",
-          message: ` ${Description}  ${data.Content[0].url}`,
-        });
-        if (result.action === Share.sharedAction) {
-          if (result.activityType) {
-            console.log(`Shared with activity type: ${result.activityType}`);
-          } else {
-            console.log('Shared without a specific activity type');
-          }
-        } else if (result.action === Share.dismissedAction) {
-          console.log('Share dismissed');
-        }
+      if (Content != null){
+    const result = await Share.share({
+      title: "Hashx",
+      message: ` ${Description}  ${data.Content[0].url}`,
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        console.log(`Shared with activity type: ${result.activityType}`);
       } else {
-        const result = await Share.share({
-          title: "Hashx",
-          message: ` Description  :    ${Description}`,
-        });
-        if (result.action === Share.sharedAction) {
-          if (result.activityType) {
-            console.log(`Shared with activity type: ${result.activityType}`);
-          } else {
-            console.log('Shared without a specific activity type');
-          }
-        } else if (result.action === Share.dismissedAction) {
-          console.log('Share dismissed');
-        }
+        console.log('Shared without a specific activity type');
       }
-    } catch (error) {
-      Alert.alert(error.message);
+    } else if (result.action === Share.dismissedAction) {
+      console.log('Share dismissed');
     }
-  };
+  }else{
+    const result = await Share.share({
+      title: "Hashx",
+      message: ` Description  :    ${Description}`,
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        console.log(`Shared with activity type: ${result.activityType}`);
+      } else {
+        console.log('Shared without a specific activity type');
+      }
+    } else if (result.action === Share.dismissedAction) {
+      console.log('Share dismissed');
+    }
+  }
+  } catch (error) {
+    Alert.alert(error.message);
+  }
+};
 
-  const onSharePress = (id) => {
-    console.log('Share button pressed')
-    onShare(id);
-  };
+const onSharePress = (id) => {
+          console.log('Share button pressed')
+          onShare(id);
+        };
 
-  const onCommentPress = (id) => {
+  const onCommentPress = (id) =>{
     console.log(id)
     console.log('Comment button pressed');
-    navigation.navigate('Comment', { postId: id })
+    navigation.navigate('Comment' ,{ postId: id })
   };
   const onLikePress = () => console.log('Like button pressed');
-
+  
 
   // onContractPress
   const onDislikePress = (id) => {
@@ -165,16 +160,16 @@ function ReelsScreenUpdated() {
 
 
 
-  const [filtererData, setFiltererData] = useState('');
-  async function handelfiltererData(data) {
+  const [filtererData , setFiltererData] = useState('');
+  async function handelfiltererData(data){
     setFiltererData(data);
-    if (data == "MyPosts") {
+    if(data  == "MyPosts"){
       const user = await AsyncStorage.getItem('user_info');
-      const { email, id } = JSON.parse(user);
+      const {email , id} = JSON.parse(user);
       setVideos(videos.filter((item) => item.user.Email == email));
     }
-
-
+    
+    
   }
 
 
@@ -200,13 +195,9 @@ function ReelsScreenUpdated() {
           onFinishPlaying={onFinishPlaying}
           userInfo={userInfo}
           onSendDataTogradParent={handelfiltererData}
-         
-         
         />
-
-      )
-
-      }
+      
+      )}
     </View>
   );
 }
