@@ -109,6 +109,13 @@ const getasset = async (postID) =>{
 
   }, [id]);
 
+  const addCardToTrade = (payload) => {
+
+    console.log(`Received payload in parent component: ${payload}`);
+    console.log(payload)
+    setAssets2([payload,...Assets2])
+  };
+
   return (
     <DraxProvider>
       {isLoading ? (
@@ -116,13 +123,12 @@ const getasset = async (postID) =>{
       ) : (
         <View style={styles.container}>
           <Text style={styles.title}>Information</Text>
-
           <View style={styles.topContainer}>
             <View style={styles.verticalCardContainer}>
-              <Text style={styles.cardText}>+</Text>
+            <DropArea asset={Assets2} addCardToTrade={addCardToTrade}/>
             </View>
-            <View style={styles.verticalCardContainer}>
-              <DropArea asset={Assets1[0]} />
+            <View style={styles.verticalCardContainer} >
+              <DropArea asset={Assets1} addCardToTrade={addCardToTrade} />
             </View>
           </View>
           <Switch

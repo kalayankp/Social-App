@@ -22,7 +22,7 @@ const DraggableAssets = ({ data }) => {
       draggingStyle={styles.dragging}
       dragReleasedStyle={styles.dragging}
       hoverDraggingStyle={styles.hoverDragging}
-      dragPayload={id} 
+      dragPayload={data} 
       longPressDelay={0}
     >
       {renderContent(Content, Description, id)}
