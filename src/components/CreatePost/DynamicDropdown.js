@@ -20,7 +20,8 @@ export default function DynamicDropdown({ handleSelectContract }) {
 
   useEffect(() => {
     dispatch(fetchContracts())
-  }, [toggleModal]);
+    
+  }, [toggleModal,options]);
 
 
   
