@@ -4,7 +4,7 @@ export const data = [
     post: {
       url: require('../asset/Assets/video2.mov'),
     },
-
+    avatar:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiqZCOyJMqGraHiwB0T-0ggN4i8yCJA49mHw&usqp=CAU",
     isImage: false,
     user: {
       userId: 1,
@@ -69,6 +69,7 @@ export const data = [
     post: {
       url: require('../asset/Assets/video5.mov'),
     },
+   
     isImage: false,
     user: {
       userId: 5,

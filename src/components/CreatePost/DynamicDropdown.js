@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Modal, StyleSheet, Dimensions } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from "../../utils/supabase"
 import ContractForm from './ContractForm';
 import { useDispatch, useSelector } from 'react-redux';
-const { width, height } = Dimensions.get('window');
 import { fetchContracts, getContract } from '../../actions/contractAction';
+const { width, height } = Dimensions.get('window');
+
 
 export default function DynamicDropdown({ handleSelectContract }) {
 
@@ -19,15 +18,8 @@ export default function DynamicDropdown({ handleSelectContract }) {
     return store.contractReducer.options
   })
 
-
-
-//  LOG  [{"label": null, "value": "9a9f17b0-7873-49cc-8aca-4658d6960f8e"}, {"label": null, "value": "68cc953f-4087-4b93-b1da-e360df934238"}, {"label": null, "value": "13a71c66-116c-464c-a0a5-2525fddfd288"}, {"label": null, "value": "bbd5c83f-92d2-4aee-b9fc-aea9a9088329"}, {"label": null, "value": "4841c9aa-00fe-4e9c-bba1-721e5587f511"}, {"label": null, "value": "86684650-80b5-48d7-bbcb-0d1070d7e60d"}, {"label": "TITLE", "value": "419fed41-ee12-490c-88c5-382b8833e056"}, {"label": "Create New", "value": "createNew"}, null] options
-//  LOG  [{"label": null, "value": "9a9f17b0-7873-49cc-8aca-4658d6960f8e"}, {"label": null, "value": "68cc953f-4087-4b93-b1da-e360df934238"}, {"label": null, "value": "13a71c66-116c-464c-a0a5-2525fddfd288"}, {"label": null, "value": "bbd5c83f-92d2-4aee-b9fc-aea9a9088329"}, {"label": null, "value": "4841c9aa-00fe-4e9c-bba1-721e5587f511"}, {"label": null, "value": "86684650-80b5-48d7-bbcb-0d1070d7e60d"}, {"label": "TITLE", "value": "419fed41-ee12-490c-88c5-382b8833e056"}, {"label": "Create New", "value": "createNew"}] options
-
   useEffect(() => {
     dispatch(fetchContracts())
-  
-   
   }, [toggleModal]);
 
 
@@ -50,14 +42,12 @@ export default function DynamicDropdown({ handleSelectContract }) {
   };
  
   const handleAddContract = async ( title, clauses ) => {
-    console.log(title,"titleforomhandleadd")
-  
-    try {
+  try {
     
     dispatch(getContract(setContractFormOpen, clauses, title));
 
     } catch (error) {
-      console.error('Error fetching contract: 120', error);
+      console.error('Error fetching contract', error);
       setContractFormOpen(false);
       alert("Error fetching contract");
     }

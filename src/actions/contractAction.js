@@ -15,7 +15,7 @@ export const fetchContracts = () => async (dispatch) => {
             .eq('owner_id', id)
             .order('created_at', { ascending: false });
         if (error) {
-            console.error('Error fetching contract from contractAction 18 :', error);
+            console.error('Error fetching contract from contractAction :', error);
             dispatch({ type: FETCH_CONTRACTS_FAILURE, payload: error })
             return;
         }
@@ -39,7 +39,7 @@ export const fetchContracts = () => async (dispatch) => {
         }
     } catch (error) {
         dispatch({ type: FETCH_CONTRACTS_FAILURE, payload: error })
-        console.error('Error fetching contract :', error);
+        console.error('Error fetching contract', error);
     }
 }
 

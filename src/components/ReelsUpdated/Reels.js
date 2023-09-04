@@ -6,6 +6,7 @@ import { View } from 'react-native';
 const ScreenHeight = Dimensions.get('window').height;
 
 function Reels({
+ 
   videos,
   backgroundColor = 'white',
   fetchVideos,
@@ -36,6 +37,7 @@ function Reels({
   shares,
   onSendDataTogradParent
 }) {
+  
   const FlatlistRef = useRef(null);
   const [ViewableItem, SetViewableItem] = useState('');
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 70 });
