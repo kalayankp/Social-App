@@ -43,9 +43,10 @@ export default function DynamicDropdown({ handleSelectContract }) {
   };
  
   const handleAddContract = async ( title, clauses ) => {
+    
   try {
     
-  await dispatch (AddNewContract(setContractFormOpen, clauses, title));
+  dispatch (AddNewContract(setContractFormOpen, clauses, title));
 
     } catch (error) {
       console.error('Error fetching contract 51', error);
