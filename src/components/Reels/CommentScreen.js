@@ -14,19 +14,18 @@ import { supabase } from '../../utils/supabase';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CommentScreen = ({route}) => {
+const CommentScreen = ({ route }) => {
   const navigation = useNavigation()
   const { postId } = route.params;
-  console.log('postId', postId);
+
   const handleOpenCommentHistory = (commentId) => {
     navigation.navigate('CommentHistory', { commentId });
   };
 
   async function PostComments(comment) {
     const user = await AsyncStorage.getItem('user_info');
-    const {email,id } = JSON.parse(user);
-    console.log('IdentityUUID',id);
-    console.log('email', email);
+    const { email, id } = JSON.parse(user);
+
     try {
       const args = {
         Body: comment,
@@ -35,7 +34,7 @@ const CommentScreen = ({route}) => {
         ItemType: 2,
       };
       const { data, error } = await supabase.from('Comment').insert(args);
-      console.log('POSTCOMMENT', data, error);
+
     } catch (error) {
       console.log('error', error);
     }
@@ -49,7 +48,7 @@ const CommentScreen = ({route}) => {
         .eq('ItemType', 2)
         .eq('ItemID', postId)
         .order('CreatedAt', { ascending: true });
-      console.log('GETCOMMENT', data);
+
       return data;
     } catch (error) {
       console.log('error', error);
@@ -59,31 +58,30 @@ const CommentScreen = ({route}) => {
 
   const [comments, setComments] = useState();
   const [loading, setLoading] = useState(true);
-  const [name , setName] = useState('')
+  const [name, setName] = useState('')
 
-  
-  async function getName(){
+
+  async function getName() {
     const user = await AsyncStorage.getItem('user_info');
-    const {email,id } = JSON.parse(user);
-    console.log('IdentityUUID',id);
-    console.log('email', email);
+    const { email, id } = JSON.parse(user);
+
     try {
       await supabase
-      .from("UserInfo")
-      .select("name")
-      .eq("id", id)
-      .then((data) => {
-        console.log(data.data[0].name)
-        setName(data.data[0].name)
-      }
-      )
+        .from("UserInfo")
+        .select("name")
+        .eq("id", id)
+        .then((data) => {
+
+          setName(data.data[0].name)
+        }
+        )
     } catch (error) {
       console.log('error', error);
     }
   }
   useEffect(() => {
-   
-getName()
+
+    getName()
 
 
 
@@ -92,7 +90,7 @@ getName()
         const data = await GetComments();
         setComments(data);
         setLoading(false);
-        console.log('data', data);
+
       } catch (error) {
         console.log('error', error);
         setLoading(false);
@@ -114,15 +112,13 @@ getName()
       LatestEditID={item.LatestEditID}
       onOpenCommentHistory={handleOpenCommentHistory}
       onEditComment={async (id, editedComment) => {
-        console.log('onEditComment', id);
-        console.log(editedComment);
+
         try {
           const { data, error } = await supabase
             .from('Comment')
             .update({ Body: editedComment, LatestEditID: id })
             .eq('id', id);
-          console.log(data);
-          console.log(error);
+
           if (error) {
             throw new Error(error.message);
           }
@@ -134,14 +130,14 @@ getName()
               return comment;
             });
           });
-        }catch (error) {
+        } catch (error) {
           console.log('error', error);
         }
       }}
-      />
+    />
   );
   const onPostComment = async (comment) => {
-    console.log('onPostComment', comment);
+
     const newComment = {
       username: name,
       profilePic: 'https://picsum.photos/32/32',
@@ -150,7 +146,7 @@ getName()
       likes: 0,
       Body: comment,
     };
-    console.log(newComment)
+
     await PostComments(comment);
     setComments([...comments, newComment]);
   };

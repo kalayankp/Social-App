@@ -8,7 +8,7 @@ export const fetchContracts = () => async (dispatch) => {
         const result = await fetchContractsApi();
 
         if (result.error) {
-            console.error('Error fetching contract from contractAction 20:', result.error);
+            console.error('Error fetching contract from contractAction :', result.error);
 
             dispatch({ type: FETCH_CONTRACTS_FAILURE, payload: result.error })
             return;
@@ -23,16 +23,16 @@ export const fetchContracts = () => async (dispatch) => {
     }
 };
 
-
-
 export const AddNewContract = (setContractFormOpen, clauses, title) => async (dispatch) => {
 
     try {
         const result = await getContractsApi(clauses, title);
 
         if (result.success) {
-            alert("contract  created successfully")
+           
             dispatch({ type: CREATE_CONTRACT_SUCCESS, payload: result.data })
+            
+            alert("contract created successfully")
         }
         else {
             console.error('Error creating contract:', result.error);
@@ -51,7 +51,6 @@ export const AddNewContract = (setContractFormOpen, clauses, title) => async (di
         dispatch({ type: CREATE_CONTRACT_FAILURE, payload: error })
     }
 }
-
 
 
 

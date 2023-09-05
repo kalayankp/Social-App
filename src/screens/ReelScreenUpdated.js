@@ -25,7 +25,7 @@ function ReelsScreenUpdated() {
     try {
       setLoading(true);
       const { data, error } = await supabase.from('Post').select('*').order('created_at', { ascending: false });
-      console.log(data,"supdasedataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      
       if (error) throw error;
 
       const videoData = [];
@@ -41,7 +41,7 @@ function ReelsScreenUpdated() {
         // console.log("from loop" , userData.name);
         const {name , Email, profile_image_url} = userData;
         if (userEror) throw userEror;
-console.log(profile_image_url,"imgggggggggggggggggg")
+
 const NoProfilePic = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvQmR2Qrof1aCENRuX8QfnvkqGnN35FByfxeFn4FE&s"  
 
 

@@ -4,6 +4,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import ContractForm from './ContractForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContracts, AddNewContract } from '../../actions/contractAction';
+
+
 const { width, height } = Dimensions.get('window');
 
 
@@ -20,63 +22,68 @@ export default function DynamicDropdown({ handleSelectContract }) {
 
   useEffect(() => {
     dispatch(fetchContracts())
-    
-  }, [toggleModal,options]);
 
+}, [toggleModal, options]);
 
-  
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+
   const selectOption = (option) => {
     setSelectedOption(option.value);
-   
+
     handleSelectContract(option);
     toggleModal();
   };
 
-
   const handleCreateNew = () => {
     setContractFormOpen(true);
-   
+
   };
- 
-  const handleAddContract = async ( title, clauses ) => {
-    
-  try {
-    
-  dispatch (AddNewContract(setContractFormOpen, clauses, title));
+
+  const handleAddContract = async (title, clauses) => {
+
+    try {
+
+      dispatch(AddNewContract(setContractFormOpen, clauses, title));
+
 
     } catch (error) {
-      console.error('Error fetching contract 51', error);
+      console.error('Error fetching contract', error);
+      setContractCreated(false);
       setContractFormOpen(false);
       alert("Error fetching contract");
     }
   };
 
+
+
   const renderOption = ({ item }) => (
-   
     <TouchableOpacity
       style={[
         styles.optionItem,
-        item?.value === 'createNew' && styles.createNewOption,
+        item.value === 'createNew' && styles.createNewOption,
       ]}
       onPress={() => {
-        if (item?.value === 'createNew') {
+        if (item.value === 'createNew') {
           handleCreateNew();
         } else {
           selectOption(item);
         }
       }}
     >
-      <Text style={styles.optionText}>{item?.label}</Text>
+      <Text style={styles.optionText}>{item.label}</Text>
     </TouchableOpacity>
   );
 
+
   return (
     <View style={styles.container}>
+
+
+
       <TouchableOpacity style={styles.selectedOption} onPress={toggleModal}>
         <Text style={styles.selectedText}>
           {selectedOption ? options.find(opt => opt.value === selectedOption).label : 'Select a Contract'}
@@ -92,6 +99,9 @@ export default function DynamicDropdown({ handleSelectContract }) {
         visible={isModalVisible}
         onRequestClose={toggleModal}
       >
+
+
+
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <AntDesign
@@ -105,11 +115,13 @@ export default function DynamicDropdown({ handleSelectContract }) {
                 toggleModal()
               }}
             />
+
             <FlatList
               data={options}
               renderItem={renderOption}
-              keyExtractor={(options) => options?.id || options?.value}
+              keyExtractor={(item) => item.id || item.value}
             />
+
           </View>
         </View>
       </Modal>

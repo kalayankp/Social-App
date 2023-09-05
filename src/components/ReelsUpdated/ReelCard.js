@@ -86,9 +86,7 @@ function ReelCard({
     if (!VideoPlayer.current) return;
     if (ViewableItem === id) SetPaused(false);
     else SetPaused(true);
-    console.log('ViewableItem', ViewableItem);
-    console.log('id', id);
-    console.log('type', description);
+
     const element = VideoPlayer.current;
 
 
@@ -352,7 +350,7 @@ function ReelCard({
                 horizontal
                 data={videoUrls}
                 renderItem={({ item, index }) => (
-                  console.log(item.url),
+
                   //  load video if mimetype is video else and tehn display
                   item.mimetype === 'video' ? (
                     <Video

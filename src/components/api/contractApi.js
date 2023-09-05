@@ -14,7 +14,7 @@ export const fetchContractsApi = async () => {
             .order('created_at', { ascending: false });
 
         if (error) {
-            console.error('Error fetching contract from contractApi 16:', error);
+            console.error('Error fetching contract from contractApi:', error);
             return { error };
         }
 
@@ -27,6 +27,7 @@ export const fetchContractsApi = async () => {
             mappedContracts.push({ value: 'createNew', label: 'Create New' });
 
             return { data: mappedContracts };
+           
         } else {
             return {
                 data: [{ value: 'createNew', label: 'Create New' }],
@@ -62,6 +63,7 @@ export const getContractsApi = async (clauses, title) => {
 
         }
 
+
         const clauseInsertPromises = clauses.map((async (clause) => {
             const { data: clauseData, error: clauseError } = await supabase.from('Clauses').insert([
                 {
@@ -77,7 +79,7 @@ export const getContractsApi = async (clauses, title) => {
 
                 return { success: true, data: clauseError };
             } else {
-                console.log('Clause created successfully', clauseData);
+               
                 return { success: true, data: clauseData };
             }
         }))
@@ -89,11 +91,12 @@ export const getContractsApi = async (clauses, title) => {
         if (clauseResults.some((clauseResults) => clauseResults === null)) {
             return { success: false, error: 'Some clauses failed to insert' };
         }
+        
         return { success: true, data: contractData };
 
     } catch (error) {
 
-        console.error('Error creating contract 148:', error);
+        console.error('Error creating contract :', error);
 
         return { success: false, error };
     }
