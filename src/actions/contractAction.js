@@ -29,18 +29,15 @@ export const AddNewContract = (setContractFormOpen, clauses, title) => async (di
         const result = await getContractsApi(clauses, title);
 
         if (result.success) {
-           
+            alert("contract  created successfully")
             dispatch({ type: CREATE_CONTRACT_SUCCESS, payload: result.data })
-            
-            alert("contract created successfully")
+            setContractFormOpen(false);
         }
         else {
             console.error('Error creating contract:', result.error);
             setContractFormOpen(false);
             alert('Error creating contract');
-
             dispatch({ type: FETCH_CONTRACTS_FAILURE, payload: result.error })
-
         }
 
     } catch (error) {
