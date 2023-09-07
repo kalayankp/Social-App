@@ -32,19 +32,19 @@ function TradeScreen() {
 
 
 
-  const [Assets1 , setAssets1] =  useState([]);
-  const [Assets2 , setAssets2] =  useState([]);
-  
+  const [Assets1, setAssets1] = useState([]);
+  const [Assets2, setAssets2] = useState([]);
 
-const getasset = async (postID) =>{
-  const {data  , error} = await supabase
-  .from('Post')
-  .select('*')
-  .eq('id' , postID)
-  .single()
-  console.log(data)
-  setAssets1([...Assets1 , data])
-}
+
+  const getasset = async (postID) => {
+    const { data, error } = await supabase
+      .from('Post')
+      .select('*')
+      .eq('id', postID)
+      .single()
+    console.log(data)
+    setAssets1([...Assets1, data])
+  }
   const fetchBundles = async (userId, setBundles) => {
     try {
       const { data, error } = await supabase
@@ -77,7 +77,7 @@ const getasset = async (postID) =>{
         // Fetch bundles for Trader1 and Trader2 here
         await fetchBundles(data.Trader2, setBundle);
         await fetchBundles(data.Trader1, setOthersBundle);
-        await  getasset(data.Assets1[0])
+        await getasset(data.Assets1[0])
         setIsLoading(false);
       }
     } catch (error) {
@@ -88,15 +88,15 @@ const getasset = async (postID) =>{
 
 
 
-const Trade = supabase.channel('custom-all-channel')
-  .on(
-    'postgres_changes',
-    { event: '*', schema: 'public', table: 'Trade' },
-    (payload) => {
-      console.log('Change received!', payload)
-    }
-  )
-  .subscribe()
+  // const Trade = supabase.channel('custom-all-channel')
+  //   .on(
+  //     'postgres_changes',
+  //     { event: '*', schema: 'public', table: 'Trade' },
+  //     (payload) => {
+  //       console.log('Change received!', payload)
+  //     }
+  //   )
+  //   .subscribe()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,18 +107,19 @@ const Trade = supabase.channel('custom-all-channel')
       }
     };
     fetchData();
-
-    
   }, [id]);
-
   const addCardToTrade = (payload) => {
-    console.log(`Received payload in parent component: ${payload}`);
-    console.log(payload.IdentityUUID)
-    if(payload.IdentityUUID == trade.Trader2){
-      setAssets2([payload,...Assets2])
-    }
-    else{
-      setAssets1([payload , ...Assets1])
+    console.log(`Received payload in parent component: ${JSON.stringify(payload)}`);
+    
+    if (payload.IdentityUUID === trade.Trader2) {
+      const filteredAssets2 = Assets2.filter((item) => item.Id == payload.Id);
+      setAssets2([payload, ...filteredAssets2]);
+      console.log("Assets2:", Assets2);
+    } 
+    if ( (payload.IdentityUUID === trade.Trader1) ) {
+      const filteredAssets1 = Assets1.filter((item) => item.Id == payload.Id);
+      setAssets1([payload, ...filteredAssets1]);
+      console.log("Assets1:", Assets1);
     }
   };
   return (
@@ -129,15 +130,15 @@ const Trade = supabase.channel('custom-all-channel')
         <View style={styles.container}>
           <Text style={styles.title}>Information</Text>
           <View style={styles.topContainer}>
-            <View style={!isEnabled ? styles.verticalCardContainer :styles.blurredCardContainer}>
+            <View style={!isEnabled ? styles.verticalCardContainer : styles.blurredCardContainer}>
               {/* asset 2  : from trader2   who started the trade*/}
 
-            
-            <DropArea asset={Assets2} addCardToTrade={addCardToTrade} isEnabled={!isEnabled}/> 
-            
-            
+
+              <DropArea asset={Assets2} addCardToTrade={addCardToTrade} isEnabled={!isEnabled} />
+
+
             </View>
-            <View style={isEnabled ?styles.verticalCardContainer: styles.blurredCardContainer } >
+            <View style={isEnabled ? styles.verticalCardContainer : styles.blurredCardContainer} >
               {/* assets1 :  trader1  who posted the selling card */}
               <DropArea asset={Assets1} addCardToTrade={addCardToTrade} isEnabled={isEnabled} />
             </View>
@@ -152,25 +153,25 @@ const Trade = supabase.channel('custom-all-channel')
             value={isEnabled}
           />
           <View style={styles.scrollViewContainer}>
-  <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
+            <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
 
 
-    {/* isEnables  ===  True than show bundel of loged in user */}
-    {isEnabled ? (
-      othersBundle.map((item) => (
-        <View style={styles.smallCardContainer} key={item.id}>
-          <DraggableAssets data={item} />
-        </View>
-      ))
-    ) : (
-      bundle.map((item) => (
-        <View style={styles.smallCardContainer} key={item.id}>
-          <DraggableAssets data={item}  />
-        </View>
-      ))
-    )}
-  </ScrollView>
-</View>
+              {/* isEnables  ===  True than show bundel of loged in user */}
+              {isEnabled ? (
+                othersBundle.map((item) => (
+                  <View style={styles.smallCardContainer} key={item.id}>
+                    <DraggableAssets data={item} />
+                  </View>
+                ))
+              ) : (
+                bundle.map((item) => (
+                  <View style={styles.smallCardContainer} key={item.id}>
+                    <DraggableAssets data={item} />
+                  </View>
+                ))
+              )}
+            </ScrollView>
+          </View>
           <View style={styles.additionalContainer}></View>
         </View>
       )}
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     padding: 10,
     width: ScreenWidth / 2 - 10,
-    height: ScreenHeight / 2+100,
+    height: ScreenHeight / 2 + 100,
     margin: 5,
   },
   cardText: {
@@ -217,8 +218,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollViewContainer: {
-    flex: 1, 
-    marginTop:40
+    flex: 1,
+    marginTop: 40
   },
   loadingIndicator: {
     marginTop: 20,
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     padding: 10,
     width: ScreenWidth / 2 - 10,
-    height: ScreenHeight / 2+100,
+    height: ScreenHeight / 2 + 100,
     margin: 5,
     opacity: 0.5, // Adjust the opacity value as needed for your desired level of blur
   },
