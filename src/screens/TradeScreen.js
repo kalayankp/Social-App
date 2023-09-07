@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Switch,
+  TouchableOpacity,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { DraxProvider } from 'react-native-drax';
@@ -145,13 +146,23 @@ function TradeScreen() {
 
 
           </View>
-          <Switch
-            trackColor={{ false: '#767577', true: '#81b0ff' }}
-            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          />
+          <View style={styles.toggleButtonContainer}>
+            <Switch
+              trackColor={{ false: '#767577', true: '#81b0ff' }}
+              thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleSwitch}
+              value={isEnabled}
+            />
+            <TouchableOpacity
+              style={styles.acceptTradeButton}
+              onPress={() => {
+                // Handle the "Accept Trade" button click event here
+              }}
+            >
+              <Text style={styles.acceptTradeButtonText}>Accept Trade</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.scrollViewContainer}>
             <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
 
@@ -241,6 +252,21 @@ const styles = StyleSheet.create({
     height: ScreenHeight / 2 + 100,
     margin: 5,
     opacity: 0.5, // Adjust the opacity value as needed for your desired level of blur
+  },
+  toggleButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  acceptTradeButton: {
+    backgroundColor: 'orange', // Change the background color as desired
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  acceptTradeButtonText: {
+    color: 'white', // Change the text color as desired
+    fontWeight: 'bold',
   },
 });
 
