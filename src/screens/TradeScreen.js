@@ -42,7 +42,6 @@ const getasset = async (postID) =>{
   .select('*')
   .eq('id' , postID)
   .single()
-
   console.log(data)
   setAssets1([...Assets1 , data])
 }
@@ -86,6 +85,19 @@ const getasset = async (postID) =>{
     }
   };
 
+
+
+
+const Trade = supabase.channel('custom-all-channel')
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'Trade' },
+    (payload) => {
+      console.log('Change received!', payload)
+    }
+  )
+  .subscribe()
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,26 +108,19 @@ const getasset = async (postID) =>{
     };
     fetchData();
 
-    // const subscription =  supabase
-    // .from('Trade')
-    // .on('*' , (payload) =>{
-    //   console.log("new post" , payload.new);
-    // })
-    // .subscribe();
-    // return () => {
-    //   subscription.unsubscribe();
-    // };
-
-
+    
   }, [id]);
 
   const addCardToTrade = (payload) => {
-
     console.log(`Received payload in parent component: ${payload}`);
-    console.log(payload)
-    setAssets2([payload,...Assets2])
+    console.log(payload.IdentityUUID)
+    if(payload.IdentityUUID == trade.Trader2){
+      setAssets2([payload,...Assets2])
+    }
+    else{
+      setAssets1([payload , ...Assets1])
+    }
   };
-
   return (
     <DraxProvider>
       {isLoading ? (
@@ -124,12 +129,20 @@ const getasset = async (postID) =>{
         <View style={styles.container}>
           <Text style={styles.title}>Information</Text>
           <View style={styles.topContainer}>
-            <View style={styles.verticalCardContainer}>
-            <DropArea asset={Assets2} addCardToTrade={addCardToTrade}/>
+            <View style={!isEnabled ? styles.verticalCardContainer :styles.blurredCardContainer}>
+              {/* asset 2  : from trader2   who started the trade*/}
+
+            
+            <DropArea asset={Assets2} addCardToTrade={addCardToTrade} isEnabled={!isEnabled}/> 
+            
+            
             </View>
-            <View style={styles.verticalCardContainer} >
-              <DropArea asset={Assets1} addCardToTrade={addCardToTrade} />
+            <View style={isEnabled ?styles.verticalCardContainer: styles.blurredCardContainer } >
+              {/* assets1 :  trader1  who posted the selling card */}
+              <DropArea asset={Assets1} addCardToTrade={addCardToTrade} isEnabled={isEnabled} />
             </View>
+
+
           </View>
           <Switch
             trackColor={{ false: '#767577', true: '#81b0ff' }}
@@ -140,6 +153,9 @@ const getasset = async (postID) =>{
           />
           <View style={styles.scrollViewContainer}>
   <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
+
+
+    {/* isEnables  ===  True than show bundel of loged in user */}
     {isEnabled ? (
       othersBundle.map((item) => (
         <View style={styles.smallCardContainer} key={item.id}>
@@ -149,7 +165,7 @@ const getasset = async (postID) =>{
     ) : (
       bundle.map((item) => (
         <View style={styles.smallCardContainer} key={item.id}>
-          <DraggableAssets data={item} />
+          <DraggableAssets data={item}  />
         </View>
       ))
     )}
@@ -216,6 +232,14 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     backgroundColor: 'green',
+  },
+  blurredCardContainer: {
+    borderColor: 'black',
+    padding: 10,
+    width: ScreenWidth / 2 - 10,
+    height: ScreenHeight / 2+100,
+    margin: 5,
+    opacity: 0.5, // Adjust the opacity value as needed for your desired level of blur
   },
 });
 

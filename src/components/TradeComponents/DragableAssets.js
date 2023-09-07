@@ -3,7 +3,7 @@ import { View, Image, Text, StyleSheet } from "react-native";
 import { DraxView } from "react-native-drax";
 import Video from "react-native-video";
 
-const DraggableAssets = ({ data }) => {
+const DraggableAssets = ({ data}) => {
   const { Content, Description, id } = data;
   const renderContent = (Content, Description, id) => {
     if (Content == null || Content.length === 0) {
