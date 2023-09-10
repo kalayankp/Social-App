@@ -89,15 +89,17 @@ function TradeScreen() {
 
 
 
-  // const Trade = supabase.channel('custom-all-channel')
-  //   .on(
-  //     'postgres_changes',
-  //     { event: '*', schema: 'public', table: 'Trade' },
-  //     (payload) => {
-  //       console.log('Change received!', payload)
-  //     }
-  //   )
-  //   .subscribe()
+  supabase.channel('Schema-db-changes')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'Trade' },
+      (payload) => {
+        console.log('Change received!', payload)
+        alert("jhbadl")
+      }
+    )
+    .subscribe()
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,6 +110,7 @@ function TradeScreen() {
       }
     };
     fetchData();
+  
   }, [id]);
   const addCardToTrade = (payload) => {
     console.log(`Received payload in parent component: ${JSON.stringify(payload)}`);

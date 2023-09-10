@@ -109,12 +109,11 @@ const MainStackFlow = () => {
 const DrawerNavigation = () => {
   return (
     <Drawer.Navigator 
-    initialRouteName="Reels"
+    // initialRouteName="Reels"
     // initialRouteName="CreatePost"
     // initialRouteName="CreatePost"
-    
+    initialRouteName="MainStackFlow"
     >
-      
       <Drawer.Group>
         <Drawer.Screen
           name="MainStackFlow"
