@@ -111,16 +111,12 @@ function TradeScreen() {
     }
   };
   
-  // Add a useEffect hook to log updated state values
-  useEffect(() => {
-    console.log("asset1 ==> ", Assets1);
-    console.log("asset2 ==> ", Assets2);
-  }, [Assets1, Assets2]);
+  
 
 
 
 
-  supabase.channel('Schema-db-changes')
+  supabase.channel('custom-all-channel')
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'Trade' },
@@ -144,26 +140,58 @@ function TradeScreen() {
   }, [id]);
 
 
-  const updateTrade = async () => {
-
-
-  }
-
+  const updateTrade = async (asset, id) => {
+    try {
+      if (asset === 'Assets2') {
+        let filteredAssets2 ;
+        if (trade.Assets2 ==  null){
+          filteredAssets2 = [id]
+        }else{
+         filteredAssets2 = trade.Assets2.filter((itemId) => itemId !== id);
+        }
+        const { data, error } = await supabase
+          .from('Trade') 
+          .update({
+            Assets2: filteredAssets2, // Update the field in the Trade table
+          })
+          .eq('id', trade.id)
+          .single();
+        console.log("data from trade update ==>", data);
+      } else {
+        let filteredAssets1;
+        if(trade.Assets1 ==  null ){
+          filteredAssets1 = [id]
+        }else{
+          filteredAssets1 = trade.Assets1.filter((itemId) => itemId !== id);
+        }
+     
+        const { data, error } = await supabase
+          .from('Trade') // Use the correct table name
+          .update({
+            Assets1: filteredAssets1, // Update the field in the Trade table
+          })
+          .eq('id', trade.id)
+          .single();
+        console.log("data from trade update ==>", data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const addCardToTrade = (payload) => {
     console.log(`Received payload in parent component: ${JSON.stringify(payload)}`);
   
     if (payload.IdentityUUID === trade.Trader2) {
-      // remove item with id from assets2
       console.log('trade2');
       const filteredAssets2 = Assets2.filter((item) => item.Id !== payload.Id);
       setAssets2([payload, ...filteredAssets2]);
-      updateTrade('Assets2',payload.Id);
+      updateTrade('Assets2',payload.id);
     } 
     if (payload.IdentityUUID === trade.Trader1) {
       console.log('trade1');
       const filteredAssets1 = Assets1.filter((item) => item.Id !== payload.Id);
       setAssets1([payload, ...filteredAssets1]);
-      updateTrade();
+      updateTrade('Assets1',payload.id);
     }
   };
 
