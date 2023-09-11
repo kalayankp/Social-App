@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../utils/supabase';
 import DropArea from '../components/TradeComponents/DropArea';
 import DraggableAssets from '../components/TradeComponents/DragableAssets';
+import { set } from 'react-native-reanimated';
 
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -37,15 +38,22 @@ function TradeScreen() {
   const [Assets2, setAssets2] = useState([]);
 
 
+
   const getasset = async (postID) => {
-    const { data, error } = await supabase
-      .from('Post')
-      .select('*')
-      .eq('id', postID)
-      .single()
-    console.log(data)
-    setAssets1([...Assets1, data])
-  }
+    try {
+      const { data, error } = await supabase
+        .from('Post')
+        .select('*')
+        .eq('id', postID)
+        .single();
+      console.log('getasset data:', data); // Add this line to log the data
+      return data;
+    } catch (error) {
+      console.error('Error fetching asset:', error);
+      return null; // Return null in case of an error
+    }
+  };
+
   const fetchBundles = async (userId, setBundles) => {
     try {
       const { data, error } = await supabase
@@ -70,21 +78,44 @@ function TradeScreen() {
         .select('*')
         .eq('id', tradeId)
         .single();
-
       if (error) {
         console.error('Error fetching trade:', error);
+        alert('Error fetching trade data. Please try again.');
       } else {
         setTrade(data);
         // Fetch bundles for Trader1 and Trader2 here
         await fetchBundles(data.Trader2, setBundle);
         await fetchBundles(data.Trader1, setOthersBundle);
-        await getasset(data.Assets1[0])
+        // Use Promise.all to fetch all assets1 in parallel if there are any
+        if (data.Assets1 && data.Assets1.length > 0) {
+          const asset1Promises = data.Assets1.map((assetId) => getasset(assetId));
+          const asset1Data = await Promise.all(asset1Promises);
+          setAssets1(asset1Data);
+        } else {
+          setAssets1([]); // Set an empty array when there are no assets
+        }
+  
+        // Use Promise.all to fetch all assets2 in parallel if there are any
+        if (data.Assets2 && data.Assets2.length > 0) {
+          const asset2Promises = data.Assets2.map((assetId) => getasset(assetId));
+          const asset2Data = await Promise.all(asset2Promises);
+          setAssets2(asset2Data);
+        } else {
+          setAssets2([]); // Set an empty array when there are no assets
+        }
+  
         setIsLoading(false);
       }
     } catch (error) {
       console.error('Error fetching trade:', error);
     }
   };
+  
+  // Add a useEffect hook to log updated state values
+  useEffect(() => {
+    console.log("asset1 ==> ", Assets1);
+    console.log("asset2 ==> ", Assets2);
+  }, [Assets1, Assets2]);
 
 
 
@@ -95,7 +126,6 @@ function TradeScreen() {
       { event: '*', schema: 'public', table: 'Trade' },
       (payload) => {
         console.log('Change received!', payload)
-        alert("jhbadl")
       }
     )
     .subscribe()
@@ -112,20 +142,32 @@ function TradeScreen() {
     fetchData();
   
   }, [id]);
+
+
+  const updateTrade = async () => {
+
+
+  }
+
   const addCardToTrade = (payload) => {
     console.log(`Received payload in parent component: ${JSON.stringify(payload)}`);
-    
+  
     if (payload.IdentityUUID === trade.Trader2) {
-      const filteredAssets2 = Assets2.filter((item) => item.Id == payload.Id);
+      // remove item with id from assets2
+      console.log('trade2');
+      const filteredAssets2 = Assets2.filter((item) => item.Id !== payload.Id);
       setAssets2([payload, ...filteredAssets2]);
-      console.log("Assets2:", Assets2);
+      updateTrade('Assets2',payload.Id);
     } 
-    if ( (payload.IdentityUUID === trade.Trader1) ) {
-      const filteredAssets1 = Assets1.filter((item) => item.Id == payload.Id);
+    if (payload.IdentityUUID === trade.Trader1) {
+      console.log('trade1');
+      const filteredAssets1 = Assets1.filter((item) => item.Id !== payload.Id);
       setAssets1([payload, ...filteredAssets1]);
-      console.log("Assets1:", Assets1);
+      updateTrade();
     }
   };
+
+
   return (
     <DraxProvider>
       {isLoading ? (
@@ -136,18 +178,12 @@ function TradeScreen() {
           <View style={styles.topContainer}>
             <View style={!isEnabled ? styles.verticalCardContainer : styles.blurredCardContainer}>
               {/* asset 2  : from trader2   who started the trade*/}
-
-
               <DropArea asset={Assets2} addCardToTrade={addCardToTrade} isEnabled={!isEnabled} />
-
-
             </View>
             <View style={isEnabled ? styles.verticalCardContainer : styles.blurredCardContainer} >
               {/* assets1 :  trader1  who posted the selling card */}
               <DropArea asset={Assets1} addCardToTrade={addCardToTrade} isEnabled={isEnabled} />
             </View>
-
-
           </View>
           <View style={styles.toggleButtonContainer}>
             <Switch
@@ -161,6 +197,7 @@ function TradeScreen() {
               style={styles.acceptTradeButton}
               onPress={() => {
                 // Handle the "Accept Trade" button click event here
+                console.log('Accept Trade button clicked!');
               }}
             >
               <Text style={styles.acceptTradeButtonText}>Accept Trade</Text>
