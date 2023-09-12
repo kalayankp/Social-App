@@ -10,12 +10,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { DraxProvider } from 'react-native-drax';
+import { DraxProvider, DraxView } from 'react-native-drax';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../utils/supabase';
 import DropArea from '../components/TradeComponents/DropArea';
 import DraggableAssets from '../components/TradeComponents/DragableAssets';
-import { set } from 'react-native-reanimated';
 
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -24,15 +23,13 @@ function TradeScreen() {
   const route = useRoute();
   const { id } = route.params;
 
-  const [bundle, setBundle] = useState([]); // logged-in user bundle
-  const [othersBundle, setOthersBundle] = useState([]); // other user's bundle
+  const [bundle, setBundle] = useState([]);
+  const [othersBundle, setOthersBundle] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [trade, setTrade] = useState(null); // Initialize trade state as null
-
+  const [trade, setTrade] = useState(null);
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
-
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const [Assets1, setAssets1] = useState([]);
   const [Assets2, setAssets2] = useState([]);
@@ -94,7 +91,7 @@ function TradeScreen() {
         } else {
           setAssets1([]); // Set an empty array when there are no assets
         }
-  
+
         // Use Promise.all to fetch all assets2 in parallel if there are any
         if (data.Assets2 && data.Assets2.length > 0) {
           const asset2Promises = data.Assets2.map((assetId) => getasset(assetId));
@@ -103,15 +100,15 @@ function TradeScreen() {
         } else {
           setAssets2([]); // Set an empty array when there are no assets
         }
-  
+
         setIsLoading(false);
       }
     } catch (error) {
       console.error('Error fetching trade:', error);
     }
   };
-  
-  
+
+
 
 
 
@@ -136,21 +133,21 @@ function TradeScreen() {
       }
     };
     fetchData();
-  
+
   }, [id]);
 
 
   const updateTrade = async (asset, id) => {
     try {
       if (asset === 'Assets2') {
-        let filteredAssets2 ;
-        if (trade.Assets2 ==  null){
+        let filteredAssets2;
+        if (trade.Assets2 == null) {
           filteredAssets2 = [id]
-        }else{
-         filteredAssets2 = trade.Assets2.filter((itemId) => itemId !== id);
+        } else {
+          filteredAssets2 = trade.Assets2.filter((itemId) => itemId !== id);
         }
         const { data, error } = await supabase
-          .from('Trade') 
+          .from('Trade')
           .update({
             Assets2: filteredAssets2, // Update the field in the Trade table
           })
@@ -159,12 +156,12 @@ function TradeScreen() {
         console.log("data from trade update ==>", data);
       } else {
         let filteredAssets1;
-        if(trade.Assets1 ==  null ){
+        if (trade.Assets1 == null) {
           filteredAssets1 = [id]
-        }else{
+        } else {
           filteredAssets1 = trade.Assets1.filter((itemId) => itemId !== id);
         }
-     
+
         const { data, error } = await supabase
           .from('Trade') // Use the correct table name
           .update({
@@ -180,20 +177,36 @@ function TradeScreen() {
   };
   const addCardToTrade = (payload) => {
     console.log(`Received payload in parent component: ${JSON.stringify(payload)}`);
-  
+
     if (payload.IdentityUUID === trade.Trader2) {
       console.log('trade2');
       const filteredAssets2 = Assets2.filter((item) => item.Id !== payload.Id);
       setAssets2([payload, ...filteredAssets2]);
-      updateTrade('Assets2',payload.id);
-    } 
+      updateTrade('Assets2', payload.id);
+    }
     if (payload.IdentityUUID === trade.Trader1) {
       console.log('trade1');
       const filteredAssets1 = Assets1.filter((item) => item.Id !== payload.Id);
       setAssets1([payload, ...filteredAssets1]);
-      updateTrade('Assets1',payload.id);
+      updateTrade('Assets1', payload.id);
     }
   };
+
+
+  const deleteDisplayCard = (payload) => {
+    console.log(`Received payload in parent component: ${JSON.stringify(payload)}`);
+
+    if (payload.IdentityUUID === trade.Trader2) {
+      trade.Assets2 = trade.Assets2.filter((item) => item !== payload.Id);
+      setTrade(trade);
+    }
+
+    if (payload.IdentityUUID === trade.Trader1) {
+      trade.Assets1 = trade.Assets1.filter((item) => item !== payload.Id);
+      setTrade(trade);
+    }
+  };
+
 
 
   return (
@@ -202,6 +215,8 @@ function TradeScreen() {
         <ActivityIndicator style={styles.loadingIndicator} size="large" color="black" />
       ) : (
         <View style={styles.container}>
+
+
           <Text style={styles.title}>Information</Text>
           <View style={styles.topContainer}>
             <View style={!isEnabled ? styles.verticalCardContainer : styles.blurredCardContainer}>
@@ -213,48 +228,68 @@ function TradeScreen() {
               <DropArea asset={Assets1} addCardToTrade={addCardToTrade} isEnabled={isEnabled} />
             </View>
           </View>
-          <View style={styles.toggleButtonContainer}>
-            <Switch
-              trackColor={{ false: '#767577', true: '#81b0ff' }}
-              thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}
-            />
-            <TouchableOpacity
-              style={styles.acceptTradeButton}
-              onPress={() => {
-                // Handle the "Accept Trade" button click event here
-                console.log('Accept Trade button clicked!');
+
+          <View style={styles.container}>
+
+            <DraxView
+              onReceiveDragEnter={({ dragged: { payload } }) => {
+                console.log(`hello ${payload}`)
               }}
-            >
-              <Text style={styles.acceptTradeButtonText}>Accept Trade</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.scrollViewContainer}>
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
+              onReceiveDragExit={({ dragged: { payload } }) => {
+                console.log(`goodbye ${payload}`)
+              }}
+              onReceiveDragDrop={({ dragged: { payload } }) => {
+                console.log(`Dropped ${payload}`)
+                deleteDisplayCard(payload);
+                
+              }}>
+
+              <View style={styles.toggleButtonContainer}>
+                <Switch
+                  trackColor={{ false: '#767577', true: '#81b0ff' }}
+                  thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+                <TouchableOpacity
+                  style={styles.acceptTradeButton}
+                  onPress={() => {
+                    // Handle the "Accept Trade" button click event here
+                    console.log('Accept Trade button clicked!');
+                  }}
+                >
+                  <Text style={styles.acceptTradeButtonText}>Accept Trade</Text>
+                </TouchableOpacity>
+
+              </View>
+              <View style={styles.scrollViewContainer}>
+                <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
 
 
-              {/* isEnables  ===  True than show bundel of loged in user */}
-              {isEnabled ? (
-                othersBundle.map((item) => (
-                  <View style={styles.smallCardContainer} key={item.id}>
-                    <DraggableAssets data={item} />
-                  </View>
-                ))
-              ) : (
-                bundle.map((item) => (
-                  <View style={styles.smallCardContainer} key={item.id}>
-                    <DraggableAssets data={item} />
-                  </View>
-                ))
-              )}
-            </ScrollView>
+                  {/* isEnables  ===  True than show bundel of loged in user */}
+                  {isEnabled ? (
+                    othersBundle.map((item) => (
+                      <View style={styles.smallCardContainer} key={item.id}>
+                        <DraggableAssets data={item} />
+                      </View>
+                    ))
+                  ) : (
+                    bundle.map((item) => (
+                      <View style={styles.smallCardContainer} key={item.id}>
+                        <DraggableAssets data={item} />
+                      </View>
+                    ))
+                  )}
+                </ScrollView>
+              </View>
+              <View style={styles.additionalContainer}></View>
+              </DraxView>
           </View>
-          <View style={styles.additionalContainer}></View>
-        </View>
-      )}
-    </DraxProvider>
+        </View> 
+      )
+}
+    </DraxProvider >
   );
 }
 const styles = StyleSheet.create({
@@ -286,9 +321,9 @@ const styles = StyleSheet.create({
   },
   smallCardContainer: {
     padding: 5,
-    marginHorizontal: 5,
     width: ScreenWidth / 3,
     height: ScreenHeight / 5,
+    marginHorizontal: 15,
   },
   horizontalScroll: {
     flexGrow: 1,
