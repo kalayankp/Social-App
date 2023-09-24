@@ -15,8 +15,7 @@ const Header = () => {
 
   const onApply = () => {
     // You can do something with the selected min and max prices here
-    console.log('Selected Min Price:', minPrice);
-    console.log('Selected Max Price:', maxPrice);
+  
     hideModal();
   };
   const [Mapvisible, setMapVisible] = useState(false);

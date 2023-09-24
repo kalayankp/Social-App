@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList , ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 import { Image } from 'react-native-elements';
-
 import User from '../../components/ReelsUpdated/User';
 import Buttons from '../../components/ReelsUpdated/Button';
 import Header from './Header';
 import helper from '../../components/ReelsUpdated/utils/helper';
 import DropDownFilter from './DropDownFilter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { color } from 'react-native-reanimated';
+
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -33,19 +32,19 @@ function ReelCard({
   headerIconSize,
   headerIcon,
   headerComponent,
-  onHeaderIconPress = () => {},
+  onHeaderIconPress = () => { },
 
   // Options Props
   optionsComponent,
   pauseOnOptionsShow = true,
-  onSharePress = () => {},
-  onCommentPress = () => {},
-  onLikePress = () => {},
-  onDislikePress = () => {},
-  
+  onSharePress = () => { },
+  onCommentPress = () => { },
+  onLikePress = () => { },
+  onDislikePress = () => { },
+
 
   // Player Props
-  onFinishPlaying = () => {},
+  onFinishPlaying = () => { },
 
   // Slider Props
   minimumTrackTintColor = 'white',
@@ -59,14 +58,14 @@ function ReelCard({
   // User Props
   // username = 'Username',
   // profilePic = 'https://picsum.photos/200',
-  ,onSendDataToParent
+  , onSendDataToParent
   ,
   caption = 'https://picsum.photos/200   this is my caption',
   likes = 2,
   comments = 3,
   shares = 4,
 }) {
-  
+
   // ref for Video Player
   const VideoPlayer = useRef(null);
 
@@ -84,22 +83,20 @@ function ReelCard({
   // Play/Pause video according to visibility
   useEffect(() => {
 
-    if(!VideoPlayer.current) return;
+    if (!VideoPlayer.current) return;
     if (ViewableItem === id) SetPaused(false);
     else SetPaused(true);
-    console.log('ViewableItem', ViewableItem);
-    console.log('id', id);
-    console.log('type',description);
+
     const element = VideoPlayer.current;
 
-    console.log(videoUrls)
+
   }, [ViewableItem]);
   useEffect(() => {
     if (VideoPlayer.current && !Paused) {
-        VideoPlayer.current.seek(0); 
-        SetPaused(false); 
+      VideoPlayer.current.seek(0);
+      SetPaused(false);
     }
-  
+
   }, [Paused]);
   // Pause when user toggles options to True
   useEffect(() => {
@@ -107,7 +104,7 @@ function ReelCard({
       if (ShowOptions) SetPaused(true);
       else SetPaused(false);
     }
-    
+
   }, [ShowOptions, pauseOnOptionsShow]);
 
   // Callback for Seek Update
@@ -115,7 +112,7 @@ function ReelCard({
     async (seekTime) => {
       try {
         if (VideoPlayer.current) VideoPlayer.current.seek((seekTime * Duration) / 100 / 1000);
-      } catch (error) {}
+      } catch (error) { }
     },
     [Duration, ShowOptions]
   );
@@ -126,7 +123,7 @@ function ReelCard({
       let currentTime = Math.round(playbackStatus.currentTime);
       let duration = Math.round(playbackStatus.seekableDuration);
       if (currentTime && duration) SetProgress((currentTime / duration) * 100);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // Function for getting video dimensions on load complete
@@ -158,7 +155,7 @@ function ReelCard({
   const onMiddlePress = async () => {
     try {
       SetShowOptions(!ShowOptions);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // Function to go back 10 seconds
@@ -168,7 +165,7 @@ function ReelCard({
         let toSeek = Math.floor((Progress * Duration) / 100) / 1000;
         if (toSeek > 10) VideoPlayer.current.seek(toSeek - 10);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // Function to skip 10 seconds
@@ -178,11 +175,11 @@ function ReelCard({
         let toSeek = Math.floor((Progress * Duration) / 100) / 1000;
         VideoPlayer.current.seek(toSeek + 10);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // Manage error here
-  const videoError = (error) => {};
+  const videoError = (error) => { };
 
   // useMemo for Slider
   const GetSlider = useMemo(
@@ -299,23 +296,23 @@ function ReelCard({
   const [feedFilter, setFeedFilter] = useState('Trending');
 
 
-  async function handleFilterChange(filter){
-    
+  async function handleFilterChange(filter) {
+
     setFeedFilter(filter);
     onSendDataToParent(filter);
-  
+
   };
 
-  const GetDropDown  = useMemo(
+  const GetDropDown = useMemo(
     () => (
       <View style={styles.DropDownFilter}>
-        <DropDownFilter onChangeFilter={handleFilterChange}/>
+        <DropDownFilter onChangeFilter={handleFilterChange} />
       </View>
     ),
     []
   );
 
-  
+
 
 
 
@@ -324,76 +321,80 @@ function ReelCard({
       style={[styles.container, { backgroundColor: backgroundColor }]}
       onPress={onMiddlePress}
     >
-     {loading ? (
-  <ActivityIndicator
-    size="large"
-    color={activityIndicatorColor}
-    style={{ position: 'absolute' }}
-  />
-) : (
-  videoUrls === null || videoUrls.length === 0  ? (
-    <View>
-          <Text
-            style={{
-              fontSize: 30,
-              fontWeight: 'bold',
-              color: 'white',
-              textAlign: 'center',
-            }}
-          >
-            {description} 
-          </Text>
-        </View>
-  ) : (
-    <View>
-    <FlatList
-              horizontal
-              data={videoUrls}
-              renderItem={({ item, index }) => (
-                console.log(item.url),
-                //  load video if mimetype is video else and tehn display
-                item.mimetype === 'video' ? (
-                  <Video
-                    key={index}
-                    ref={VideoPlayer}
-                    hls={true} 
-                    
-                    source={{ uri: item.url 
-                    }}
-                    
-                    bufferConfig={{
-                      minBufferMs: 1000,
-                      maxBufferMs: 5000,
-                      bufferForPlaybackMs: 2500,
-                      bufferForPlaybackAfterRebufferMs: 5000
-                    }}
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color={activityIndicatorColor}
+          style={{ position: 'absolute' }}
+        />
+      ) : (
 
-                    progressUpdateInterval={100}
-                    style={VideoDimensions}
-                    resizeMode="contain"
-                    onError={videoError}
-                    playInBackground={false}
-                    paused={Paused}
-                    muted={false}
-                    repeat={true}
-                    onLoad={(event) => onLoadComplete(event)}
-                  />
-                ) : (
-                  <Image
-                    key={index}
-                    source={{ uri: item.url }}
-                    style={VideoDimensions}
-                    resizeMode="contain"
-                    onLoad={() => onLoadComplete(event)}
-                  />
-                )
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
+        !videoUrls?.length ?
+
+          (
+            <View>
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                  color: 'white',
+                  textAlign: 'center',
+                }}
+              >
+                {description}
+              </Text>
             </View>
-   
-  )
-)}
+          ) : (
+            <View>
+              <FlatList
+                horizontal
+                data={videoUrls}
+                renderItem={({ item, index }) => (
+
+                  //  load video if mimetype is video else and tehn display
+                  item.mimetype === 'video' ? (
+                    <Video
+                      key={index}
+                      ref={VideoPlayer}
+                      hls={true}
+
+                      source={{
+                        uri: item.url
+                      }}
+
+                      bufferConfig={{
+                        minBufferMs: 1000,
+                        maxBufferMs: 5000,
+                        bufferForPlaybackMs: 2500,
+                        bufferForPlaybackAfterRebufferMs: 5000
+                      }}
+
+                      progressUpdateInterval={100}
+                      style={VideoDimensions}
+                      resizeMode="contain"
+                      onError={videoError}
+                      playInBackground={false}
+                      paused={Paused}
+                      muted={false}
+                      repeat={true}
+                      onLoad={(event) => onLoadComplete(event)}
+                    />
+                  ) : (
+                    <Image
+                      key={index}
+                      source={{ uri: item.url }}
+                      style={VideoDimensions}
+                      resizeMode="contain"
+                      onLoad={() => onLoadComplete(event)}
+                    />
+                  )
+                )}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+
+          )
+      )}
       {ShowOptions ? (
         <>
           {GetUser}
@@ -401,7 +402,7 @@ function ReelCard({
           {GetButtons}
           {GetSlider}
           {GetDropDown}
-          
+
         </>
       ) : null}
     </Pressable>
@@ -485,10 +486,10 @@ const styles = StyleSheet.create({
   DropDownFilter: {
     position: 'absolute',
     marginTop: 10,
-    width: '100%', 
-    top: 50, 
+    width: '100%',
+    top: 50,
     zIndex: 100,
-    left:ScreenWidth/6
+    left: ScreenWidth / 6
   },
 
 });

@@ -22,7 +22,7 @@ import {Button} from 'react-native-elements';
 import {Context as AuthContext} from '../context/AuthContext';
 import { on } from 'events';
 import { userInfo } from 'os';
-import { set } from 'react-native-reanimated';
+ import { set } from 'react-native-reanimated';
 import { ActivityIndicator } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;

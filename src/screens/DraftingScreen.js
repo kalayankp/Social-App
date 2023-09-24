@@ -70,6 +70,8 @@ const handleTitleSave = () => {
       return clause;
     });
     setClauses(newClauses);
+   
+   
     setButton(false)
   };
   
@@ -80,6 +82,8 @@ const handleTitleSave = () => {
       index={item.index}
       saveClause={saveClause}
       editClause={editClause}
+      isEditing={isEditing}
+      
     />
   );
   const ClauseCount = clauses.length;

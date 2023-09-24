@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Button,
@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {Picker} from '@react-native-picker/picker'
+import { Picker } from '@react-native-picker/picker'
 import InputBox from '../components/CreateReel/InputBox';
 import ImagePicker from 'react-native-image-crop-picker';
 import { supabase } from '../utils/supabase';
@@ -19,7 +19,7 @@ import { useNavigation } from '@react-navigation/native';
 import MediaDisplay from '../components/CreateReel/MediaDisplay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import  DynamicDropdown from '../components/CreatePost/DynamicDropdown';
+import DynamicDropdown from '../components/CreatePost/DynamicDropdown';
 
 const CreatePost = () => {
   const [selectedMedia, setSelectedMedia] = useState([]);
@@ -41,7 +41,7 @@ const CreatePost = () => {
     })
       .then((media) => {
         setSelectedMedia(media);
-        console.log(media);
+
       })
       .catch((error) => {
         console.log(error);
@@ -74,10 +74,10 @@ const CreatePost = () => {
         if (error) {
           console.log('Error uploading image:', error);
         } else {
-          console.log('Image uploaded successfully:', data);
+
           const publicURL = supabase.storage.from('hashx-reels/image').getPublicUrl(filePath);
           uploadedImageUrls.push(publicURL.data.publicUrl);
-          console.log('Public Image URL:', publicURL);
+
         }
       } else if (media.mime.startsWith('video/')) {
         // Upload videos to the 'video' folder
@@ -88,10 +88,10 @@ const CreatePost = () => {
         if (error) {
           console.log('Error uploading video:', error);
         } else {
-          console.log('Video uploaded successfully:', data);
+
           const publicURL = supabase.storage.from('hashx-reels/video').getPublicUrl(filePath);
           uploadedVideoUrls.push(publicURL.data.publicUrl);
-          console.log('Public Video URL:', publicURL);
+
         }
       }
     }
@@ -100,11 +100,10 @@ const CreatePost = () => {
     setSelectedMedia([]);
     setDescription('');
 
-    console.log('Uploaded Image URLs:', uploadedImageUrls);
-    console.log('Uploaded Video URLs:', uploadedVideoUrls);
+
     uploadPost(uploadedImageUrls, uploadedVideoUrls);
   };
-  
+
   const navigateToVideoScreen = (media) => {
     navigation.navigate('VideosScreen', { media });
   };
@@ -119,7 +118,7 @@ const CreatePost = () => {
 
   const uploadPost = async (uploadedImageUrls, uploadedVideoUrls) => {
     const contentArray = [];
-  
+
     // Add image objects to the contentArray
     for (const imageUrl of uploadedImageUrls) {
       contentArray.push({
@@ -127,7 +126,7 @@ const CreatePost = () => {
         mimetype: 'img',
       });
     }
-  
+
     // Add video objects to the contentArray
     for (const videoUrl of uploadedVideoUrls) {
       contentArray.push({
@@ -135,13 +134,12 @@ const CreatePost = () => {
         mimetype: 'video',
       });
     }
-  console.log('contentArray', contentArray);
+
     const contentJSON = contentArray;
 
     const user = await AsyncStorage.getItem('user_info');
-    const {email , id } = JSON.parse(user);
-    console.log('IdentityUUID',id);
-    console.log('email', email);
+    const { email, id } = JSON.parse(user);
+
 
 
     const { data, error } = await supabase.from('Post').insert([
@@ -152,45 +150,46 @@ const CreatePost = () => {
         contract: selectedOption,
       },
     ])
-  
+
     if (error) {
       console.log('Error creating post:', error);
     } else {
-      console.log('Post created successfully:', data);
+      alert("Post created successfully")
+
     }
   };
 
   const onSave = () => {
-    if (selectedMedia.length === 0 ) {
-      if(description ==""){
+    if (selectedMedia.length === 0) {
+      if (description == "") {
         alert("no media selected or or description")
         return;
-      }else{
+      } else {
         uploadMediaToSupabase();
       }
-     
+
     }
     uploadMediaToSupabase();
   };
-  const handelSelectContract = (contract) => {
-    console.log('value from the create post',contract);
-    if(contract == null){
+  const handleSelectContract = (contract) => {
+
+    if (contract == null) {
       setSelectedOption(null);
-    }else{
+    } else {
       setSelectedOption(contract.value);
     }
-  } 
+  }
   return (
     <ScrollView contentContainerStyle={styles.container}>
-     <MediaDisplay selectedMedia={selectedMedia} openMediaPicker={openMediaPicker} />
-       <InputBox onInputChange={handleInputChange} />
-       
-       <View style={styles.pickerContainer}>
-       <View style={styles.pickerLabelContainer}>
+      <MediaDisplay selectedMedia={selectedMedia} openMediaPicker={openMediaPicker} />
+      <InputBox onInputChange={handleInputChange} />
+
+      <View style={styles.pickerContainer}>
+        <View style={styles.pickerLabelContainer}>
           <Text style={styles.pickerLabelText}>Select a Contract:</Text>
         </View>
-        < DynamicDropdown  handelSelectContract= {handelSelectContract} />
-        </View>
+        < DynamicDropdown handleSelectContract={handleSelectContract} />
+      </View>
       {loading ? (
         <ActivityIndicator size="large" color="blue" />
       ) : (
@@ -198,7 +197,7 @@ const CreatePost = () => {
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
       )}
-    
+
     </ScrollView>
   );
 };
@@ -207,7 +206,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: 'center',
-  
+
   },
   saveButton: {
     backgroundColor: 'orange',
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 20,
     alignSelf: 'flex-end',
-    marginEnd : '5%'
+    marginEnd: '5%'
   },
   saveButtonText: {
     color: 'white',
@@ -251,7 +250,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    color  : 'black'
+    color: 'black'
     // backgroundColor: 'orange',
   },
 });

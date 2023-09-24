@@ -28,8 +28,7 @@ const Comment = ({
   const [isEditing, setIsEditing] = React.useState(false);
   const [name, setName] = React.useState("Shivam");
   useEffect(() => {
-    console.log('comment', Body);
-    console.log('comment', LatestEditID);
+
 
     // get the name of the user from the Identityid using UserInfo table
     async function getName() {
@@ -39,7 +38,7 @@ const Comment = ({
           .select('name')
           .eq('id', IdentityID)
           .then((data) => {
-            console.log(data.data[0].name);
+
             setName(data.data[0].name);
           });
       }
@@ -95,7 +94,7 @@ const Comment = ({
           <TouchableOpacity onPress={handleBodyClick}>
             <Text style={styles.commentText}>
               {Body}
-              {  LatestEditID == null ? null : (
+              {LatestEditID == null ? null : (
                 <Text style={styles.edited} onPress={handleOpenCommentHistory}>
                   (edited)
                 </Text>

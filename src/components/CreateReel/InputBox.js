@@ -14,7 +14,7 @@ const InputBox = ({ onInputChange }) => {
     // Update the input text by replacing mentioned names and hashtags with styled text
     let updatedText = text;
     if (mentionedNames) {
-      console.log(mentionedNames);
+
       mentionedNames.forEach((name) => {
         updatedText = updatedText.replace(
           name,
@@ -23,7 +23,7 @@ const InputBox = ({ onInputChange }) => {
       });
     }
     if (mentionedHashtags) {
-      console.log(mentionedHashtags);
+
       mentionedHashtags.forEach((tag) => {
         updatedText = updatedText.replace(
           tag,
@@ -46,7 +46,7 @@ const InputBox = ({ onInputChange }) => {
         multiline={true}
         numberOfLines={4}
         placeholderTextColor="black"
-      
+
 
       />
     </View>

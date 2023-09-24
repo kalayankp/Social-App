@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList  ,  RefreshControl} from 'react-native';
+import { Dimensions, FlatList, RefreshControl } from 'react-native';
 
 import ReelCard from './ReelCard';
 import { View } from 'react-native';
 const ScreenHeight = Dimensions.get('window').height;
 
 function Reels({
+
   videos,
   backgroundColor = 'white',
   fetchVideos,
@@ -36,6 +37,7 @@ function Reels({
   shares,
   onSendDataTogradParent
 }) {
+
   const FlatlistRef = useRef(null);
   const [ViewableItem, SetViewableItem] = useState('');
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 70 });
@@ -70,8 +72,8 @@ function Reels({
 
   const [dataFromChild, setDataFromChild] = useState(null);
   const handleDataFromChild = (data) => {
-    console.log('Data received from child:', data);
-    
+
+
     onSendDataTogradParent(data);
     setDataFromChild(data);
   };
@@ -83,11 +85,11 @@ function Reels({
   });
 
   const onEndReached = () => {
-    console.log('end reached');  
+    console.log('end reached');
   };
 
   useEffect(() => {
-    console.log(videos)
+
   }, [videos])
 
 
@@ -123,7 +125,7 @@ function Reels({
           }}
           {...applyProps}
         />
-       
+
       )}
       getItemLayout={(_data, index) => ({
         length: ScreenHeight,
@@ -145,4 +147,3 @@ function Reels({
 export default Reels;
 
 
-      

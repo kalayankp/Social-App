@@ -1,145 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Modal, StyleSheet, Dimensions } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from "../../utils/supabase"
 import ContractForm from './ContractForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContracts, AddNewContract } from '../../actions/contractAction';
+
+
 const { width, height } = Dimensions.get('window');
 
-export default function DynamicDropdown({handelSelectContract}) {
-  const [options, setOptions] = useState([]);
+
+export default function DynamicDropdown({ handleSelectContract }) {
+
   const [selectedOption, setSelectedOption] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isContractFormOpen, setContractFormOpen] = useState(false);
+
+  const dispatch = useDispatch()
+  const options = useSelector((store) => {
+    return store.contractReducer.options
+  })
+
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const user = await AsyncStorage.getItem('user_info');
-        const { id } = JSON.parse(user);
-  
-        let { data: contractData, error } = await supabase
-          .from('Contract')
-          .select('*')
-          .eq('owner_id', id)
-          .order('created_at', { ascending: false });
-        if (error) {
-          console.error('Error fetching contract:', error);
-          return;
-        }
-        if (contractData && contractData.length > 0) {
-          const mappedContracts = contractData.map(contract => ({
-            value: contract.id,
-            label: contract.title,
-          }));
-          mappedContracts.push({ value: 'createNew', label: 'Create New' });
-  
-          setOptions(mappedContracts);
-        } else {
-          setOptions([{value: 'createNew', label: 'Create New'}])
-          console.log('No contracts found for this owner_id');
-        }
-      } catch (error) {
-        console.error('Error fetching contract:', error);
-      }
-    }
-  
-    fetchData();
-  }, [toggleModal]);
-  
+    dispatch(fetchContracts())
+
+}, [toggleModal, options]);
+
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+
   const selectOption = (option) => {
     setSelectedOption(option.value);
-    console.log('option.value',option);
-    handelSelectContract(option);
+
+    handleSelectContract(option);
     toggleModal();
   };
 
   const handleCreateNew = () => {
     setContractFormOpen(true);
-    console.log('Create New');
+
   };
 
-  const handleAddContract =async ({title , clauses}) => {
-    console.log('Added Contract:', title);
-    console.log('clauses:', clauses);
+  const handleAddContract = async (title, clauses) => {
+
     try {
-    async function  getContract(){
-      const user = await AsyncStorage.getItem('user_info');
-            const {email , id } = JSON.parse(user);
-            console.log(id)
-            try {
-              const { data, error } = await supabase.from('Contract').insert([
-                {
-                  title: title,
-                  owner_id: id,
-                },
-              ])
-              
-              const {data :getbytitle  ,  error:titlerror  }= await supabase
-              .from('Contract')
-              .select('*')
-              .eq('title', title)
-              .single();
 
-              if (error) {
-                console.log('Error creating contract:', error);
-                setContractFormOpen(false);
-                alert("Error creating contract");
-              } else {
-                console.log('Contract created successfully:', data);
-              }
-              console.log('getbytitle',getbytitle);
-              console.log('titlerror',titlerror);
+      dispatch(AddNewContract(setContractFormOpen, clauses, title));
 
-              for(const element of clauses){
-                const { data, error } = await supabase.from('Clauses').insert([
-                  {
-                    contract_id: getbytitle.id,
-                    clause: element,
-                  },
-                ])
-                if (error) {
-                  console.log('Error creating clause:', error);
-                  setContractFormOpen(false);
-                  alert("Error creating clause");
-                } else {
-                  console.log('Clause created successfully:', data);
-                }
-              }
-              const {data : refreshedContracts ,  error:refresheror }= await supabase
-              .from('Contract')
-              .select('*')
-              .eq('owner_id', id)
-              .order('created_at', { ascending: false });
-              if (refreshedContracts && refreshedContracts.length > 0) {
-                const mappedContracts = refreshedContracts.map(contract => ({
-                  value: contract.id,
-                  label: contract.title,
-                }));
-                mappedContracts.push({ value: 'createNew', label: 'Create New' });
-                setOptions(mappedContracts);
-              } else {
-                console.log(refresheror);
-                console.log('No contracts found for this owner_id');
-              }
-              setContractFormOpen(false);
-            } catch (error) {
-              console.error('Error creating contract:', error);
-              setContractFormOpen(false);
-              alert("Error creating contract");
-            }
-          }
-          getContract();
+
     } catch (error) {
-      console.error('Error fetching contract:', error);
+      console.error('Error fetching contract', error);
+      setContractCreated(false);
       setContractFormOpen(false);
       alert("Error fetching contract");
     }
   };
+
+
 
   const renderOption = ({ item }) => (
     <TouchableOpacity
@@ -159,8 +78,12 @@ export default function DynamicDropdown({handelSelectContract}) {
     </TouchableOpacity>
   );
 
+
   return (
     <View style={styles.container}>
+
+
+
       <TouchableOpacity style={styles.selectedOption} onPress={toggleModal}>
         <Text style={styles.selectedText}>
           {selectedOption ? options.find(opt => opt.value === selectedOption).label : 'Select a Contract'}
@@ -176,6 +99,9 @@ export default function DynamicDropdown({handelSelectContract}) {
         visible={isModalVisible}
         onRequestClose={toggleModal}
       >
+
+
+
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <AntDesign
@@ -183,29 +109,31 @@ export default function DynamicDropdown({handelSelectContract}) {
               color='orange'
               size={24}
               style={styles.closeIcon}
-              onPress={()=>{
+              onPress={() => {
                 setSelectedOption('')
-                handelSelectContract(null);
+                handleSelectContract(null);
                 toggleModal()
               }}
             />
+
             <FlatList
               data={options}
               renderItem={renderOption}
               keyExtractor={(item) => item.id || item.value}
             />
+
           </View>
         </View>
       </Modal>
 
-      {   isContractFormOpen  && <Modal
-         isVisible={isContractFormOpen}
-        backdropOpacity={0.7} 
-        animationIn="slideInUp" 
-        animationOut="slideOutDown" 
+      {isContractFormOpen && <Modal
+        isVisible={isContractFormOpen}
+        backdropOpacity={0.7}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
       >
         <ContractForm
-          onClose={() => setContractFormOpen(false)} 
+          onClose={() => setContractFormOpen(false)}
           onAddContract={handleAddContract}
         />
       </Modal>}
@@ -244,9 +172,9 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     zIndex: 1,
-    padding : 10,
-    marginLeft :10,
-    paddingLeft : 20
+    padding: 10,
+    marginLeft: 10,
+    paddingLeft: 20
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -266,7 +194,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   createNewOption: {
-    backgroundColor: '#f0f0f0', 
+    backgroundColor: '#f0f0f0',
     justifyContent: 'center',
     alignItems: 'center',
   },
