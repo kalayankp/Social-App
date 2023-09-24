@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect  } from 'react';
 import {
   View,
   Button,
@@ -10,6 +10,8 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+import Modal from 'react-native-modal';
+import {Picker} from '@react-native-picker/picker'
 import InputBox from '../components/CreateReel/InputBox';
 import ImagePicker from 'react-native-image-crop-picker';
 import { supabase } from '../utils/supabase';
@@ -17,24 +19,21 @@ import { useNavigation } from '@react-navigation/native';
 import MediaDisplay from '../components/CreateReel/MediaDisplay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import  DynamicDropdown from '../components/CreatePost/DynamicDropdown';
+
 const CreatePost = () => {
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [address, setAddress] = useState('');
   const navigation = useNavigation();
-  const [publicUrls, setPublicUrls] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('');
 
   useEffect(() => {
     getLocation();
   }, []);
-
   const handleInputChange = (value) => {
     setDescription(value)
   };
-
-
   const openMediaPicker = () => {
     ImagePicker.openPicker({
       mediaType: 'any',
@@ -149,7 +148,8 @@ const CreatePost = () => {
       {
         IdentityUUID: id,
         Description: description,
-        Content: contentJSON, 
+        Content: contentJSON,
+        contract: selectedOption,
       },
     ])
   
@@ -161,26 +161,36 @@ const CreatePost = () => {
   };
 
   const onSave = () => {
-    if (selectedMedia.length === 0) {
-      alert("no media selected")
-      return;
+    if (selectedMedia.length === 0 ) {
+      if(description ==""){
+        alert("no media selected or or description")
+        return;
+      }else{
+        uploadMediaToSupabase();
+      }
+     
     }
     uploadMediaToSupabase();
   };
-
+  const handelSelectContract = (contract) => {
+    console.log('value from the create post',contract);
+    if(contract == null){
+      setSelectedOption(null);
+    }else{
+      setSelectedOption(contract.value);
+    }
+  } 
   return (
     <ScrollView contentContainerStyle={styles.container}>
      <MediaDisplay selectedMedia={selectedMedia} openMediaPicker={openMediaPicker} />
-      {/* <TextInput
-        style={styles.descriptionInput}
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-        placeholderTextColor="black"
-        multiline={true}
-        numberOfLines={4}
-      /> */}
        <InputBox onInputChange={handleInputChange} />
+       
+       <View style={styles.pickerContainer}>
+       <View style={styles.pickerLabelContainer}>
+          <Text style={styles.pickerLabelText}>Select a Contract:</Text>
+        </View>
+        < DynamicDropdown  handelSelectContract= {handelSelectContract} />
+        </View>
       {loading ? (
         <ActivityIndicator size="large" color="blue" />
       ) : (
@@ -188,6 +198,7 @@ const CreatePost = () => {
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
       )}
+    
     </ScrollView>
   );
 };
@@ -211,6 +222,37 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  pickerContainer: {
+    alignSelf: 'stretch',
+    marginHorizontal: '5%',
+    marginTop: 20,
+  },
+  pickerLabelContainer: {
+    flexDirection: 'row', // Align items in a row
+    alignItems: 'center', // Center items vertically
+    justifyContent: 'space-between', // Space between items
+    marginBottom: 5,
+  },
+  pickerLabel: {
+    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  pickerLabelText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  picker: {
+    borderColor: 'black',
+    borderWidth: 2,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    color  : 'black'
+    // backgroundColor: 'orange',
   },
 });
 

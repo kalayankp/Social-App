@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList , ScrollView } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList , ScrollView  ,   Button} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 import { Image } from 'react-native-elements';
@@ -10,7 +10,9 @@ import Header from './Header';
 import helper from '../../components/ReelsUpdated/utils/helper';
 import DropDownFilter from './DropDownFilter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import PlaybackRate from "./PlaybackRate";
+import { color } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
+import { supabase } from '../../utils/supabase';
 // Screen Dimensions
 const ScreenWidth = Dimensions.get('window').width;
 const ScreenHeight = Dimensions.get('window').height;
@@ -42,6 +44,7 @@ function ReelCard({
   onCommentPress = () => {},
   onLikePress = () => {},
   onDislikePress = () => {},
+  
 
   // Player Props
   onFinishPlaying = () => {},
@@ -68,10 +71,6 @@ function ReelCard({
   
   // ref for Video Player
   const VideoPlayer = useRef(null);
-  const videoRef = useRef(null);
-  const progressRef = useRef(null);
-  const bufferRef = useRef(null);
-
 
   // States
   const [VideoDimensions, SetVideoDimensions] = useState({
@@ -83,82 +82,28 @@ function ReelCard({
   const [Paused, SetPaused] = useState(false);
   const [ShowOptions, SetShowOptions] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   // Play/Pause video according to visibility
   useEffect(() => {
 
-    if (!videoRef.current) {
-      return;
-    }
-
-    const onWaiting = () => {
-      if (isPlaying) setIsPlaying(false);
-      setIsWaiting(true);
-    };
-
-    const onPlay = () => {
-      if (isWaiting) setIsWaiting(false);
-      setIsPlaying(true);
-    };
-
-
-    const onPause = () => {
-      setIsPlaying(false);
-      setIsWaiting(false);
-    };
-
-    const element = videoRef.current;
-
-    const onProgress = () => {
-      if (!element.buffered || !bufferRef.current) return;
-      if (!element.buffered.length) return;
-      const bufferedEnd = element.buffered.end(element.buffered.length - 1);
-      const duration = element.duration;
-      if (bufferRef && duration > 0) {
-        bufferRef.current.style.width = (bufferedEnd / duration) * 100 + "%";
-      }
-    };
-
-
-    const onTimeUpdate = () => {
-      setIsWaiting(false);
-      if (!element.buffered || !progressRef.current) return;
-      const duration = element.duration;
-      setDurationSec(duration);
-      setElapsedSec(element.currentTime);
-      if (progressRef && duration > 0) {
-        progressRef.current.style.width =
-          (element.currentTime / duration) * 100 + "%";
-      }
-    };
-
-
-
+    if(!VideoPlayer.current) return;
     if (ViewableItem === id) SetPaused(false);
     else SetPaused(true);
     console.log('ViewableItem', ViewableItem);
     console.log('id', id);
     console.log('type',description);
-  }, [videoRef.current]);
+    const element = VideoPlayer.current;
 
-
+    console.log(videoUrls)
+  }, [ViewableItem]);
   useEffect(() => {
     if (VideoPlayer.current && !Paused) {
-      setTimeout(() => {
-        VideoPlayer.current.seek(0); // Start from the beginning
-        SetPaused(false); // Set paused to false to play the video
-      }, 1000); // Wait for 1 second before playing
+        VideoPlayer.current.seek(0); 
+        SetPaused(false); 
     }
+  
   }, [Paused]);
-
-
-  // useEffect(() => {
-  //   if (!videoRef.current) return;
-  //   if (videoRef.current.playbackRate === playbackRate) return;
-  //   videoRef.current.playbackRate = playbackRate;
-  // }, [playbackRate]);
-
-
   // Pause when user toggles options to True
   useEffect(() => {
     if (pauseOnOptionsShow) {
@@ -177,18 +122,6 @@ function ReelCard({
     },
     [Duration, ShowOptions]
   );
-
-
-  const seekToPosition = (pos) => {
-    if (!videoRef.current) return;
-    if (pos < 0 || pos > 1) return;
-
-    const durationMs = videoRef.current.duration * 1000 || 0;
-
-    const newElapsedMs = durationMs * pos;
-    const newTimeSec = newElapsedMs / 1000;
-    videoRef.current.currentTime = newTimeSec;
-  };
 
   // Callback for PlaybackStatusUpdate
   const PlayBackStatusUpdate = (playbackStatus) => {
@@ -337,6 +270,13 @@ function ReelCard({
               text="share"
               onPress={() => onSharePress(id)}
             />
+            <Buttons
+              name="filetext1"
+              text="Contract"
+              color={disliked ? 'dodgerblue' : 'white'}
+              onPress={() => onDislikePress(id)}
+            />
+
           </>
         )}
       </View>
@@ -362,12 +302,14 @@ function ReelCard({
   const [feedFilter, setFeedFilter] = useState('Trending');
 
 
+
   async function handleFilterChange(filter){
     
     setFeedFilter(filter);
     onSendDataToParent(filter);
   
   };
+
 
   const GetDropDown  = useMemo(
     () => (
@@ -379,7 +321,88 @@ function ReelCard({
   );
 
 
+
+  const CreateNewTrade = async (listingid) => {
+    try {
+      const user = await AsyncStorage.getItem('user_info');
+      const { id } = JSON.parse(user);
   
+      // Get the trader1 and Assets1 values
+      const { trader1, Assets1 } = await getTrader1(listingid);
+  
+      if (!trader1) {
+        console.error('Error in CreateNewTrade: Invalid trader1');
+        return;
+      }
+  
+      const { data, error } = await supabase
+        .from('Trade')
+        .insert([
+          {
+            ListingID: listingid,
+            Trader1: trader1,
+            Assets1: Assets1,
+            Trader2: id,
+            Status1: 1,
+            Status2: 1,
+          },
+        ])
+        .select();
+  
+      if (error) {
+        console.error('Error in CreateNewTrade:', error);
+      } else if (data && data[0] && data[0].id) {
+        navigation.navigate('Trade', {
+          id: data[0].id,
+        });
+      }
+    } catch (error) {
+      console.error('Error in CreateNewTrade:', error);
+    }
+  };
+  
+  const getTrader1 = async (id) => {
+    try {
+      const { data, error } = await supabase
+        .from('Post')
+        .select('*')
+        .eq('id', id);
+  
+      if (data && data.length > 0) {
+        return {
+          trader1: data[0].IdentityUUID,
+          Assets1: [data[0].id],
+        };
+      } else {
+        return {
+          trader1: '', // Set to a default value or handle it differently
+          Assets1: [],
+        };
+      }
+    } catch (error) {
+      console.error('Error in getTrader1:', error);
+      return {
+        trader1: '', // Set to a default value or handle it differently
+        Assets1: [],
+      };
+    }
+  };
+  const StartTrade  = useMemo(
+    () => (
+      <View style={styles.trade}>
+        <Button 
+        title="Start Trade"
+        color={'#1A3837'}
+        onPress={  async () => {
+          await CreateNewTrade(id)
+        }} 
+        />
+      </View>
+    ),
+    []
+  );
+
+
   return (
     <Pressable
       style={[styles.container, { backgroundColor: backgroundColor }]}
@@ -392,7 +415,7 @@ function ReelCard({
     style={{ position: 'absolute' }}
   />
 ) : (
-  videoUrls === null ? (
+  videoUrls === null || videoUrls.length === 0  ? (
     <View>
           <Text
             style={{
@@ -402,7 +425,7 @@ function ReelCard({
               textAlign: 'center',
             }}
           >
-            {description}
+            {description} 
           </Text>
         </View>
   ) : (
@@ -414,35 +437,31 @@ function ReelCard({
                 console.log(item.url),
                 //  load video if mimetype is video else and tehn display
                 item.mimetype === 'video' ? (
-                  // <Video
-                  //   key={index}
-                  //   ref={videoRef}
-                  //   source={{ uri: item.url}}
-                  //   progressUpdateInterval={100}
-                  //   style={VideoDimensions}
-                  //   resizeMode="contain"
-                  //   onError={videoError}
-                  //   playInBackground={false}
-                  //   paused={Paused}
-                  //   muted={false}
-                  //   repeat={true}
-                  //   onLoad={(event) => onLoadComplete(event)}
-                  // />
                   <Video
                     key={index}
-                    // autoPlay={autoPlay}
-                    // muted={muted}
+                    ref={VideoPlayer}
+                    hls={true} 
+                    
+                    source={{ uri: item.url 
+                    }}
+                    
+                    bufferConfig={{
+                      minBufferMs: 1000,
+                      maxBufferMs: 5000,
+                      bufferForPlaybackMs: 2500,
+                      bufferForPlaybackAfterRebufferMs: 5000
+                    }}
+
+                    progressUpdateInterval={100}
+                    style={VideoDimensions}
+                    resizeMode="contain"
+                    onError={videoError}
+                    playInBackground={false}
                     paused={Paused}
                     muted={false}
                     repeat={true}
-                    style={VideoDimensions}
-                    source={{ uri: item.url}}
-                    // onClick={handlePlayPauseClick}
-                    ref={videoRef}
-                    resizeMode="contain"
                     onLoad={(event) => onLoadComplete(event)}
                   />
-
                 ) : (
                   <Image
                     key={index}
@@ -466,16 +485,19 @@ function ReelCard({
           {GetButtons}
           {GetSlider}
           {GetDropDown}
+          {StartTrade}
+          
         </>
       ) : null}
     </Pressable>
   );
 }
 
-// Exports
+
 export default ReelCard;
 
-// Stylesheet
+
+
 const styles = StyleSheet.create({
   container: {
     width: ScreenWidth,
@@ -548,9 +570,20 @@ const styles = StyleSheet.create({
   DropDownFilter: {
     position: 'absolute',
     marginTop: 10,
-    width: '100%', /* Take the full width of the screen */
-    top: 50, /* Adjust this value as per your preference for vertical positioning */
+    width: '100%', 
+    top: 50, 
     zIndex: 100,
     left:ScreenWidth/6
-  }
+  },
+  trade: {
+    position: 'absolute',
+    width: ScreenWidth,
+    bottom: 90,
+    height: ScreenHeight / 10,
+    alignItems: 'center', // Center horizontally
+    justifyContent: 'flex-end', 
+    marginBottom: 50,
+    zIndex: 100,
+  },
+
 });

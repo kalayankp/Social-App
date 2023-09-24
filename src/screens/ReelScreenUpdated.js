@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, StatusBar, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import { View, StatusBar, StyleSheet, ActivityIndicator, Text,Alert, Share } from 'react-native';
 import Reels from '../components/ReelsUpdated/Reels';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../utils/supabase';
 import Video from 'react-native-video';
 import { LazyLoadComponent } from 'react-lazyload';
-import { set } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const headerTitle = 'My Reels';
@@ -83,19 +82,73 @@ function ReelsScreenUpdated() {
 
   useEffect(() => {
     fetchVideos();
-    // console.log("these are final video from item ",videos);
   }, []);
 
 
   const onHeaderIconPress = () => navigation.goBack();
-  const onSharePress = () => console.log('Share button pressed');
+  const onShare = async (id) => {
+    try {
+      const info  =  supabase.from('Post').select('*').eq('id', id);
+      const {data , error} = await info.single();
+      if (error) throw error;
+      console.log(data);
+      const {Content , Description} = data;
+      console.log(Content);
+      console.log(Description);
+      if (Content != null){
+    const result = await Share.share({
+      title: "Hashx",
+      message: ` ${Description}  ${data.Content[0].url}`,
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        console.log(`Shared with activity type: ${result.activityType}`);
+      } else {
+        console.log('Shared without a specific activity type');
+      }
+    } else if (result.action === Share.dismissedAction) {
+      console.log('Share dismissed');
+    }
+  }else{
+    const result = await Share.share({
+      title: "Hashx",
+      message: ` Description  :    ${Description}`,
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        console.log(`Shared with activity type: ${result.activityType}`);
+      } else {
+        console.log('Shared without a specific activity type');
+      }
+    } else if (result.action === Share.dismissedAction) {
+      console.log('Share dismissed');
+    }
+  }
+  } catch (error) {
+    Alert.alert(error.message);
+  }
+};
+
+const onSharePress = (id) => {
+          console.log('Share button pressed')
+          onShare(id);
+        };
+
   const onCommentPress = (id) =>{
     console.log(id)
     console.log('Comment button pressed');
     navigation.navigate('Comment' ,{ postId: id })
   };
   const onLikePress = () => console.log('Like button pressed');
-  const onDislikePress = () => console.log('Dislike button pressed');
+  
+
+  // onContractPress
+  const onDislikePress = (id) => {
+    console.log(id)
+    navigation.navigate('ShowContract', { postId: id })
+  }
+
+
   const onFinishPlaying = index => console.log(`Finished playing video ${index}`);
 
   const LoadingIndicator = (
@@ -111,12 +164,8 @@ function ReelsScreenUpdated() {
   async function handelfiltererData(data){
     setFiltererData(data);
     if(data  == "MyPosts"){
-      // console.log("from parent" , data);
-      // console.log("from parent" , filtererData);
       const user = await AsyncStorage.getItem('user_info');
       const {email , id} = JSON.parse(user);
-      // console.log('User ID:', id);
-      // console.log('User Email:', email);
       setVideos(videos.filter((item) => item.user.Email == email));
     }
     

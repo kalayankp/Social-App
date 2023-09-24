@@ -1,100 +1,88 @@
-import React from 'react';
-import {StyleSheet, View, SafeAreaView, StatusBar} from 'react-native';
-import {Text} from 'react-native-elements';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, SafeAreaView, StatusBar ,ActivityIndicator} from 'react-native';
+import { Text } from 'react-native-elements';
 import MainHeader from '../components/MainHeader';
 import metrics from '../contents/metrics';
 import TradeList from '../components/TradeList';
 import TradeStatus from '../components/TradeStatus';
 import RightIcons from '../components/RightIcons';
 
+import { getTradeData } from './api/data';
+
 const ExploreScreen = () => {
-  console.log(metrics.height);
-  const data = [
-    {
-      id: 517665,
-      tradeWith: 'Srikanth B R',
-      status: 'ONGOING',
-    },
-    {
-      id: 517664,
-      tradeWith: 'Anand Krishnan',
-      status: 'ONGOING',
-    },
-    {
-      id: 517613,
-      tradeWith: 'Lokesh N',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517565,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517561,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517550,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517571,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517581,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517591,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517321,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517322,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-    {
-      id: 517320,
-      tradeWith: 'Param G',
-      status: 'COMPLETED',
-    },
-  ];
+  const [tradeData, setTradeData] = useState([]);
+  const [isLoading , setIsLoading] =  useState(false);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    const dataAsTrader1 = await getTradeData('Trade', 'Trader1');
+    const dataAsTrader2 = await getTradeData('Trade', 'Trader2');
+    // Concatenate the two arrays
+    const mergedData = dataAsTrader1.concat(dataAsTrader2);
+    // Sort the merged data by the 'modifiedAt' field in ascending order
+    mergedData.sort((a, b) => new Date(a.modifiedAt) - new Date(b.modifiedAt));
+    // Filter out items with the same ID
+    const filteredData = mergedData.filter((item, index, self) => {
+      return index === self.findIndex((t) => (
+        t.id === item.id
+      ));
+    });
+  
+    setTradeData(filteredData);
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, []);
+
+  const renderTradeList = () => {
+    return (
+      <TradeList
+        data={tradeData}
+        style={{ marginBottom: metrics.height / 10 }}
+      />
+    );
+  };
+
   return (
-    // <SafeAreaView style={{flex: 1}}>
-    // {/* <MainHeader title="YOUR TRADE" /> */}
     <>
       <StatusBar backgroundColor="white" />
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <MainHeader title="YOUR TRADES" rightComponent={RightIcons} />
-        <View style={{flex: 1, marginTop: 10}}>
+        <View style={{ flex: 1, marginTop: 10 }}>
+          {/* Add your TradeStatus components here */}
           <View style={styles.statusContainer}>
-            <TradeStatus type="ALL" count="44" />
-            <TradeStatus type="ONGOING" count="44" />
-            <TradeStatus type="COMPLETED" count="172" />
+            {/* Replace the count values with actual counts */}
+            <TradeStatus type="ALL" count={tradeData.length} />
+            {/* Calculate the counts for ONGOING and COMPLETED trades */}
+            {/* You can use tradeData.filter() to count based on trade.status */}
+            <TradeStatus
+              type="ONGOING"
+              count={tradeData.filter((trade) => trade.status === 'ONGOING').length}
+            />
+            <TradeStatus
+              type="COMPLETED"
+              count={tradeData.filter((trade) => trade.status === 'COMPLETED').length}
+            />
           </View>
           <View style={styles.cardLayout}>
-            <TradeList data={data} />
+            {/* Render the trade list */}
+
+            {isLoading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        renderTradeList()
+      )}
+            
           </View>
         </View>
-        <View style={{marginBottom: metrics.width >= 800 ? 35 : 80}} />
+        <View style={{ marginBottom: metrics.width >= 800 ? 35 : 80 }} />
       </View>
     </>
-
-    // </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -3,29 +3,37 @@ import {Text} from 'react-native-elements';
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import metrics from '../contents/metrics';
+import { useNavigation } from '@react-navigation/native';
 const TradeList = ({data}) => {
-  //   const renderTradeList =({items})=>(<View><Text>{items.}</Text></View>)
+  const navigation = useNavigation();
   function renderTradeList(itemData) {
-    let statusBackground =
-      itemData.item.status === 'ONGOING' ? '#ffb101' : '#51ba0e';
+
+    function checkVariables(status1,status2) {
+      return status1 === 1 && status2 === 1 ? 1 : 2;
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.image}></View>
         <View style={styles.tradedData}>
-          <Text style={styles.tradeHeading}>TRADED WITH</Text>
+          <Text >TRADED WITH</Text>
 
-          <Text style={styles.tradePerson}>{itemData.item.tradeWith}</Text>
+          <Text >{itemData.item.UserInfo.name}</Text>
           <View style={styles.statusContainer}>
-            <Text
-              style={[styles.tradeStatus, {backgroundColor: statusBackground}]}>
-              {itemData.item.status}
+            <Text style={[styles.tradeStatus ,]}>
+            {checkVariables(itemData.item.status1 , itemData.item.status2) ==1  ? "onGoing" : "progress"}
             </Text>
+     
           </View>
         </View>
 
         <View style={styles.subData}>
-          <Text style={styles.tradeId}>#{itemData.item.id}</Text>
-          <Pressable>
+          {/* <Text style={styles.tradeId}>#{itemData.item.id}</Text> */}
+          <Pressable onPress={()=>{
+             navigation.navigate('Trade', {
+              id:itemData.item.id ,
+            });
+          }}>
             <Icon name="angle-right" style={styles.icon} />
           </Pressable>
         </View>
@@ -59,16 +67,15 @@ const styles = StyleSheet.create({
     width: 85,
     height: 85,
     backgroundColor: 'grey',
-    // marginHorizontal: 10,
-    // marginVertical: 10,
+    marginHorizontal: 10,
+    marginVertical: 10,
   },
   tradedData: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'space-between',
-    // marginHorizontal: 20,
-    // borderWidth: 1,
+    marginHorizontal: 20,
     paddingLeft: 20,
-    // paddingBottom: 10,
+    paddingBottom: 10,
     height: '100%',
   },
   tradeHeading: {
@@ -79,6 +86,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     fontWeight: '400',
+    color:"black"
   },
   subData: {
     alignItems: 'center',
@@ -90,11 +98,10 @@ const styles = StyleSheet.create({
   tradeStatus: {
     textAlign: 'center',
     paddingHorizontal: 15,
-
     borderWidth: 0,
     borderRadius: 10,
     overflow: 'hidden',
-    color: '#fff',
+    color: 'red',
     fontWeight: 'bold',
   },
   subData: {
