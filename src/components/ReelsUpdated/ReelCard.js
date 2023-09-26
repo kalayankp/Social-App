@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList , ScrollView  ,   Button} from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Pressable, ActivityIndicator, FlatList , ScrollView  ,Button} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Video from 'react-native-video';
 import { Image } from 'react-native-elements';
