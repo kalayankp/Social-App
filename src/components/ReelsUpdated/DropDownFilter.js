@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     flex: 1,
     // padding :10,
-    borderWidth:0,
+    borderWidth: 0,
     borderRadius: 5,
     borderColor: 'white',
     overflow: 'hidden',

@@ -16,8 +16,9 @@ const ContractForm = ({ onClose, onAddContract }) => {
   const [editingClauses, setEditingClauses] = useState([]);
 
   const handleAddContract = () => {
+
     if (title && clauses.length > 0) {
-      onAddContract({ title, clauses });
+      onAddContract(title, clauses);
     } else {
       alert('Please provide a title and at least one clause.');
     }
@@ -72,16 +73,16 @@ const ContractForm = ({ onClose, onAddContract }) => {
               <Text style={styles.editButtonText}>
                 {editingClauses[index] ?
                   <AntDesign
-                  name='check'
-                  color='orange'
-                  size={24}
-                /> : 
-                 
-                 <AntDesign
-                 name='edit'
-                 color='orange'
-                 size={24}
-               />}
+                    name='check'
+                    color='orange'
+                    size={24}
+                  /> :
+
+                  <AntDesign
+                    name='edit'
+                    color='orange'
+                    size={24}
+                  />}
               </Text>
             </TouchableOpacity>
           </View>

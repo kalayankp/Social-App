@@ -11,7 +11,7 @@ const ShowContract = () => {
 
   const route = useRoute();
 
-  useEffect(() => {
+  const ShowContractFunction = () => {
     const postId = route.params?.postId;
 
     async function getContract() {
@@ -64,15 +64,20 @@ const ShowContract = () => {
     }
 
     getContract();
-  }, []);
+  }
+
+
+  useEffect(ShowContractFunction, [])
+
+
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         {loading ? (
-           <View style={styles.loadingContainer}>
-           <ActivityIndicator size="large" color="#000000" />
-         </View>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#000000" />
+          </View>
         ) : (
           <>
             <Text style={styles.title}>{title || 'No Contract'}</Text>
@@ -164,7 +169,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#525266',
   },
-  
+
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',

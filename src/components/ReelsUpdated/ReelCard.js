@@ -322,6 +322,7 @@ function ReelCard({
 
 
 
+
   const CreateNewTrade = async (listingid) => {
     try {
       const user = await AsyncStorage.getItem('user_info');
