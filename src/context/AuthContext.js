@@ -32,18 +32,17 @@ const handleSignOut = (dispatch) => async () => {
   await AsyncStorage.removeItem('user_info');
 };
 
-const updateLoginStatus = (dispatch) => async ({ email , id }) => {
+const updateLoginStatus = (dispatch) => async ({ email, id }) => {
   try {
-    console.log("user Info email dispatch: ",email);
-    console.log("user Info id dispatch : ",id);
-    const userInfo = { email , id };
-    console.log(userInfo)
+
+    const userInfo = { email, id };
+
     // After successful signup, you can store the user info in AsyncStorage
 
     await AsyncStorage.setItem('user_info', JSON.stringify(userInfo));
     dispatch({ type: 'update_signup_state', payload: true });
     dispatch({ type: 'update_login_state', payload: true });
-    dispatch({type : 'update_user_info' , payload : userInfo})
+    dispatch({ type: 'update_user_info', payload: userInfo })
 
   } catch (error) {
     throw error;
@@ -51,11 +50,10 @@ const updateLoginStatus = (dispatch) => async ({ email , id }) => {
 };
 
 
-const handleSignUp = (dispatch) => async ({ email , id }) => {
+const handleSignUp = (dispatch) => async ({ email, id }) => {
   try {
-    console.log("user Info email dispatch: ",email);
-    console.log("user Info id dispatch : ",id);
-    const userInfo = { email , id };
+
+    const userInfo = { email, id };
     // After successful signup, you can store the user info in AsyncStorage
     await AsyncStorage.setItem('user_info', JSON.stringify(userInfo));
     // Dispatch the update_signup_state action to indicate that signup is successful
@@ -63,8 +61,8 @@ const handleSignUp = (dispatch) => async ({ email , id }) => {
 
     // You might want to dispatch update_login_state action as well to set the user as signed in
     dispatch({ type: 'update_login_state', payload: true });
-      
-    }
+
+  }
   catch (error) {
     throw error;
   }

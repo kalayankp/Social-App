@@ -25,7 +25,7 @@ function ReelsScreenUpdated() {
     try {
       setLoading(true);
       const { data, error } = await supabase.from('Post').select('*').order('created_at', { ascending: false });
-      // console.log(data);
+      
       if (error) throw error;
 
       const videoData = [];
@@ -34,15 +34,17 @@ function ReelsScreenUpdated() {
         const post = data[index];
         const {data :userData  , error  :userEror } = await supabase.
         from('UserInfo')
-        .select('name  , Email')
+        .select('name  , Email, profile_image_url')
         .eq("id", post.IdentityUUID)
         .single();
       
         // console.log("from loop" , userData.name);
-        const {name , Email} = userData;
+        const {name , Email, profile_image_url} = userData;
         if (userEror) throw userEror;
 
-        
+const NoProfilePic = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvQmR2Qrof1aCENRuX8QfnvkqGnN35FByfxeFn4FE&s"  
+
+
         if(post.Content != null){
           videoData.push({
             id: post.id,
@@ -50,7 +52,8 @@ function ReelsScreenUpdated() {
             user: {
               name: name,
               Email : Email,
-              avatar: "https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+           
+             avatar: profile_image_url !== null ? profile_image_url  : NoProfilePic 
             },
             likes: post.Likes,
             comments: post.Comments,
@@ -63,7 +66,7 @@ function ReelsScreenUpdated() {
             videoUrls: null,
             user: {
               name: name,
-              avatar: "https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+              avatar: profile_image_url !== null ? profile_image_url  : NoProfilePic 
             },
             likes: post.Likes,
             comments: post.Comments,
