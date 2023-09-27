@@ -169,7 +169,7 @@ const ProfileScreen = ({ profileImageUrl, onEditImage }) => {
                 containerStyle={styles.avatarContainer}
               />
               <TouchableOpacity style={styles.editEllipseIcon}>
-                <Image source={require('../asset/images/Ellipse.png')} />
+                <Image source={require('../asset/images/ed.png')} />
               </TouchableOpacity>
               {editingUserId !== null ? (
             <Icon
