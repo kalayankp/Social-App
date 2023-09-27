@@ -7,8 +7,7 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-  Text,
-} from 'react-native';
+  Text} from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Context as AuthContext } from '../context/AuthContext';
 
@@ -48,7 +47,7 @@ const LoginScreen = ({ navigation }) => {
         .from('UserInfo')
         .select('*')
         .eq('Email', email)
-        .single(); // Use .single() to get a single result
+        .single(); 
   
       if (userInfo) {
         console.log(userInfo.id);
@@ -58,7 +57,7 @@ const LoginScreen = ({ navigation }) => {
             .from('Password')
             .select('*')
             .eq('User_Id', userInfo.id)
-            .single(); // Use .single() to get a single result
+            .single(); 
   
           if (passwordInfo && passwordInfo.SaltedHash === password) {
             console.log('Login Successful');
@@ -94,7 +93,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image
+``        <Image
           source={require('../asset/images/Log.png')}
           style={styles.logo}
           resizeMode="contain"
