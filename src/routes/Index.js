@@ -25,7 +25,7 @@ const App = () => {
   if (!state.isLoading) {
     return (
       <NavigationContainer ref={navigationRef}>
-        {state.isSignedIn ? (
+        {!state.isSignedIn ? (
           <>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="MainFlow" component={MainFlow} />
