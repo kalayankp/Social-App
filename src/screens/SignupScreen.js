@@ -4,46 +4,110 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  ImageBackground,
-  Dimensions,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
   ScrollView,
-  StatusBar,
+  Text,
+  KeyboardAvoidingView,
+  Dimensions
 } from 'react-native';
 
-import { Input, Text } from 'react-native-elements';
-import { Button } from 'react-native-elements';
+import { supabase } from '../utils/supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCheck, faUserPlus, faEnvelope, faEye, faEyeSlash, faKey, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { Context as AuthContext } from '../context/AuthContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 console.log(windowHeight);
-
 const SignUpComponent = ({ navigation }) => {
-  const handlelogin = () => {
-    navigation.navigate('LoginScreen')
-  }
+  const handleLogin = () => {
+    navigation.navigate('LoginScreen');
+  };
 
+  const { state, handleSignUp } = useContext(AuthContext);
   const [name, setname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [Visible, setVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleInputFocus = () => {
     setIsInputFocused(true);
   };
-
   const handleInputBlur = () => {
     setIsInputFocused(false);
   };
+
+  async function handleSignUpSupa(userInfo) {
+    setLoading(true);
+    try {
+      const { name, email, password } = userInfo;
+      const { data, error } = await supabase.from('UserInfo').insert([
+        {
+          name: name,
+          Email: email,
+        },
+      ]);
+  
+      if (error) {
+        console.log('Error creating User:', error);
+      } else {
+        console.log('User created successfully');
+      }
+  
+      const { data: userData, error: selectError } = await supabase
+        .from('UserInfo')
+        .select()
+        .eq('Email', email);
+        console.log(userData)
+  
+      if (selectError) {
+        console.log('Error fetching user data:', selectError);
+        setLoading(false);
+      } else {
+        console.log('User data:', userData);
+  
+        if (userData && userData.length > 0) {
+          const { data: pass, error: passError } = await supabase
+            .from('Password')
+            .insert([
+              {
+                SaltedHash: password,
+                User_Id: userData[0].id,
+              },
+            ]);
+  
+          if (passError) {
+            console.log('Error creating Password:', passError);
+          } else {
+            console.log('Password created successfully', pass);
+            console.log(userData[0].id);
+            handleSignUp({ email, id: userData[0].id });
+          }
+        } else {
+          console.log('No user data found');
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      console.log('Error signing up:', error.message);
+    }
+    setLoading(false);
+  }
+  
+
+  const onSubmit = () => {
+    handleSignUpSupa({ name, email, password });
+  };
+
+  useEffect(() => {
+    if (state.errorMessage) {
+      Alert.alert('Oops!', state.errorMessage, [{ text: 'OK' }]);
+    }
+  }, [state.errorMessage]);
 
   const PasswordVisibility = () => {
     setVisible(!Visible);
@@ -57,7 +121,7 @@ const SignUpComponent = ({ navigation }) => {
       >
         <View style={styles.card}>
           <Text style={styles.headtext}>Sign up</Text>
-          
+
           <View style={styles.iconsContainer}>
             <TouchableOpacity style={styles.googleButton}>
               <Image
@@ -68,7 +132,6 @@ const SignUpComponent = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-        
           <Text style={styles.nametext}>Name</Text>
           <TextInput
             style={[styles.fields, isInputFocused ? styles.inputFocused : null]}
@@ -117,20 +180,19 @@ const SignUpComponent = ({ navigation }) => {
             <Text style={styles.rememberText}>I agree with Terms and Privacy</Text>
           </View>
 
-    
           <View style={styles.Buttoncontainer}>
-            <TouchableOpacity style={styles.Button}>
+            <TouchableOpacity style={styles.Button} onPress={onSubmit}>
               <Text style={styles.ButtonText}>Sign up</Text>
             </TouchableOpacity>
           </View>
 
-
           <View style={styles.loginLinkContainer}>
-            <TouchableOpacity onPress={handlelogin}>
+            <TouchableOpacity onPress={handleLogin}>
               <Text style={styles.loginLinkText}>Already have an account?</Text>
               <Text style={styles.loginLink}>Log In</Text>
             </TouchableOpacity>
           </View>
+          
         </View>
       </KeyboardAvoidingView>
     </ScrollView>
@@ -139,7 +201,7 @@ const SignUpComponent = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#DCDCDC',
@@ -152,13 +214,13 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '90%',
-    maxWidth: 400,
+    maxWidth: windowWidth * 0.9, 
     backgroundColor: '#FFF',
     padding: 20,
     borderRadius: 15,
-    marginTop: 70,
-    marginBottom: 40,
-    paddingHorizontal:10
+    marginBottom: windowHeight * 0.01, 
+  
+    paddingHorizontal: 10,
   },
   headtext: {
     fontSize: 24,
@@ -166,7 +228,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     fontWeight: '600',
     marginBottom: 30,
-    marginLeft:10
+    marginLeft: 10,
   },
   iconsContainer: {
     display: 'flex',
@@ -174,20 +236,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 30,
-    marginLeft:10
+    marginLeft: 10,
   },
   googleButton: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 327,
+    width: windowWidth * 0.8, 
     height: 50,
     paddingVertical: 7,
     paddingHorizontal: 39,
     borderRadius: 30,
     borderWidth: 1.5,
-    borderColor: '#rgba(0, 0, 0, 0.05)',
+    borderColor: 'rgba(0, 0, 0, 0.05)',
   },
   googleIcon: {
     height: 15,
@@ -208,12 +270,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 10,
-    marginLeft:15,
-    top:4
+    marginLeft: 15,
+    top: 4,
   },
   fields: {
     height: 50,
-    width:327,
+    width: windowWidth * 0.8, 
     borderRadius: 10,
     borderWidth: 1,
     color: 'rgba(0, 0, 0, 0.50)',
@@ -239,7 +301,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    marginLeft:15
+    marginLeft: 15,
   },
   box: {
     width: 20,
@@ -260,11 +322,11 @@ const styles = StyleSheet.create({
   Buttoncontainer: {
     alignContent: 'center',
     marginBottom: 20,
-    marginLeft:15
+    marginLeft: 15,
   },
   Button: {
     display: 'flex',
-    width: 320,
+    width: windowWidth * 0.8,
     height: 50,
     paddingVertical: 7,
     paddingHorizontal: 10,
@@ -280,13 +342,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     textAlign: 'center',
     fontWeight: '800',
-    marginRight:10,
-    top:6
+    marginRight: 10,
+    top: 6,
   },
   loginLinkContainer: {
     alignItems: 'center',
-    marginTop: 20,
-    
+    marginLeft:10
   },
   loginLinkText: {
     color: 'rgba(0, 0, 0, 0.40)',
@@ -294,7 +355,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     lineHeight: undefined,
-    bottom: 20,
+    bottom: 10,
   },
   loginLink: {
     flexShrink: 0,
@@ -303,7 +364,7 @@ const styles = StyleSheet.create({
     lineHeight: undefined,
     fontWeight: 'bold',
     color: '#374957',
-    marginLeft: 45,
+    marginLeft:48,
     textDecorationLine: 'underline',
   },
 });
