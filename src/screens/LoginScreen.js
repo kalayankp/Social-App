@@ -47,7 +47,7 @@ const LoginScreen = ({ navigation }) => {
         .from('UserInfo')
         .select('*')
         .eq('Email', email)
-        .single(); 
+        .single(); // Use .single() to get a single result
   
       if (userInfo) {
         console.log(userInfo.id);
@@ -57,7 +57,7 @@ const LoginScreen = ({ navigation }) => {
             .from('Password')
             .select('*')
             .eq('User_Id', userInfo.id)
-            .single(); 
+            .single(); // Use .single() to get a single result
   
           if (passwordInfo && passwordInfo.SaltedHash === password) {
             console.log('Login Successful');
@@ -93,7 +93,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-``        <Image
+        <Image
           source={require('../asset/images/Log.png')}
           style={styles.logo}
           resizeMode="contain"
