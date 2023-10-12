@@ -7,7 +7,8 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-  Text} from 'react-native';
+  Text,
+} from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Context as AuthContext } from '../context/AuthContext';
 
@@ -26,7 +27,6 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const LoginScreen = ({ navigation }) => {
-  const {text} = useContext(AuthContext)
   const handleSignup = () => {
     navigation.navigate('SignupScreen');
   };
@@ -42,32 +42,30 @@ const LoginScreen = ({ navigation }) => {
     console.log('handleLogin');
     console.log(email, password);
     setLoading(true);
-  
     try {
-      const { data: userInfo, error: userInfoError } = await supabase
+      const { data, error } = await supabase
         .from('UserInfo')
         .select('*')
-        .eq('Email', email)
-        .single(); // Use .single() to get a single result
-  
-      if (userInfo) {
-        console.log(userInfo.id);
-  
+        .eq('Email', email);
+      console.log('data ', data);
+
+      if (data[0]?.Email === email) {
+        console.log(data[0].id);
+
         try {
-          const { data: passwordInfo, error: passwordError } = await supabase
+          let { data: pass, error } = await supabase
             .from('Password')
             .select('*')
-            .eq('User_Id', userInfo.id)
-            .single(); // Use .single() to get a single result
-  
-          if (passwordInfo && passwordInfo.SaltedHash === password) {
+            .eq('User_Id', data[0].id);
+          console.log('pass', pass);
+          if (pass[0]?.SaltedHash === password) {
             console.log('Login Successful');
             setLoading(false);
             setErrorMessage('');
-  
-            const id = userInfo.id;
+
+            const id = data[0].id;
             console.log('this id from login screen', id);
-         
+            updateLoginStatus({ email, id });
           } else {
             console.log('Password is incorrect');
             setLoading(false);
@@ -86,7 +84,7 @@ const LoginScreen = ({ navigation }) => {
       setErrorMessage('Please Check Your Email');
     }
   }
-  
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -169,12 +167,13 @@ const LoginScreen = ({ navigation }) => {
 
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.loginButtonText}>Login</Text>
-     
       </TouchableOpacity>
+
       {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
       <TouchableOpacity style={styles.forgotPassword}>
         <Text style={styles.forgotPasswordLabel}>Forgot Password</Text>
       </TouchableOpacity>
+      
       <View style={styles.signUpContainer}>
         <Text style={styles.signUpLabel}>Don't have an account?</Text>
         <TouchableOpacity style={styles.signUpButton} onPress={handleSignup}>
@@ -261,18 +260,16 @@ const styles = StyleSheet.create({
   rememberLabel: {
     fontSize: windowWidth * 0.04,
     color: 'rgba(0, 0, 0, 0.67)',
-    marginRight: windowWidth * 0.41, 
+    marginRight: windowWidth * 0.41, // Adjust the margin for icon alignment
   },
     errorText: {
     color: 'red',
-   
     marginLeft: 15,
    bottom:130
   },
   forgotPassword: {
     marginBottom: windowWidth * 0.03,
-    marginTop:10
-   
+    marginTop:'4%'
   },
   forgotPasswordLabel: {
     fontSize: windowWidth * 0.04,
@@ -301,7 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: windowWidth * 0.01,
+    marginTop: windowWidth * 0.1,
   },
   signUpLabel: {
     fontSize: windowWidth * 0.04,

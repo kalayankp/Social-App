@@ -21,6 +21,8 @@ target 'hashx' do
 
   pod 'react-native-video', :path => '../node_modules/react-native-video'
 
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+
   target 'hashxTests' do
     inherit! :complete
     # Pods for testing
