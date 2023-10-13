@@ -1,12 +1,12 @@
-import { Text, View } from 'react-native'
-import React, { Component } from 'react'
+import React from 'react';
+import { TouchableOpacity, Text } from 'react-native';
 
-export default class LogoutButton extends Component {
-  render() {
-    return (
-      <View>
-        <Text>LogoutButton</Text>
-      </View>
-    )
-  }
-}
+const LogoutButton = ({ onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text>Logoutnfgeigb</Text>
+    </TouchableOpacity>
+  );
+};
+
+export default LogoutButton;

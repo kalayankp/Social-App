@@ -1,46 +1,39 @@
-import React, {useEffect, useContext} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import React, { useEffect, useContext } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-//USER DEFINED IMPORTS
-import {Context as AuthContext} from '../context/AuthContext';
+// USER DEFINED IMPORTS
+import { Context as AuthContext } from '../context/AuthContext';
 import LoginFlow from './LoginFlow';
 import MainFlow from './MainFlow';
-import {navigationRef} from './RootNavigation';
+import { navigationRef } from './RootNavigation';
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const {state, localSignIn} = useContext(AuthContext);
+  const { state, autoLogin } = useContext(AuthContext); // Destructure state and autoLogin
 
   useEffect(() => {
-    localSignIn();
+    autoLogin();
   }, []);
-  console.log(state);
 
   if (state.isLoading) {
     return null;
   }
 
-  if (!state.isLoading) {
-    return (
-      <NavigationContainer ref={navigationRef}>
-        {!state.isSignedIn ? (
-          <>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="MainFlow" component={MainFlow} />
-            </Stack.Navigator>
-          </>
-        ) : (
-          <>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="LoginFlow" component={LoginFlow} />
-            </Stack.Navigator>
-          </>
-        )}
-      </NavigationContainer>
-    );
-  }
+  return (
+    <NavigationContainer ref={navigationRef}>
+      {state.isSignedIn ? (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="MainFlow" component={MainFlow} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="LoginFlow" component={LoginFlow} />
+        </Stack.Navigator>
+      )}
+    </NavigationContainer>
+  );
 };
 
-export {App};
+export { App };

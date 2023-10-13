@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useReducer } from 'react';
+// createDataContext.js
+import React, { useReducer, createContext } from 'react';
 
 export default (reducer, actions, initialState) => {
   const Context = createContext();
